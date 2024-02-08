@@ -1,22 +1,20 @@
-import sys
-import json
-import csv
 import os
 import pandas as pd
-import mmif
 import argparse
-import glob
 from pyannote.core import Segment, Timeline, Annotation
 from pyannote.metrics.detection import DetectionErrorRate, DetectionPrecisionRecallFMeasure
 from mmif import Mmif, DocumentTypes, AnnotationTypes
-from requests.exceptions import ConnectionError
 import pathlib
 import math
+import goldretriever
 
+# Constants
+GOLD_URL_Cyron = "https://github.com/clamsproject/aapb-annotations/tree/main/newshour-chyron/golds"
+GOLD_URL_Slate = "https://github.com/clamsproject/aapb-annotations/tree/main/january-slates/golds"
 
 #####Yao: So for now, if we want to evaluate the slate app, we need to run the code like this:
 
-# python evaluate.py -m /your/preds/path -g /your/gold/path -o /your/output/path -r /your/result/path --slate
+# python evaluate.py -m /your/preds/path -o /your/output/path -r /your/result/path --slate
 
 ########## small tools
 
@@ -28,7 +26,7 @@ def convert_time(time_str):
         seconds = int(parts[2].strip())
         minutes = int(parts[1].strip())
         hours = int(parts[0].strip())
-        total_seconds = hours * 3600 + minutes * 60 + seconds + microsecond * 0.01
+        total_seconds = hours * 3600 + minutes * 60 + seconds + microsecond * 0.001
         return total_seconds
     elif len(parts) == 3:
         seconds = float(parts[2].strip())
@@ -40,52 +38,28 @@ def convert_time(time_str):
         return 0
 
 
-# for chyron
-def get_csv_list(csv_dir):
-    csv_files = os.listdir(csv_dir)
-    return [os.path.join(csv_dir, file) for file in csv_files if file.endswith(".csv")]
-
-
-# for slate
-def get_tsv_list(tsv_dir):
-    srt_files = os.listdir(tsv_dir)
-    return [os.path.join(tsv_dir, file) for file in srt_files if file.endswith(".tsv")]
-
-
 # adapt the code from Kelley Lynch - 'evaluate_chyrons.py'
-def load_slate_gold_standard(tsv_file_list, test_dir):
-    gold_timeframes = {}
-    valid_files = set(filename.split(".")[0] for filename in os.listdir(test_dir))
-    for tsv_file in tsv_file_list:
-        df = pd.read_csv(tsv_file, sep=',')
-        for index, row in df[["GUID", "Slate Start", "Slate End"]].iterrows():
-            video_fileID = row["GUID"]
-            start = row["Slate Start"]
-            end = row["Slate End"]
-            if pd.isna(start) or pd.isna(end):
-                continue
-            Slate_Start = convert_time(start)
-            Slate_End = convert_time(end)
-            if video_fileID in valid_files:
-                if video_fileID not in gold_timeframes:
-                    gold_timeframes[video_fileID] = Timeline()
-                gold_timeframes[video_fileID].add(Segment(Slate_Start, Slate_End))
-    return gold_timeframes
+
+def get_gold_file_list(ref_dir):
+    gold_files = os.listdir(ref_dir)
+    return [os.path.join(ref_dir, file) for file in gold_files]
 
 
-def load_chyron_gold_standard(csv_file_list, test_dir):
+def load_gold_standard(gold_file_list, pred_dir):
     gold_timeframes = {}
-    valid_files = set(filename.split(".")[0] for filename in os.listdir(test_dir))
-    for csv_file in csv_file_list:
-        df = pd.read_csv(csv_file, sep=',')
-        for index, row in df[["start_time", "end_time"]].iterrows():
-            video_fileID = os.path.splitext(os.path.basename(csv_file))[0]
-            chyron_start = float(row["start_time"])
-            chyron_end = float(row["end_time"])
-            if video_fileID in valid_files:
+    pred_files = set(filename.split(".")[0] for filename in os.listdir(pred_dir))
+    for gold_file in gold_file_list:
+        df = pd.read_csv(gold_file)
+        for index, row in df[["start", "end"]].iterrows():
+            video_fileID = os.path.splitext(os.path.basename(gold_file))[0]
+            # start = float(row["start"])
+            # end = float(row["end"])
+            start = convert_time(row["start"])
+            end = convert_time(row["end"])
+            if video_fileID in pred_files:
                 if video_fileID not in gold_timeframes:
                     gold_timeframes[video_fileID] = Timeline()
-                gold_timeframes[video_fileID].add(Segment(chyron_start, chyron_end))
+                gold_timeframes[video_fileID].add(Segment(start, end))
     return gold_timeframes
 
 
@@ -122,13 +96,13 @@ def process_mmif_file(mmif_file_path, gold_timeframe_dict):
             while True:
                 try:
                     cur = next(ann)
-                    starts.append(float(cur.properties["start"]))
-                    ends.append(float(cur.properties["end"]))
+                    starts.append(mmif.get_start(cur))
+                    ends.append(mmif.get_end(cur))
                 # check if it's been annotated based on the next version of the slate app
                 except:
                     break
-            result = mmif.get_all_views_contain(at_types=AnnotationTypes.TimeFrame)
-            view = result[-1]
+            view = mmif.get_view_contains(at_types=AnnotationTypes.TimeFrame)
+            # view = result[-1]
             fps = vd.get_property('fps')
             calculated_starts = [round(start / fps, 2) for start in starts]
             calculated_ends = [round(end / fps, 2) for end in ends]
@@ -241,6 +215,7 @@ if __name__ == "__main__":
     gold_group.add_argument('--slate', action='store_true', help='slate annotations')
     gold_group.add_argument('--chyron', action='store_true', help='chyron annotations')
     args = parser.parse_args()
+
     if args.output_dir:
         outdir = pathlib.Path(args.output_dir)
         if not outdir.exists():
@@ -249,9 +224,12 @@ if __name__ == "__main__":
         outdir = pathlib.Path(__file__).parent
 
     if args.slate:
-        gold_timeframes_dict = load_slate_gold_standard(get_tsv_list(args.gold_dir), args.machine_dir)
+        ref_dir = goldretriever.download_golds(GOLD_URL_Slate) if args.gold_dir is None else args.gold_dir
     elif args.chyron:
-        gold_timeframes_dict = load_chyron_gold_standard(get_csv_list(args.gold_dir), args.machine_dir)
+        ref_dir = goldretriever.download_golds(GOLD_URL_Cyron) if args.gold_dir is None else args.gold_dir
+
+    gold_file_list = get_gold_file_list(ref_dir)
+    gold_timeframes_dict = load_gold_standard(gold_file_list, args.machine_dir)
 
     # create the 'test_timeframes'
     test_timeframes = process_mmif_file(args.machine_dir, gold_timeframes_dict)
