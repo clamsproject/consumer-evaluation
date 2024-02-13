@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "mmif": "http://mmif.clams.ai/1.1.0"
+  },
+  "documents": [
+    {
+      "@type": "http://mmif.clams.ai/vocabulary/VideoDocument/v1",
+      "properties": {
+        "mime": "video",
+        "id": "d1",
+        "location": "baapb://cpb-aacip-153-000002z3.video"
+      }
+    }
+  ],
+  "views": [
+    {
+      "id": "v_0",
+      "metadata": {
+        "timestamp": "2024-02-13T13:19:58.867594",
+        "app": "http://apps.clams.ai/swt-detection/unresolvable",
+        "contains": {
+          "http://mmif.clams.ai/vocabulary/Annotation/v2": {
+            "document": "d1"
+          }
+        },
+        "parameters": {
+          "pretty": "True",
+          "stopAt": "300000"
+        }
+      },
+      "annotations": [
+        {
+          "@type": "http://mmif.clams.ai/vocabulary/Annotation/v2",
+          "properties": {
+            "fps": 29.97,
+            "frameCount": 73510.0,
+            "duration": 2452786.0,
+            "durationTimeUnit": "milliseconds",
+            "id": "a_1"
+          }
+        }
+      ]
+    }
+  ]
+}

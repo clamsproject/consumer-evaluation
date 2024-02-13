@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "mmif": "http://mmif.clams.ai/1.1.0"
+  },
+  "documents": [
+    {
+      "@type": "http://mmif.clams.ai/vocabulary/VideoDocument/v1",
+      "properties": {
+        "mime": "video",
+        "id": "d1",
+        "location": "baapb://cpb-aacip-131-87brv8v7.video"
+      }
+    }
+  ],
+  "views": [
+    {
+      "id": "v_0",
+      "metadata": {
+        "timestamp": "2024-02-13T13:19:09.094275",
+        "app": "http://apps.clams.ai/swt-detection/unresolvable",
+        "parameters": {
+          "pretty": "True",
+          "stopAt": "300000"
+        },
+        "error": {
+          "message": "<class 'requests.exceptions.JSONDecodeError'>: Expecting value: line 1 column 1 (char 0)",
+          "stackTrace": "  File \"/home/krim/anaconda3/envs/clams-app-swt-detection/lib/python3.8/site-packages/clams/restify/__init__.py\", line 149, in post\n    return self.json_to_response(self.cla.annotate(raw_data, **self.annotate_param_caster.cast(raw_params)))\n\t\n  File \"/home/krim/anaconda3/envs/clams-app-swt-detection/lib/python3.8/site-packages/clams/app/__init__.py\", line 120, in annotate\n    annotated = self._annotate(mmif, **refined_params)\n\t\n  File \"/home/krim/Projects/clams/clamsproject/app-swt-detection/app.py\", line 53, in _annotate\n    self.logger.info(f\"Processing video {vd.id} at {vd.location_path()}\")\n\t\n  File \"/home/krim/anaconda3/envs/clams-app-swt-detection/lib/python3.8/site-packages/mmif/serialize/annotation.py\", line 339, in location_path\n    return self.properties.location_path_resolved(nonexist_ok=nonexist_ok)\n\t\n  File \"/home/krim/anaconda3/envs/clams-app-swt-detection/lib/python3.8/site-packages/mmif/serialize/annotation.py\", line 493, in location_path_resolved\n    p = discovered_docloc_plugins[scheme].resolve(self.location)\n\t\n  File \"/home/krim/anaconda3/envs/clams-app-swt-detection/lib/python3.8/site-packages/mmif_docloc_baapb/__init__.py\", line 19, in resolve\n    return r.json()[0]\n\t\n  File \"/home/krim/anaconda3/envs/clams-app-swt-detection/lib/python3.8/site-packages/requests/models.py\", line 975, in json\n    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)\n"
+        }
+      },
+      "annotations": []
+    }
+  ]
+}
