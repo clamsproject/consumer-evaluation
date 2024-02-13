@@ -1,23 +1,27 @@
 import json
-import os
+from pathlib import Path
 from urllib.parse import urljoin
 
 import requests
 
 
-def download_golds(gold_dir_url=None, folder_name=None):
+def download_golds(gold_dir_url, folder_name=None):
     import tempfile
     # code adapt from Angela Lam's
 
     if folder_name is None:
         folder_name = tempfile.TemporaryDirectory().name
     # Create a new directory to store the downloaded files on local computer
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name)
+    target_dir = Path(folder_name)
+    if not target_dir.exists():
+        target_dir.mkdir()
 
     # Check if the directory is empty
-    if not (len(os.listdir(folder_name)) == 0):
+    try:
+        next(target_dir.glob('*'))
         raise Exception("The folder '" + folder_name + "' already exists and is not empty")
+    except StopIteration:
+        pass
 
     # Send a GET request to the repository URL and extract the HTML content
     response = requests.get(gold_dir_url)
@@ -33,9 +37,19 @@ def download_golds(gold_dir_url=None, folder_name=None):
                                     payload['repo']['name'],
                                     payload['refInfo']['name'],
                                     link)))
-        file_name = os.path.basename(link)
-        file_path = os.path.join(folder_name, file_name)
+        file_path = target_dir / link.split('/')[-1]
         with open(file_path, 'wb') as file:
             response = requests.get(raw_url)
             file.write(response.content)
     return folder_name
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Download gold files from a github repository')
+    parser.add_argument('-d', '--download_dir', default=None, 
+                        help='The name of the folder to store the downloaded files. '
+                             'If not provided, a system temporary directory will be created')
+    parser.add_argument('gold_url', help='The URL of the gold directory')
+    args = parser.parse_args()
+    download_golds(args.gold_url, args.download_dir)
+    
