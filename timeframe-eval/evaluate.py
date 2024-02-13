@@ -8,6 +8,7 @@ import sys
 import pandas as pd
 from mmif import Mmif, DocumentTypes, AnnotationTypes
 from mmif.utils import timeunit_helper as tuh
+from mmif.utils import video_document_helper as vdh
 from pyannote.core import Segment, Timeline, Annotation
 from pyannote.metrics.detection import DetectionErrorRate, DetectionPrecisionRecallFMeasure
 
@@ -23,16 +24,18 @@ def load_gold_standard(gold_dir):
     for gold_fname in pathlib.Path(gold_dir).glob("*.csv"):
         with open(gold_fname, 'r') as gold_file:
             aapb_guid = gold_fname.stem
-            print(aapb_guid)
             r = csv.DictReader(gold_file, delimiter=',')
-            for row in r:
-                start, end = (tuh.convert(row[time_key], 'iso', 'sec', 0) for time_key in ["start", "end"])
-                gold_timeframes[aapb_guid].add(Segment(start, end))
+            for i, row in enumerate(r):
+                try:
+                    start, end = (tuh.convert(row[time_key], 'iso', 'sec', 0) for time_key in ["start", "end"])
+                    gold_timeframes[aapb_guid].add(Segment(start, end))
+                except ValueError:
+                    sys.stderr.write(f"Invalid time format in {gold_fname}: {row} @ {i}\n")
 
     return gold_timeframes
 
 
-def process_mmif_file(mmif_dir, gold_timeframe_dict):
+def process_mmif_file(mmif_dir, gold_timeframe_dict, frame_types):
     mmif_files = pathlib.Path(mmif_dir).glob("*.mmif")
     pred_timeframes = collections.defaultdict(Timeline)
     for mmif_file in mmif_files:
@@ -50,7 +53,10 @@ def process_mmif_file(mmif_dir, gold_timeframe_dict):
                 sys.stderr.write(f"No TimeFrame found in {mmif_file}\n")
                 continue
             for tf_ann in v.get_annotations(AnnotationTypes.TimeFrame):
-                fps = vd.get_property('fps')
+                if not tf_ann.get_property('frameType') in frame_types:
+                    continue
+                # fps = vdh.get_framerate(vd)
+                fps = 29.97
                 tu = tf_ann.get_property('timeUnit')
                 s = mmif.get_start(tf_ann)
                 e = mmif.get_end(tf_ann)
@@ -160,8 +166,8 @@ if __name__ == "__main__":
                         help='directory containing machine annotated files (MMIF)')
     parser.add_argument('-s', '--side-by-side', help='directory to publish side-by-side results', default=None)
     parser.add_argument('-r', '--result-file', help='file to store evaluation results', default='results.txt')
+    parser.add_argument('-g', '--gold-dir', help='file to store gold standard', default=None)
     gold_group = parser.add_mutually_exclusive_group(required=True)
-    gold_group.add_argument('-g', '--gold-dir', help='file to store gold standard', default=None)
     gold_group.add_argument('--slate', action='store_true', help='slate annotations')
     gold_group.add_argument('--chyron', action='store_true', help='chyron annotations')
     args = parser.parse_args()
@@ -173,20 +179,22 @@ if __name__ == "__main__":
     else:
         outdir = pathlib.Path(__file__).parent
 
+    ref_dir = None
     if args.gold_dir:
         ref_dir = args.gold_dir
-    elif args.slate:
-        ref_dir = goldretriever.download_golds(GOLD_SLATES_URL)
-    elif args.chyron:
-        ref_dir = goldretriever.download_golds(GOLD_CHYRON_URL)
     else:
+        if args.slate:
+            ref_dir = goldretriever.download_golds(GOLD_SLATES_URL)
+        elif args.chyron:
+            ref_dir = goldretriever.download_golds(GOLD_CHYRON_URL)
+    if ref_dir is None:
         raise ValueError("No gold standard provided")
     ref_dir = pathlib.Path(ref_dir)
 
     gold_timeframes_dict = load_gold_standard(ref_dir)
 
     # create the 'test_timeframes'
-    test_timeframes = process_mmif_file(args.mmif_dir, gold_timeframes_dict)
+    test_timeframes = process_mmif_file(args.mmif_dir, gold_timeframes_dict, frame_types=['slate' if args.slate else 'chyron' if args.chyron else ''])
 
     # final calculation
     calculate_detection_metrics(gold_timeframes_dict, test_timeframes, args.result_file)
