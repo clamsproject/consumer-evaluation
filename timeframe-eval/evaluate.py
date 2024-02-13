@@ -16,7 +16,7 @@ import goldretriever
 
 # Constants
 GOLD_CHYRON_URL = "https://github.com/clamsproject/aapb-annotations/tree/cc0d58e16a06a8f10de5fc0e5333081c107d5937/newshour-chyron/golds"
-GOLD_SLATES_URL = "https://github.com/clamsproject/aapb-annotations/tree/cc0d58e16a06a8f10de5fc0e5333081c107d5937/january-slates/golds"
+GOLD_SLATES_URL = "https://github.com/clamsproject/aapb-annotations/tree/b1d6476b6be6f9ffcb693872931d4d40e84449c8/january-slates/golds"
 
 
 def load_gold_standard(gold_dir):
