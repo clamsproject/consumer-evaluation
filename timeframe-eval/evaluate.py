@@ -1,142 +1,67 @@
-import sys
-import json
-import csv
-import os
-import pandas as pd
-import mmif
 import argparse
-import glob
+import collections
+import csv
+import math
+import pathlib
+import sys
+
+import pandas as pd
+from mmif import Mmif, DocumentTypes, AnnotationTypes
+from mmif.utils import timeunit_helper as tuh
+from mmif.utils import video_document_helper as vdh
 from pyannote.core import Segment, Timeline, Annotation
 from pyannote.metrics.detection import DetectionErrorRate, DetectionPrecisionRecallFMeasure
-from mmif import Mmif, DocumentTypes, AnnotationTypes
-from requests.exceptions import ConnectionError
-import pathlib
-import math
+
+import goldretriever
+
+# Constants
+GOLD_CHYRON_URL = "https://github.com/clamsproject/aapb-annotations/tree/cc0d58e16a06a8f10de5fc0e5333081c107d5937/newshour-chyron/golds"
+GOLD_SLATES_URL = "https://github.com/clamsproject/aapb-annotations/tree/b1d6476b6be6f9ffcb693872931d4d40e84449c8/january-slates/golds"
 
 
-#####Yao: So for now, if we want to evaluate the slate app, we need to run the code like this:
+def load_gold_standard(gold_dir):
+    gold_timeframes = collections.defaultdict(Timeline)
+    for gold_fname in pathlib.Path(gold_dir).glob("*.csv"):
+        with open(gold_fname, 'r') as gold_file:
+            aapb_guid = gold_fname.stem
+            r = csv.DictReader(gold_file, delimiter=',')
+            for i, row in enumerate(r):
+                try:
+                    start, end = (tuh.convert(row[time_key], 'iso', 'sec', 0) for time_key in ["start", "end"])
+                    gold_timeframes[aapb_guid].add(Segment(start, end))
+                except ValueError:
+                    sys.stderr.write(f"Invalid time format in {gold_fname}: {row} @ {i}\n")
 
-# python evaluate.py -m /your/preds/path -g /your/gold/path -o /your/output/path -r /your/result/path --slate
-
-########## small tools
-
-# convert time from string in csv to the pyannote-style time format
-def convert_time(time_str):
-    parts = str(time_str).replace(';', ':').replace(',', '').split(':')
-    if len(parts) == 4:
-        microsecond = int(parts[3].strip())
-        seconds = int(parts[2].strip())
-        minutes = int(parts[1].strip())
-        hours = int(parts[0].strip())
-        total_seconds = hours * 3600 + minutes * 60 + seconds + microsecond * 0.01
-        return total_seconds
-    elif len(parts) == 3:
-        seconds = float(parts[2].strip())
-        minutes = int(parts[1].strip())
-        hours = int(parts[0].strip())
-        total_seconds = hours * 3600 + minutes * 60 + seconds
-        return total_seconds
-    else:
-        return 0
-
-
-# for chyron
-def get_csv_list(csv_dir):
-    csv_files = os.listdir(csv_dir)
-    return [os.path.join(csv_dir, file) for file in csv_files if file.endswith(".csv")]
-
-
-# for slate
-def get_tsv_list(tsv_dir):
-    srt_files = os.listdir(tsv_dir)
-    return [os.path.join(tsv_dir, file) for file in srt_files if file.endswith(".tsv")]
-
-
-# adapt the code from Kelley Lynch - 'evaluate_chyrons.py'
-def load_slate_gold_standard(tsv_file_list, test_dir):
-    gold_timeframes = {}
-    valid_files = set(filename.split(".")[0] for filename in os.listdir(test_dir))
-    for tsv_file in tsv_file_list:
-        df = pd.read_csv(tsv_file, sep=',')
-        for index, row in df[["GUID", "Slate Start", "Slate End"]].iterrows():
-            video_fileID = row["GUID"]
-            start = row["Slate Start"]
-            end = row["Slate End"]
-            if pd.isna(start) or pd.isna(end):
-                continue
-            Slate_Start = convert_time(start)
-            Slate_End = convert_time(end)
-            if video_fileID in valid_files:
-                if video_fileID not in gold_timeframes:
-                    gold_timeframes[video_fileID] = Timeline()
-                gold_timeframes[video_fileID].add(Segment(Slate_Start, Slate_End))
     return gold_timeframes
 
 
-def load_chyron_gold_standard(csv_file_list, test_dir):
-    gold_timeframes = {}
-    valid_files = set(filename.split(".")[0] for filename in os.listdir(test_dir))
-    for csv_file in csv_file_list:
-        df = pd.read_csv(csv_file, sep=',')
-        for index, row in df[["start_time", "end_time"]].iterrows():
-            video_fileID = os.path.splitext(os.path.basename(csv_file))[0]
-            chyron_start = float(row["start_time"])
-            chyron_end = float(row["end_time"])
-            if video_fileID in valid_files:
-                if video_fileID not in gold_timeframes:
-                    gold_timeframes[video_fileID] = Timeline()
-                gold_timeframes[video_fileID].add(Segment(chyron_start, chyron_end))
-    return gold_timeframes
-
-
-# give each mmif file an absolute path, return a list
-def get_mmif(mmif_dir):
-    mmif_files = os.listdir(mmif_dir)
-    mmif_file_list = [os.path.join(mmif_dir, file) for file in mmif_files if file.endswith(".mmif")]
-    return mmif_file_list
-
-
-# get info from mmif files
-def process_mmif_file(mmif_file_path, gold_timeframe_dict):
-    mmif_files = get_mmif(mmif_file_path)
-    test_timeframes = {}
+def process_mmif_file(mmif_dir, gold_timeframe_dict, frame_types):
+    mmif_files = pathlib.Path(mmif_dir).glob("*.mmif")
+    pred_timeframes = collections.defaultdict(Timeline)
     for mmif_file in mmif_files:
-        print(mmif_file)
         mmif = Mmif(open(mmif_file).read())
         vds = mmif.get_documents_by_type(DocumentTypes.VideoDocument)
         if vds:
             vd = vds[0]
         else:
+            sys.stderr.write(f"No video document found in {mmif_file}\n")
             continue
-        video_fileID = os.path.basename(vd.location).split(".")[0]
-        if video_fileID in gold_timeframe_dict:
-            if video_fileID not in test_timeframes:
-                test_timeframes[video_fileID] = Timeline()
-            # get the slate start and end time
-            starts = []
-            ends = []
+        aapb_guid = pathlib.Path(vd.location).stem
+        if aapb_guid in gold_timeframe_dict:
             v = mmif.get_view_contains(AnnotationTypes.TimeFrame)
             if v is None:
+                sys.stderr.write(f"No TimeFrame found in {mmif_file}\n")
                 continue
-            ann = v.get_annotations(AnnotationTypes.TimeFrame)
-            while True:
-                try:
-                    cur = next(ann)
-                    starts.append(float(cur.properties["start"]))
-                    ends.append(float(cur.properties["end"]))
-                # check if it's been annotated based on the next version of the slate app
-                except:
-                    break
-            result = mmif.get_all_views_contain(at_types=AnnotationTypes.TimeFrame)
-            view = result[-1]
-            fps = vd.get_property('fps')
-            calculated_starts = [round(start / fps, 2) for start in starts]
-            calculated_ends = [round(end / fps, 2) for end in ends]
-            i = 0
-            while i < len(calculated_ends):
-                test_timeframes[video_fileID].add(Segment(calculated_starts[i], calculated_ends[i]))
-                i += 1
-    return test_timeframes
+            for tf_ann in v.get_annotations(AnnotationTypes.TimeFrame):
+                if not tf_ann.get_property('frameType') in frame_types:
+                    continue
+                # fps = vdh.get_framerate(vd)
+                fps = 29.97
+                tu = tf_ann.get_property('timeUnit')
+                s = mmif.get_start(tf_ann)
+                e = mmif.get_end(tf_ann)
+                pred_timeframes[aapb_guid].add(Segment(*(tuh.convert(t, tu, 'sec', fps) for t in (s, e))))
+    return pred_timeframes
 
 
 # adapt the code from Kelley Lynch - 'evaluate_chyrons.py'
@@ -163,9 +88,15 @@ def calculate_detection_metrics(gold_timeframes_dict, test_timeframes, result_pa
         TP += true_positive
         FP += false_positive
         FN += false_negative
-        data = pd.concat([data, pd.DataFrame(
-            {'GUID': file_ID, 'FN seconds': results_dict['miss'], 'FP seconds': results_dict['false alarm'],
-             'Total true seconds': results_dict['total']}, index=[0])], ignore_index=True)
+        data = pd.concat(
+            [
+                data,
+                pd.DataFrame({'GUID': file_ID, 
+                              'FN seconds': results_dict['miss'], 
+                              'FP seconds': results_dict['false alarm'], 
+                              'Total true seconds': results_dict['total']}, 
+                             index=[0])
+            ], ignore_index=True)
     try:
         precision = TP / (TP + FP)
     except ZeroDivisionError:
@@ -178,10 +109,9 @@ def calculate_detection_metrics(gold_timeframes_dict, test_timeframes, result_pa
         f1 = 0.0
     else:
         f1 = (2 * precision * recall) / (precision + recall)
-    s = 'Total Precision = ' + str(precision) + '\t Total Recall = ' + str(recall) + '\t Total F1 = ' + str(
-        f1) + '\n\n\n' + 'Individual file results: \n' + data.to_string()
-    with open(result_path, 'w') as fh_out:
-        fh_out.write(s)
+    with open(result_path, 'w') as out_f:
+        out_f.write(f'Total Precision = {str(precision)}\t Total Recall = {str(recall)}\t Total F1 = {str(f1)}\n\n\nIndividual file results: \n')
+        out_f.write(data.to_string(index=True))
 
 
 def generate_side_by_side(golddir, testdir, outdir):
@@ -232,29 +162,39 @@ def generate_side_by_side(golddir, testdir, outdir):
 if __name__ == "__main__":
     # get the absolute path of video-file-dir and hypothesis-file-dir
     parser = argparse.ArgumentParser(description='Process some directories.')
-    parser.add_argument('-m', '--machine_dir', type=str, required=True,
-                        help='directory containing machine annotated files')
-    parser.add_argument('-o', '--output_dir', help='directory to publish side-by-side results', default=None)
-    parser.add_argument('-r', '--result_file', help='file to store evaluation results', default='results.txt')
-    parser.add_argument('-g', '--gold_dir', help='file to store gold standard', default=None)
+    parser.add_argument('-m', '--mmif-dir', type=str, required=True,
+                        help='directory containing machine annotated files (MMIF)')
+    parser.add_argument('-s', '--side-by-side', help='directory to publish side-by-side results', default=None)
+    parser.add_argument('-r', '--result-file', help='file to store evaluation results', default='results.txt')
+    parser.add_argument('-g', '--gold-dir', help='file to store gold standard', default=None)
     gold_group = parser.add_mutually_exclusive_group(required=True)
     gold_group.add_argument('--slate', action='store_true', help='slate annotations')
     gold_group.add_argument('--chyron', action='store_true', help='chyron annotations')
     args = parser.parse_args()
-    if args.output_dir:
-        outdir = pathlib.Path(args.output_dir)
+
+    if args.side_by_side:
+        outdir = pathlib.Path(args.side_by_side)
         if not outdir.exists():
             outdir.mkdir()
     else:
         outdir = pathlib.Path(__file__).parent
 
-    if args.slate:
-        gold_timeframes_dict = load_slate_gold_standard(get_tsv_list(args.gold_dir), args.machine_dir)
-    elif args.chyron:
-        gold_timeframes_dict = load_chyron_gold_standard(get_csv_list(args.gold_dir), args.machine_dir)
+    ref_dir = None
+    if args.gold_dir:
+        ref_dir = args.gold_dir
+    else:
+        if args.slate:
+            ref_dir = goldretriever.download_golds(GOLD_SLATES_URL)
+        elif args.chyron:
+            ref_dir = goldretriever.download_golds(GOLD_CHYRON_URL)
+    if ref_dir is None:
+        raise ValueError("No gold standard provided")
+    ref_dir = pathlib.Path(ref_dir)
+
+    gold_timeframes_dict = load_gold_standard(ref_dir)
 
     # create the 'test_timeframes'
-    test_timeframes = process_mmif_file(args.machine_dir, gold_timeframes_dict)
+    test_timeframes = process_mmif_file(args.mmif_dir, gold_timeframes_dict, frame_types=['slate' if args.slate else 'chyron' if args.chyron else ''])
 
     # final calculation
     calculate_detection_metrics(gold_timeframes_dict, test_timeframes, args.result_file)
