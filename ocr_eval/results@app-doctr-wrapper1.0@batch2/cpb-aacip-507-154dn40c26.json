@@ -1,0 +1,168 @@
+{
+  "275.7771": {
+    "ref_text": "john block secretary of agriculture",
+    "hyp_text": "- gohn block - secrefary of agricuiture - a",
+    "cer": 0.3142857253551483
+  },
+  "356.7771": {
+    "ref_text": "rep. thomas p. o'neill speaker of the house",
+    "hyp_text": "rep. thomas p. onell speuker of the house",
+    "cer": 0.06976744532585144
+  },
+  "516.5271": {
+    "ref_text": "rita lavelle former e.p.a. official",
+    "hyp_text": "rita lavelle former e.p.a. official",
+    "cer": 0.0
+  },
+  "755.5271": {
+    "ref_text": "walter ward n.y.c. councilman",
+    "hyp_text": "walter ward ny.c. councilman",
+    "cer": 0.03448275849223137
+  },
+  "785.7771": {
+    "ref_text": "mayor ed koch",
+    "hyp_text": "aug. 30, 1985 mayor-ed-roch",
+    "cer": 1.307692289352417
+  },
+  "923.5271": {
+    "ref_text": "\"robert\"",
+    "hyp_text": "robert\"",
+    "cer": 0.125
+  },
+  "957.7771": {
+    "ref_text": "dr. matt newman anti-aids citizens group",
+    "hyp_text": "dr matti newman antt-aids citizens gioup",
+    "cer": 0.10000000149011612
+  },
+  "986.7771": {
+    "ref_text": "ellen fleming anti-aids citizens group",
+    "hyp_text": "ellen fleming anti-aids citizens group",
+    "cer": 0.0
+  },
+  "1020.5271": {
+    "ref_text": "claude lindsey anti-aids citizens group",
+    "hyp_text": "claude hindey anit-aids cifizens group",
+    "cer": 0.12820513546466827
+  },
+  "1099.5271": {
+    "ref_text": "mathilde krim, phd. aids medical foundation",
+    "hyp_text": "mahinderin imapad . - aidstmbicon",
+    "cer": 0.604651153087616
+  },
+  "1162.43976": {
+    "ref_text": "mathilde krim, phd. aids medical foundation",
+    "hyp_text": "mantubermamahe aids medican foundation",
+    "cer": 0.3255814015865326
+  },
+  "1449.7771": {
+    "ref_text": "dr. helen singer kaplan new york hospital",
+    "hyp_text": "dr helen singer kaplan new york hospital",
+    "cer": 0.024390242993831635
+  },
+  "1525.2771": {
+    "ref_text": "joe tom easley civil rights lawyer",
+    "hyp_text": "joe tom easley givil rights lawyer -",
+    "cer": 0.0882352963089943
+  },
+  "1696.7771": {
+    "ref_text": "joe tom easley civil rights lawyer",
+    "hyp_text": "joe tom easley civilmrights - lawyer",
+    "cer": 0.0882352963089943
+  },
+  "1968.7771": {
+    "ref_text": "william mayer defense department",
+    "hyp_text": "willam mayer defense department",
+    "cer": 0.03125
+  },
+  "2025.2771": {
+    "ref_text": "dr. herbert perkin irwin memorial blood bank san francisco",
+    "hyp_text": "de herbert - - perkin irwin memorial blood bank san francisco",
+    "cer": 0.1034482792019844
+  },
+  "2054.0271": {
+    "ref_text": "bobby reynolds",
+    "hyp_text": "bobby reynolds",
+    "cer": 0.0
+  },
+  "2079.5271": {
+    "ref_text": "paul castro",
+    "hyp_text": "paul castro",
+    "cer": 0.0
+  },
+  "2143.2771": {
+    "ref_text": "dr. thomas vernon colorado health dept.",
+    "hyp_text": "denver nver - dr thomas vernon colorado health dept.",
+    "cer": 0.3589743673801422
+  },
+  "2300.7771": {
+    "ref_text": "dr. thomas vernon colorado health dept.",
+    "hyp_text": "denver jver de thomas vernon colorado health dept.",
+    "cer": 0.3076923191547394
+  },
+  "2445.5271": {
+    "ref_text": "joe tom easley civil rights lawyer",
+    "hyp_text": "joe tomeasley civil rights lawyer",
+    "cer": 0.029411764815449715
+  },
+  "2603.7771": {
+    "ref_text": "mathilde krim, phd. aids medical foundation",
+    "hyp_text": "mathide krimpead taids medical foundation",
+    "cer": 0.1627907007932663
+  },
+  "2644.0271": {
+    "ref_text": "dr. helen singer kaplan new york hospital",
+    "hyp_text": "- dlk helen singer kaplan inew york hospita",
+    "cer": 0.1463414579629898
+  },
+  "2781.2771": {
+    "ref_text": "joe tom easley civil rights lawyer",
+    "hyp_text": "joe tomleasley civil rights lawyer -",
+    "cer": 0.0882352963089943
+  },
+  "2988.7771": {
+    "ref_text": "neil harl economist, iowa state university",
+    "hyp_text": "inel harl economist, lowa state university",
+    "cer": 0.0714285746216774
+  },
+  "3016.2771": {
+    "ref_text": "rep. jim leach (r) iowa",
+    "hyp_text": "rep. jim leagh (r) lowa",
+    "cer": 0.08695652335882187
+  },
+  "3081.2771": {
+    "ref_text": "tom langemeier former loan officer",
+    "hyp_text": "tom langemeier former loan officer",
+    "cer": 0.0
+  },
+  "3099.5271": {
+    "ref_text": "don wilkinson governor, farm credit administration",
+    "hyp_text": "don wilkinson governor, farm credit administration",
+    "cer": 0.0
+  },
+  "3144.2771": {
+    "ref_text": "kwame holman",
+    "hyp_text": "kwame holman",
+    "cer": 0.0
+  },
+  "3207.2771": {
+    "ref_text": "leo tucker farmer",
+    "hyp_text": "leo tucker farmer",
+    "cer": 0.0
+  },
+  "3217.5271": {
+    "ref_text": "debbie hall farmer",
+    "hyp_text": "debbe hall farmer",
+    "cer": 0.0555555559694767
+  },
+  "3257.5271": {
+    "ref_text": "rep. jim leach (r) iowa",
+    "hyp_text": "rep jim leagh (r) lowa",
+    "cer": 0.1304347813129425
+  },
+  "3311.7771": {
+    "ref_text": "neil harl economist, iowa state university",
+    "hyp_text": "neil harl economist, lowa state university",
+    "cer": 0.02380952425301075
+  },
+  "mean_cer": 0.1456622997242393
+}

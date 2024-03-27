@@ -1,0 +1,143 @@
+{
+  "220.7771": {
+    "ref_text": "george mitchell u.s. olympics investigation",
+    "hyp_text": "george mitchell u.s. olympics investigation",
+    "cer": 0.0
+  },
+  "559.2771": {
+    "ref_text": "george mitchell u.s. olympics investigation",
+    "hyp_text": "george mitchell u.s. olympics investigation",
+    "cer": 0.0
+  },
+  "723.2771": {
+    "ref_text": "howard berkes national public radio",
+    "hyp_text": "salt lake city howard berkes national public radio",
+    "cer": 0.4285714328289032
+  },
+  "927.5271": {
+    "ref_text": "howard berkes national public radio",
+    "hyp_text": "salt lake city howard berkes national public radio",
+    "cer": 0.4285714328289032
+  },
+  "1103.5271": {
+    "ref_text": "howard berkes national public radio",
+    "hyp_text": "salt lake city howard berkes national public radio",
+    "cer": 0.4285714328289032
+  },
+  "1652.7771": {
+    "ref_text": "janet abramovitz worldwatch institute",
+    "hyp_text": "janet abramovitz worldwatch institute",
+    "cer": 0.0
+  },
+  "1661.2771": {
+    "ref_text": "john clizbe american red cross",
+    "hyp_text": "john clizbe american red cross",
+    "cer": 0.0
+  },
+  "1690.7771": {
+    "ref_text": "john clizbe american red cross",
+    "hyp_text": "john clizbe american red cross",
+    "cer": 0.0
+  },
+  "1726.0271": {
+    "ref_text": "bob watson world bank",
+    "hyp_text": "bob watson world bank",
+    "cer": 0.0
+  },
+  "1757.5271": {
+    "ref_text": "bob watson world bank",
+    "hyp_text": "bob watson world bank",
+    "cer": 0.0
+  },
+  "1821.5271": {
+    "ref_text": "bob watson world bank",
+    "hyp_text": "bob watson world bank",
+    "cer": 0.0
+  },
+  "1882.5271": {
+    "ref_text": "janet abramovitz worldwatch institute",
+    "hyp_text": "janet abramovitz worldwatch institute",
+    "cer": 0.0
+  },
+  "1979.0271": {
+    "ref_text": "janet abramovitz worldwatch institute",
+    "hyp_text": "janet abramovitz worldwatch institute",
+    "cer": 0.0
+  },
+  "2075.2771": {
+    "ref_text": "john clizbe american red cross",
+    "hyp_text": "a - john clizbe american red cross",
+    "cer": 0.13333334028720856
+  },
+  "2142.7771": {
+    "ref_text": "john clizbe american red cross",
+    "hyp_text": "john clizbe american red cross",
+    "cer": 0.0
+  },
+  "2250.0271": {
+    "ref_text": "bob watson world bank",
+    "hyp_text": "bob watson world bank",
+    "cer": 0.0
+  },
+  "2393.5271": {
+    "ref_text": "anthony carson boeing machinist",
+    "hyp_text": "anthony carson boeing machinist",
+    "cer": 0.0
+  },
+  "2421.0271": {
+    "ref_text": "alan mulally pres., boeing commercial airplane div.",
+    "hyp_text": "alan mulally pres., boeing commercial airplane div.",
+    "cer": 0.0
+  },
+  "2460.5271": {
+    "ref_text": "jin cho asiana airlines",
+    "hyp_text": "jin cho asiana airlines",
+    "cer": 0.0
+  },
+  "2581.0271": {
+    "ref_text": "tim goree",
+    "hyp_text": "tim goree",
+    "cer": 0.0
+  },
+  "2653.0271": {
+    "ref_text": "charles hill economist, university of washington",
+    "hyp_text": "charles hill economist, university of washington",
+    "cer": 0.0
+  },
+  "2732.0271": {
+    "ref_text": "dick conway economist",
+    "hyp_text": "dick conway economist",
+    "cer": 0.0
+  },
+  "2812.2771": {
+    "ref_text": "terence smith",
+    "hyp_text": "terence smith",
+    "cer": 0.0
+  },
+  "2854.0271": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "cer": 0.0
+  },
+  "2998.5271": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "cer": 0.0
+  },
+  "3140.0271": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "cer": 0.0
+  },
+  "3194.7771": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "cer": 0.0
+  },
+  "3289.2771": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "cer": 0.0
+  },
+  "mean_cer": 0.05068027281335422
+}

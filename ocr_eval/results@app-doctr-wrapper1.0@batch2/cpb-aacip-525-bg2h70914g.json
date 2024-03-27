@@ -1,0 +1,63 @@
+{
+  "233.7771": {
+    "ref_text": "voice of interpreter djoko murjatmodjo acting director general of air transportation, indonesian transport ministry",
+    "hyp_text": "tvine . v i voice of interpreter djoko murjatmodjo acting director general of air transportation, indonesian transport ministry",
+    "cer": 0.104347825050354
+  },
+  "564.5271": {
+    "ref_text": "friday heather abbott bombing survivor",
+    "hyp_text": "friday heather abbott bombing survivor",
+    "cer": 0.0
+  },
+  "608.0271": {
+    "ref_text": "boston phillip martin wgbh-fm",
+    "hyp_text": "xex boston phillip martin wgbh-fm kqed 9",
+    "cer": 0.37931033968925476
+  },
+  "1022.0271": {
+    "ref_text": "margaret warner @margaretwarner",
+    "hyp_text": "nshour margaret warner pbso news emargaretwarner kqed hour",
+    "cer": 0.9032257795333862
+  },
+  "1258.0271": {
+    "ref_text": "david boaz cato institute",
+    "hyp_text": "david boaz cato institute kqed 9",
+    "cer": 0.2800000011920929
+  },
+  "1772.0271": {
+    "ref_text": "voice of interpreter steffen seibert german government spokesman",
+    "hyp_text": "voice of interpreter steffen seibert german government spokesman kqed 9",
+    "cer": 0.109375
+  },
+  "1834.2771": {
+    "ref_text": "boston kenneth rogoff harvard university",
+    "hyp_text": "boston kenneth rogoff harvard university kqed 9 v//.",
+    "cer": 0.30000001192092896
+  },
+  "1859.0271": {
+    "ref_text": "jacob kirkegaard peterson institute for international economics",
+    "hyp_text": "jacob kirkegaard peterson institute for international economics kqed",
+    "cer": 0.0793650820851326
+  },
+  "2064.2771": {
+    "ref_text": "boston kenneth rogoff harvard university",
+    "hyp_text": "boston kenneth rogoff harvard university kqed 9",
+    "cer": 0.17499999701976776
+  },
+  "2128.0271": {
+    "ref_text": "jacob kirkegaard peterson institute for international economics",
+    "hyp_text": "jacob kirkegaard peterson institute for international economics kqed",
+    "cer": 0.0793650820851326
+  },
+  "2834.7771": {
+    "ref_text": "grand rapids, michigan richard norton smith presidential historian",
+    "hyp_text": "- - - - grand rapids, michigan richard norton smith presidential historian kqed 9",
+    "cer": 0.22727273404598236
+  },
+  "2880.7771": {
+    "ref_text": "boston adrian walker the boston globe",
+    "hyp_text": "call x2121 . i - a a sontacts inn the bost- be the bos boston adrian walker the boston globe kqed9",
+    "cer": 1.6486486196517944
+  },
+  "mean_cer": 0.35715920602281886
+}

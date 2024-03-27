@@ -1,0 +1,98 @@
+{
+  "301.7771": {
+    "ref_text": "rep. lee hamilton (d) indiana",
+    "hyp_text": "rep. lee a hamilton 0) ingigna",
+    "cer": 0.2068965584039688
+  },
+  "405.7771": {
+    "ref_text": "rep. edward markey (d) massachusetts",
+    "hyp_text": "rep. edward markey sd). massachusetts",
+    "cer": 0.0555555559694767
+  },
+  "434.5271": {
+    "ref_text": "rep. robert lagomarsino (r) california",
+    "hyp_text": "ep robert lagomarsino (r) california",
+    "cer": 0.05263157933950424
+  },
+  "601.5271": {
+    "ref_text": "nina totenberg national public radio",
+    "hyp_text": "nina totenberg national public/radio",
+    "cer": 0.02777777798473835
+  },
+  "828.0271": {
+    "ref_text": "nina totenberg national public radio",
+    "hyp_text": "s nina votenberg national public radio",
+    "cer": 0.0833333358168602
+  },
+  "1022.7771": {
+    "ref_text": "rep. david bonior (d) michigan",
+    "hyp_text": "rep. david bonior 0) michigan",
+    "cer": 0.06666667014360428
+  },
+  "1089.5271": {
+    "ref_text": "rep. trent lott (r) mississippi",
+    "hyp_text": "- rep. trentuott (r) mississippi",
+    "cer": 0.12903225421905518
+  },
+  "1095.5271": {
+    "ref_text": "rep. judd gregg (r) new hampshire",
+    "hyp_text": "repl i judd gregg (r)-new hampshire",
+    "cer": 0.12121212482452393
+  },
+  "1100.7771": {
+    "ref_text": "rep. jon kyl (r) arizona",
+    "hyp_text": "rep. jon kyl (r) arizona",
+    "cer": 0.0
+  },
+  "1110.2771": {
+    "ref_text": "rep. james traficant (d) ohio",
+    "hyp_text": "rep. james - traficant (d) omo",
+    "cer": 0.13793103396892548
+  },
+  "1168.0271": {
+    "ref_text": "rep. duncan hunter (r) california",
+    "hyp_text": "rep. duncan hunter r california",
+    "cer": 0.06060606241226196
+  },
+  "1243.2771": {
+    "ref_text": "rep. j. alex mcmillan (r) north carolina",
+    "hyp_text": "rep. je - - - alex mcmillan (r) north carolina",
+    "cer": 0.17499999701976776
+  },
+  "1884.2771": {
+    "ref_text": "denis woodfield johnson & johnson executive",
+    "hyp_text": "dens woodfield johnson & johnson executive",
+    "cer": 0.023255813866853714
+  },
+  "1938.2771": {
+    "ref_text": "curt wilbur live for life",
+    "hyp_text": "curt wilbur live for life",
+    "cer": 0.0
+  },
+  "2022.7771": {
+    "ref_text": "john hughes occupational medicine specialist",
+    "hyp_text": "john hughes occupational medicine specialist",
+    "cer": 0.0
+  },
+  "2556.0271": {
+    "ref_text": "michael o'connell independent drivers' association",
+    "hyp_text": "michael deconnell independent drivers association",
+    "cer": 0.05999999865889549
+  },
+  "2670.7771": {
+    "ref_text": "brian o'neill insurance institute",
+    "hyp_text": "- brian - onell insurance institute",
+    "cer": 0.1818181872367859
+  },
+  "2934.0271": {
+    "ref_text": "michael o'connell independent drivers' association",
+    "hyp_text": "michael connelll independent drivers' association",
+    "cer": 0.05999999865889549
+  },
+  "2948.0271": {
+    "ref_text": "brian o'neill insurance institute",
+    "hyp_text": "brian onell insurance institute",
+    "cer": 0.06060606241226196
+  },
+  "mean_cer": 0.07906963215454628
+}

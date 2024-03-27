@@ -1,0 +1,38 @@
+{
+  "1612.0271": {
+    "ref_text": "charles allen former intelligence official",
+    "hyp_text": "charles allen former intelligence official wetas)",
+    "cer": 0.1666666716337204
+  },
+  "1823.0271": {
+    "ref_text": "zvi bodie boston university",
+    "hyp_text": "zvi bodie boston university",
+    "cer": 0.0
+  },
+  "1939.0271": {
+    "ref_text": "william darity duke university",
+    "hyp_text": "william darity duke university",
+    "cer": 0.0
+  },
+  "1971.7771": {
+    "ref_text": "ken arrow stanford university",
+    "hyp_text": "ken arrow stanford university",
+    "cer": 0.0
+  },
+  "2047.7771": {
+    "ref_text": "george akerlof university of california, berkeley",
+    "hyp_text": "- george akerlof university of california, berkeley",
+    "cer": 0.040816325694322586
+  },
+  "2073.0271": {
+    "ref_text": "andrew lo massachusetts institute of technology",
+    "hyp_text": "andrew lo massachusetts institute of technology",
+    "cer": 0.0
+  },
+  "2716.7771": {
+    "ref_text": "michael beschloss presidential historian",
+    "hyp_text": "michael beschloss presidential historian",
+    "cer": 0.0
+  },
+  "mean_cer": 0.029640428189720427
+}

@@ -1,0 +1,48 @@
+{
+  "224.5271": {
+    "ref_text": "jim lehrer washington",
+    "hyp_text": "jim lehrer washington",
+    "cer": 0.0
+  },
+  "311.2771": {
+    "ref_text": "jerry jones umw local president",
+    "hyp_text": "new york jerry jones umw local president",
+    "cer": 0.29032257199287415
+  },
+  "543.5271": {
+    "ref_text": "thomas n. bethell editor, \"coal patrol\"",
+    "hyp_text": "washington thomas n. bethell editor, coal patrol",
+    "cer": 0.3333333432674408
+  },
+  "665.7771": {
+    "ref_text": "thomas n. bethell editor, \"coal patrol\"",
+    "hyp_text": "thomas n. bethell editor, coal patrol",
+    "cer": 0.05128205195069313
+  },
+  "774.2771": {
+    "ref_text": "john hoerr business week",
+    "hyp_text": "washington johnhoerrr business week",
+    "cer": 0.5416666865348816
+  },
+  "1046.0271": {
+    "ref_text": "thomas n. bethell editor, \"coal patrol\"",
+    "hyp_text": "thomasan. bethell editor, ecoal patrol\"",
+    "cer": 0.05128205195069313
+  },
+  "1213.0271": {
+    "ref_text": "john hoerr business week",
+    "hyp_text": "john hoerr business week",
+    "cer": 0.0
+  },
+  "1353.5271": {
+    "ref_text": "jerry jones umw local president",
+    "hyp_text": "jerry jones umw local president",
+    "cer": 0.0
+  },
+  "1679.0271": {
+    "ref_text": "john hoerr business week",
+    "hyp_text": "john hoerr business week",
+    "cer": 0.0
+  },
+  "mean_cer": 0.14087630063295364
+}

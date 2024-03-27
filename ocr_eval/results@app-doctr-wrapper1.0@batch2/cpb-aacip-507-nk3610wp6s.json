@@ -1,0 +1,113 @@
+{
+  "269.0271": {
+    "ref_text": "rep. newt gingrinch speaker of the house",
+    "hyp_text": "rep. newt gingrich speaker of the house",
+    "cer": 0.02500000037252903
+  },
+  "297.2771": {
+    "ref_text": "sen. pete domenici chairman, budget committee",
+    "hyp_text": "sen. pete - domenici chairman, budget committee",
+    "cer": 0.04444444552063942
+  },
+  "313.5271": {
+    "ref_text": "leon panetta white house chief of staff",
+    "hyp_text": "leon panetta white house chief of staff",
+    "cer": 0.0
+  },
+  "368.0271": {
+    "ref_text": "sen. alfonse d'amato chairman, whitewater committee",
+    "hyp_text": "sen. alfonse d'amato chairman, whitewater committee",
+    "cer": 0.0
+  },
+  "407.7771": {
+    "ref_text": "sen. paul sarbanes (d) maryland",
+    "hyp_text": "sen. paul sarbanes (d) maryland",
+    "cer": 0.0
+  },
+  "466.5271": {
+    "ref_text": "rep. newt gingrinch speaker of the house",
+    "hyp_text": "rep. nevt gingrich speaker of a the house a @",
+    "cer": 0.20000000298023224
+  },
+  "726.0271": {
+    "ref_text": "sen. john mccain (r) arizona",
+    "hyp_text": "capitol hill sen. john mccain (roa a - anzona a",
+    "cer": 0.7857142686843872
+  },
+  "872.5271": {
+    "ref_text": "sen. john mccain (r) arizona",
+    "hyp_text": "capitol hill sen. john mccain (fox anzona",
+    "cer": 0.6428571343421936
+  },
+  "950.7771": {
+    "ref_text": "sen. john mccain (r) arizona",
+    "hyp_text": "capitol hill sen. john mccain (boe arizona 1",
+    "cer": 0.6428571343421936
+  },
+  "1100.5271": {
+    "ref_text": "sen. john mccain (r) arizona",
+    "hyp_text": "capitol hill sen. john mccain bix a arizona 4",
+    "cer": 0.7142857313156128
+  },
+  "1243.7771": {
+    "ref_text": "william perry secretary of defense",
+    "hyp_text": "william perry secretary of defense at ballenger",
+    "cer": 0.38235294818878174
+  },
+  "1338.2771": {
+    "ref_text": "rep. toby roth (r) wisconsin",
+    "hyp_text": "- rep. toby roth (r-wisconsin mr. roth",
+    "cer": 0.4642857015132904
+  },
+  "1420.7771": {
+    "ref_text": "rep. duncan hunter (r) california",
+    "hyp_text": "replduncan hunters mr. (r)\"california",
+    "cer": 0.24242424964904785
+  },
+  "1542.0271": {
+    "ref_text": "ronald steel university of southern california",
+    "hyp_text": "ronald steel university sgutherhern california",
+    "cer": 0.15217390656471252
+  },
+  "1726.5271": {
+    "ref_text": "donald kagan yale university",
+    "hyp_text": "stamford donald kagan yale university",
+    "cer": 0.3214285671710968
+  },
+  "1875.5271": {
+    "ref_text": "ronald steel university of southern california",
+    "hyp_text": "ronald steel university df southern california",
+    "cer": 0.021739130839705467
+  },
+  "2033.0271": {
+    "ref_text": "john lukacs chestnut hill college",
+    "hyp_text": "philadelphia johntlukacs chestnut hil gollege",
+    "cer": 0.4848484992980957
+  },
+  "2291.7771": {
+    "ref_text": "ronald steel university of southern california",
+    "hyp_text": "romald steel university of.southern california",
+    "cer": 0.043478261679410934
+  },
+  "2530.5271": {
+    "ref_text": "dr. christine berg georgetown university medical center",
+    "hyp_text": "dr. christine berg georgetown university medical center",
+    "cer": 0.0
+  },
+  "2692.5271": {
+    "ref_text": "dr. christine berg georgetown university medical center",
+    "hyp_text": "dr. christine berg georgetown university medical center",
+    "cer": 0.0
+  },
+  "2829.2771": {
+    "ref_text": "david gergen u.s. news & world report",
+    "hyp_text": "david gergen u.s. news & worla report",
+    "cer": 0.027027027681469917
+  },
+  "2842.5271": {
+    "ref_text": "bill gates author",
+    "hyp_text": "bill gates author",
+    "cer": 0.0
+  },
+  "mean_cer": 0.23613259137015452
+}

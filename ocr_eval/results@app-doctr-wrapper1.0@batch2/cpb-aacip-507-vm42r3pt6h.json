@@ -1,0 +1,98 @@
+{
+  "226.2771": {
+    "ref_text": "robert gates director, cia",
+    "hyp_text": "robert gates - director, cia",
+    "cer": 0.07692307978868484
+  },
+  "360.2771": {
+    "ref_text": "andrei grachev chief presidential spokesman",
+    "hyp_text": "andrei grachev chief presidential spokesman",
+    "cer": 0.0
+  },
+  "389.0271": {
+    "ref_text": "eduard shevardnadze soviet foreign minister",
+    "hyp_text": "eduard shevardnadze soviet foreign minister",
+    "cer": 0.0
+  },
+  "1174.5271": {
+    "ref_text": "steven brill president, court tv",
+    "hyp_text": "steven, brill president gourt tv",
+    "cer": 0.09375
+  },
+  "1306.7771": {
+    "ref_text": "ellen hume press, politics & public policy center harvard university",
+    "hyp_text": "boston ellen - hume press, politics & public policy center harvard university",
+    "cer": 0.13235294818878174
+  },
+  "1534.5271": {
+    "ref_text": "ellen hume press, politics & public policy center harvard university",
+    "hyp_text": "boston ellen hume press, politics & public policy center harvard university",
+    "cer": 0.10294117778539658
+  },
+  "1632.5271": {
+    "ref_text": "ann lewis political analyst",
+    "hyp_text": "boston annlewis political analyst",
+    "cer": 0.29629629850387573
+  },
+  "1692.5271": {
+    "ref_text": "steven brill president, court tv",
+    "hyp_text": "steven,brill president, gourt tv",
+    "cer": 0.0625
+  },
+  "1795.0271": {
+    "ref_text": "susan xenarios rape counselor",
+    "hyp_text": "susant xenarios rape counselor",
+    "cer": 0.03448275849223137
+  },
+  "1951.2771": {
+    "ref_text": "susan xenarios rape counselor",
+    "hyp_text": "susan xenarios rape gounselor",
+    "cer": 0.03448275849223137
+  },
+  "2104.7771": {
+    "ref_text": "ellen hume press, politics & public policy center harvard university",
+    "hyp_text": "boston ellen hume press, politics & public policy center harvard uhiversity",
+    "cer": 0.11764705926179886
+  },
+  "2141.0271": {
+    "ref_text": "steven brill president, court tv",
+    "hyp_text": "v stevent brill president, court tv",
+    "cer": 0.09375
+  },
+  "2179.5271": {
+    "ref_text": "susan xenarios rape counselor",
+    "hyp_text": "susan xenarios rape counselor",
+    "cer": 0.0
+  },
+  "2320.5271": {
+    "ref_text": "robert gates director, cia",
+    "hyp_text": "robert gates director, cia",
+    "cer": 0.0
+  },
+  "2481.7771": {
+    "ref_text": "robert gates director, cia",
+    "hyp_text": "robert gates director, cia",
+    "cer": 0.0
+  },
+  "2688.0271": {
+    "ref_text": "ed mierzwinski public interest research group",
+    "hyp_text": "ed mierzwinski public interest research group",
+    "cer": 0.0
+  },
+  "2767.5271": {
+    "ref_text": "barry connelly associated credit bureaus",
+    "hyp_text": "barry connelly associated credit bureaus",
+    "cer": 0.0
+  },
+  "2968.0271": {
+    "ref_text": "seymour shor",
+    "hyp_text": "seymour shor",
+    "cer": 0.0
+  },
+  "3127.7771": {
+    "ref_text": "john baker equifax",
+    "hyp_text": "johny baker equifax",
+    "cer": 0.0555555559694767
+  },
+  "mean_cer": 0.05793061244644617
+}

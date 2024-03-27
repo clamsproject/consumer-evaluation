@@ -1,0 +1,73 @@
+{
+  "267.7771": {
+    "ref_text": "daniel ortega president, nicaragua",
+    "hyp_text": "voice ofinterpreter daniel ortega president, nicaragua",
+    "cer": 0.5882353186607361
+  },
+  "331.5271": {
+    "ref_text": "james baker secretary of state",
+    "hyp_text": "james baker secretary of state",
+    "cer": 0.0
+  },
+  "654.2771": {
+    "ref_text": "daniel ortega president, nicaragua",
+    "hyp_text": "voice ofinterpreter daniel ortega president, nicaragua",
+    "cer": 0.5882353186607361
+  },
+  "819.0271": {
+    "ref_text": "daniel ortega president, nicaragua",
+    "hyp_text": "voice ofinterpreter daniel ortega president, nicaragua",
+    "cer": 0.5882353186607361
+  },
+  "1486.0271": {
+    "ref_text": "alejandro bendana foreign ministry, nicaragua",
+    "hyp_text": "alejandro bendana a foreign ministry, nicaragua",
+    "cer": 0.04444444552063942
+  },
+  "1729.2771": {
+    "ref_text": "daniel ortega president, nicaragua",
+    "hyp_text": "voice ofinterpreter daniel ortega president, nicaragua",
+    "cer": 0.5882353186607361
+  },
+  "1946.7771": {
+    "ref_text": "robert adler environmental lawyer",
+    "hyp_text": "robert a adler i environmental lawyer",
+    "cer": 0.12121212482452393
+  },
+  "2005.2771": {
+    "ref_text": "richard samp washington legal foundation",
+    "hyp_text": "richard samp washington legal foundation",
+    "cer": 0.0
+  },
+  "2196.7771": {
+    "ref_text": "robert adler environmental lawyer",
+    "hyp_text": "robert adler environmental lawyer",
+    "cer": 0.0
+  },
+  "2377.0271": {
+    "ref_text": "richard samp washington legal foundation",
+    "hyp_text": "richard samp washington legal foundation",
+    "cer": 0.0
+  },
+  "2742.5271": {
+    "ref_text": "dr. david axelrod new york health commissioner",
+    "hyp_text": "dr. david axelrod new york health commissioner",
+    "cer": 0.0
+  },
+  "3183.7771": {
+    "ref_text": "dr. david axelrod new york health commissioner",
+    "hyp_text": "dr. david axelrod new york health commissioner",
+    "cer": 0.0
+  },
+  "3307.2771": {
+    "ref_text": "dr. harvey wachsman malpractice lawyer",
+    "hyp_text": "dr. harvey machsman malpractice lawyer a a",
+    "cer": 0.1315789520740509
+  },
+  "3389.0271": {
+    "ref_text": "dr. david axelrod new york health commissioner",
+    "hyp_text": "dr. david axelrod new york health commissioner",
+    "cer": 0.0
+  },
+  "mean_cer": 0.18929834264729703
+}

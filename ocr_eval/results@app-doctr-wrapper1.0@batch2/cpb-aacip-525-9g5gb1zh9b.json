@@ -1,0 +1,33 @@
+{
+  "1289.5271": {
+    "ref_text": "sen. lamar alexander (r) tennessee",
+    "hyp_text": "sen. lamar alexander (r) tennessee kqed9 :",
+    "cer": 0.23529411852359772
+  },
+  "1468.5271": {
+    "ref_text": "sen. lamar alexander (r) tennessee",
+    "hyp_text": "va sen. lamar alexander (r) tennessee kqed9 :",
+    "cer": 0.3235294222831726
+  },
+  "2188.2771": {
+    "ref_text": "craig watkins district attorney, dallas county",
+    "hyp_text": "craig watkins district attorney, dallas county kqed9 2",
+    "cer": 0.17391304671764374
+  },
+  "2262.2771": {
+    "ref_text": "craig watkins district attorney, dallas county",
+    "hyp_text": "craig watkins district attorney, dallas county kqed9 2",
+    "cer": 0.17391304671764374
+  },
+  "2378.0271": {
+    "ref_text": "craig watkins district attorney, dallas county",
+    "hyp_text": "craig watkins district attorney, dallas county kqed9 .",
+    "cer": 0.17391304671764374
+  },
+  "2513.7771": {
+    "ref_text": "craig watkins district attorney, dallas county",
+    "hyp_text": "craig watkins district attorney, dallas county kqed9 :",
+    "cer": 0.17391304671764374
+  },
+  "mean_cer": 0.2090792879462242
+}

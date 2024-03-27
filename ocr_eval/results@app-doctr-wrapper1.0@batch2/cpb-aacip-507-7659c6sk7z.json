@@ -1,0 +1,13 @@
+{
+  "418.7771": {
+    "ref_text": "lin biao technical manager",
+    "hyp_text": "lin biao technical manager",
+    "cer": 0.0
+  },
+  "1184.5271": {
+    "ref_text": "bill mosely hong kong banker",
+    "hyp_text": "bill mos osely hong kong banker",
+    "cer": 0.1071428582072258
+  },
+  "mean_cer": 0.0535714291036129
+}
