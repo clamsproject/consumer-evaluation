@@ -3,6 +3,7 @@ import csv
 import json
 import os
 import pathlib
+import re
 from collections import defaultdict
 from typing import Dict, Union, Tuple, Iterable
 
@@ -68,28 +69,45 @@ def load_hypotheses(mmif_files: Iterable[pathlib.Path]) -> Dict[str, Dict[float,
             continue
         ocr_view = mmif.get_view_contains(AnnotationTypes.Alignment)
         bb_view = mmif.get_view_contains(AnnotationTypes.BoundingBox)
+        tp_view = mmif.get_view_contains(AnnotationTypes.TimePoint)
         if ocr_view is not None:
             anno_id_to_annotation = {annotation.id: annotation
                                      for annotation in ocr_view.annotations}
+            doc_id_to_doc = {doc.id: doc
+                             for doc in mmif.get_documents_by_type(DocumentTypes.TextDocument)}
         if bb_view is not None:
             anno_id_to_annotation.update({annotation.id: annotation
                                           for annotation in bb_view.annotations})
         ocr_results = hyps[guid]
         if ocr_view is not None:
-            for annotation in ocr_view.annotations:
-                if annotation.at_type == AnnotationTypes.Alignment:
-                    source_id = annotation.properties['source']
-                    target_id = annotation.properties['target']
-                    vid_anno, bbox_anno = source_id.split(":")
-                    source_anno = anno_id_to_annotation[bbox_anno]
-                    target_anno = anno_id_to_annotation[target_id]
-                    time_point = vdh.convert(source_anno.properties['timePoint'], 'frames', 'seconds', fps)
-                    time_text = target_anno.properties['text'].value
-                    time_text = time_text.strip().lower()
-                    if time_point not in ocr_results:
+            if "doctr" in ocr_view.metadata.app.lower():
+                for alignment in ocr_view.get_annotations(AnnotationTypes.Alignment):
+                    source_id = alignment.properties['source']
+                    target_id = alignment.properties['target']
+                    if source_id.startswith("tp"):
+                        source_anno = tp_view[source_id]
+                        target_doc = doc_id_to_doc[target_id]
+                        time_point = vdh.convert(source_anno.properties['timePoint'], 'milliseconds', 'seconds', fps)
+                        time_text = target_doc.text_value
+                        time_text = time_text.strip().lower()
+                        # Remove newlines and double newlines
+                        time_text = re.sub(r'\n+', ' ', time_text)
                         ocr_results[time_point] = time_text
-                    else:
-                        ocr_results[time_point] = ocr_results[time_point] + ' ' + time_text
+            else:
+                for annotation in ocr_view.annotations:
+                    if annotation.at_type == AnnotationTypes.Alignment:
+                        source_id = annotation.properties['source']
+                        target_id = annotation.properties['target']
+                        vid_anno, bbox_anno = source_id.split(":")
+                        source_anno = anno_id_to_annotation[bbox_anno]
+                        target_anno = anno_id_to_annotation[target_id]
+                        time_point = vdh.convert(source_anno.properties['timePoint'], 'frames', 'seconds', fps)
+                        time_text = target_anno.properties['text'].value
+                        time_text = time_text.strip().lower()
+                        if time_point not in ocr_results:
+                            ocr_results[time_point] = time_text
+                        else:
+                            ocr_results[time_point] = ocr_results[time_point] + ' ' + time_text
     return hyps
 
 
@@ -132,7 +150,7 @@ def evaluate(gold_data: Dict[str, Dict[tuple, str]], test_data: Dict[str, Dict[f
 
 # Main Block
 if __name__ == "__main__":
-    APPNAME = "parseqocr-wrapper"  # default app
+    APPNAME = "app-doctr-wrapper"  # default app
     APPVERSION = 1.0  # default version 
 
     parser = argparse.ArgumentParser(description="compare the results of CLAMS OCR apps to a gold standard")
