@@ -1,0 +1,73 @@
+{
+  "845.2771": {
+    "ref_text": "jeffrey gettleman the new york times",
+    "hyp_text": "jeffrey gettleman the new york times",
+    "cer": 0.0
+  },
+  "1007.7771": {
+    "ref_text": "jeffrey gettleman the new york times",
+    "hyp_text": "jeffrey gettleman the new york times",
+    "cer": 0.0
+  },
+  "1215.7771": {
+    "ref_text": "samer shehata georgetown university",
+    "hyp_text": "samer shehata georgetown university stint a",
+    "cer": 0.22857142984867096
+  },
+  "1313.7771": {
+    "ref_text": "adeed dawisha miami university of ohio",
+    "hyp_text": "adeed dawisha miami university of ohio",
+    "cer": 0.0
+  },
+  "1444.7771": {
+    "ref_text": "samer shehata georgetown university",
+    "hyp_text": "samer shehata georgetown university",
+    "cer": 0.0
+  },
+  "1527.2771": {
+    "ref_text": "adeed dawisha miami university of ohio",
+    "hyp_text": "adeed dawisha miami university of ohio",
+    "cer": 0.0
+  },
+  "1823.0271": {
+    "ref_text": "sen. richard lugar chairman, foreign relations committee",
+    "hyp_text": "capitol hill sen. richard lugar chairman, foreign relations committee",
+    "cer": 0.2321428507566452
+  },
+  "1959.0271": {
+    "ref_text": "sen. joseph biden (d) delaware",
+    "hyp_text": "wilmington sen. joseph biden (d) delaware",
+    "cer": 0.36666667461395264
+  },
+  "2147.2771": {
+    "ref_text": "sen. richard lugar chairman, foreign relations committee",
+    "hyp_text": "capitol hill sen. richard lugar chairman, foreign relations committee",
+    "cer": 0.2321428507566452
+  },
+  "2322.2771": {
+    "ref_text": "sen. joseph biden (d) delaware",
+    "hyp_text": "wilmington sen. joseph biden (d) delaware",
+    "cer": 0.36666667461395264
+  },
+  "2752.5271": {
+    "ref_text": "bud selig commissioner, major league baseball",
+    "hyp_text": "abc news \"this week\" bud selig commissioner, major league baseball",
+    "cer": 0.46666666865348816
+  },
+  "2784.2771": {
+    "ref_text": "terence smith",
+    "hyp_text": "terence smith",
+    "cer": 0.0
+  },
+  "2818.2771": {
+    "ref_text": "buster olney espn the magazine",
+    "hyp_text": "buster olney espn the magazine",
+    "cer": 0.0
+  },
+  "3167.5271": {
+    "ref_text": "buster olney espn the magazine",
+    "hyp_text": "buster olney espn the magazine",
+    "cer": 0.0
+  },
+  "mean_cer": 0.13520408208881105
+}

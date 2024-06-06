@@ -1,0 +1,13 @@
+{
+  "212.0271": {
+    "ref_text": "washington, dc damian paletta the washington post",
+    "hyp_text": "washington, dc pbso news damian paletta hour a damianpaletta weekend kqed 9",
+    "cer": 0.795918345451355
+  },
+  "1081.0271": {
+    "ref_text": "del wilkins illinois marine towing",
+    "hyp_text": "pbso news del wilkins hour illinois marine towing weekeng",
+    "cer": 0.6764705777168274
+  },
+  "mean_cer": 0.7361944615840912
+}

@@ -1,0 +1,103 @@
+{
+  "421.0271": {
+    "ref_text": "voice of lt. jim king oklahoma highway patrol",
+    "hyp_text": "voice of lt jimh king oklahoma highway patrol",
+    "cer": 0.04444444552063942
+  },
+  "895.0271": {
+    "ref_text": "sen. richard lugar (r) indiana",
+    "hyp_text": "sen. richard lugar (r) indiana",
+    "cer": 0.0
+  },
+  "1000.5271": {
+    "ref_text": "sen. richard lugar (r) indiana",
+    "hyp_text": "sen. richard lugar (r) indiana",
+    "cer": 0.0
+  },
+  "1255.0271": {
+    "ref_text": "donald rumsfeld former sec'y of defense",
+    "hyp_text": "chicago donald rumsfeld former secyrof defense",
+    "cer": 0.25641027092933655
+  },
+  "1328.5271": {
+    "ref_text": "rev. jesse jackson",
+    "hyp_text": "rev. jesse jackson",
+    "cer": 0.0
+  },
+  "1469.2771": {
+    "ref_text": "joseph sisco former undersec'y of state",
+    "hyp_text": "chicago joseph sisco former undersecy of state",
+    "cer": 0.23076923191547394
+  },
+  "1523.0271": {
+    "ref_text": "donald rumsfeld former sec'y of defense",
+    "hyp_text": "chicago donaud-rumsfeud former secy defense",
+    "cer": 0.38461539149284363
+  },
+  "1666.0271": {
+    "ref_text": "rev. jesse jackson",
+    "hyp_text": "rev. jesse jackson",
+    "cer": 0.0
+  },
+  "1893.2771": {
+    "ref_text": "sen. richard lugar (r) indiana",
+    "hyp_text": "capitol hill sen. richard dugar (r) indiana",
+    "cer": 0.46666666865348816
+  },
+  "2056.0271": {
+    "ref_text": "sen. slade gorton (r) washington",
+    "hyp_text": "last friday sent slade gorton (r) woshington",
+    "cer": 0.4375
+  },
+  "2113.0271": {
+    "ref_text": "sen. pete domenici chairman, budget committee",
+    "hyp_text": "sen-rete domenici cinirmon, budger - gommittee",
+    "cer": 0.2222222238779068
+  },
+  "2154.7771": {
+    "ref_text": "rep. william gray chairman, budget committee",
+    "hyp_text": "rep. william gray chairman, budget committee",
+    "cer": 0.0
+  },
+  "2217.7771": {
+    "ref_text": "sen. pete domenici chairman, budget committee",
+    "hyp_text": "today sen. pete domenici chaitman, budger committee",
+    "cer": 0.17777778208255768
+  },
+  "2303.0271": {
+    "ref_text": "sen. william armstrong (r) colorado",
+    "hyp_text": "capitol hill sen. william armstrong (r) golorado",
+    "cer": 0.4000000059604645
+  },
+  "2401.0271": {
+    "ref_text": "rep. william grey (d) pennsylvania",
+    "hyp_text": "capitol hill rep. willam grey (d) pennsyivania",
+    "cer": 0.44117647409439087
+  },
+  "2513.7771": {
+    "ref_text": "rep. william gray (d) pennsylvania",
+    "hyp_text": "capitol, hill rep. willam gray (d) pennsyivania",
+    "cer": 0.47058823704719543
+  },
+  "2650.5271": {
+    "ref_text": "sen. william armstrong (r) colorado",
+    "hyp_text": "capitol hill sen. william armstrong (r) golorado",
+    "cer": 0.4000000059604645
+  },
+  "2803.756": {
+    "ref_text": "sen. william armstrong",
+    "hyp_text": "rep.ewliam sen. william gray armstrong",
+    "cer": 0.7272727489471436
+  },
+  "2960.7771": {
+    "ref_text": "sen. robert packwood (r) oregon",
+    "hyp_text": "sen. robert pagkwood - (r) oregon",
+    "cer": 0.09677419066429138
+  },
+  "3199.5271": {
+    "ref_text": "sen. robert packwood (r) oregon",
+    "hyp_text": "sen. robert pagkwood (r) oregon",
+    "cer": 0.032258063554763794
+  },
+  "mean_cer": 0.23942378703504802
+}
