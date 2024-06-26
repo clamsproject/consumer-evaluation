@@ -29,14 +29,12 @@ def convert_iso_milliseconds(timestamp):
 
 # extract gold pairs from each csv. note goldpath is fed in as a path object
 def extract_gold_labels(goldpath, count_subtypes=False):
-    # hardcoded path to make sure it worked earlier
-    # df = pd.read_csv(pathlib.Path('C:\\Users\\eljor\\desktop\\aapb-annotations\\scene-recognition\\golds\\cpb-aacip-08fb0e1f287.csv'))
     df = pd.read_csv(goldpath)
     # convert timestamps (iso) back to ms
     df['timestamp'] = df['timestamp'].apply(convert_iso_milliseconds)
     if count_subtypes:
         # fill empty subtype rows with '' then concatenate with type label
-        df['subtype label'].fillna('')
+        df['subtype label'] = df['subtype label'].fillna("")
         df['combined'] = df['type label'] + ":" + df['subtype label']
         # trim extra ":"
         df['combined'] = df['combined'].apply(lambda row: row[:-1] if row[-1] == ':' else row)
