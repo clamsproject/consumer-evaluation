@@ -7,8 +7,8 @@ To run this evaluation script, you need the following:
 
 * Set of predictions in MMIF format (either from the preds folder in this repo
 or generated from the [SWT app](https://github.com/clamsproject/app-swt-detection) )
-* Set of golds in csv format (either the golds directory in this repo or downloaded from the annotations repository
-using goldretriever.py, or your own set that exactly matches the format of the included golds.)
+* Set of golds in csv format (either downloaded from the annotations repository
+using goldretriever.py, or your own set that exactly matches the format present in [aapb-annotations](https://github.com/clamsproject/aapb-annotations/tree/main/scene-recognition/golds))
 
 There are three arguments when running the script: `-mmif-dir`, `-gold-dir`, and `count-subtypes`.
 The first two are directories that contain the predictions and golds, respectively. The third is a boolean value that
