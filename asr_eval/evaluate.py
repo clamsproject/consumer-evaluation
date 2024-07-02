@@ -1,6 +1,5 @@
 import argparse
 import goldretriever
-import pathlib
 from mmif import Mmif, Document, DocumentTypes
 from torchmetrics import WordErrorRate
 import json
@@ -80,20 +79,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     ref_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
-    
-    '''
-    parser.add_argument('-o', '--output-dir', type=str, default=None, help="Directory to store results")
-    parser.add_argument('-a', '--app-name', type=str, default=None, help="name of the app to be tested")
-    if args.output_dir:
-        out_dir = pathlib.Path(args.output_dir) 
-    else:
-        if args.app_name:
-            out_dir = pathlib.Path(f"results@{args.app_name}@batch2")
-        else:
-            out_dir = pathlib.Path("results")
-    if not out_dir.exists():
-        out_dir.mkdir()
-    '''
 
     try: 
         batch_run_wer(args.mmif_dir, ref_dir)
