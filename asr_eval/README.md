@@ -27,5 +27,5 @@ Currently, the evaluation script produces one output files: `results.json`.
 
 A sample results.json file:
 ```
-{"cpb-aacip-123-1234567890_wer_results": [{"wer_result": 0.230140820145607, "exact_case": true}, {"wer_result": 0.2058475762605667, "exact_case": false}]}
+{"cpb-aacip-123-1234567890": [{"wer_result": 0.230140820145607, "exact_case": true}, {"wer_result": 0.2058475762605667, "exact_case": false}]}
 ```
