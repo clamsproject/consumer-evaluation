@@ -1,7 +1,7 @@
 import argparse
 import goldretriever
 from mmif import Mmif, Document, DocumentTypes
-from torchmetrics import WordErrorRate
+from jiwer import wer
 import json
 import os
 
@@ -30,8 +30,7 @@ def calculateWer(hyp_file, gold_file, exact_case):
     # if we want to ignore casing
     hyp = process_text(get_text_from_mmif(hyp_file), not exact_case)
     gold = process_text(get_text_from_txt(gold_file), not exact_case)
-    wer = WordErrorRate()
-    return wer(hyp, gold).item()
+    return wer(hyp, gold)
 
 # check file id in preds and gold paths, and find the matching ids
 def batch_run_wer(hyp_dir, gold_dir): 
