@@ -7,9 +7,9 @@ The goal is to have a simple way of comparing different results from SWT.
 To run this evaluation script, you need the following:
 
 * Set of predictions in MMIF format (either from the preds folder in this repo
-or generated from the [SWT app](https://github.com/clamsproject/app-swt-detection) )
+or generated from the [SWT app](https://github.com/clamsproject/app-swt-detection/tree/6b12498fc596327ec47933b7f785044da2f8cf2f)
 * Set of golds in csv format (either downloaded from the annotations repository
-using goldretriever.py, or your own set that exactly matches the format present in [aapb-annotations](https://github.com/clamsproject/aapb-annotations/tree/main/scene-recognition/golds))
+using goldretriever.py, or your own set that exactly matches the format present in [aapb-annotations](https://github.com/clamsproject/aapb-annotations/tree/9cbe41aa124da73a0158bfc0b4dbf8bafe6d460d/scene-recognition/golds)
 
 There are three arguments when running the script: `-mmif-dir`, `-gold-dir`, and `count-subtypes`.
 The first two are directories that contain the predictions and golds, respectively. The third is a boolean value that
@@ -18,7 +18,7 @@ determines if the evaluation takes into account subtype labels or not.
 * `preds@app-swt-detection<VERSION-NUMBER>@<BATCH-NAME>`.
 
 Note that only the first one is required, as `-gold-dir` defaults to the set of golds downloaded (using `goldretriever`)
-from the [aapb-annotations](https://github.com/clamsproject/aapb-annotations/tree/main/scene-recognition/golds) repo,
+from the [aapb-annotations](https://github.com/clamsproject/aapb-annotations/tree/9cbe41aa124da73a0158bfc0b4dbf8bafe6d460d/scene-recognition/golds) repo,
 and `count-subtypes` defaults to `False`.
 
 # Usage

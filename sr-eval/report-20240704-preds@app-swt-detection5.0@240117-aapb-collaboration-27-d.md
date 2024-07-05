@@ -3,10 +3,10 @@
 
 ## Report Instance of Evaluation Information
 * 2024-07-03
-* [app-SWT-detection](https://github.com/clamsproject/app-swt-detection), version 5.0
-* [sr-eval golds](https://github.com/clamsproject/aapb-annotations/tree/main/scene-recognition/golds).
-* [preds@app-swt-detection5.0@240117-aapb-collaboration-27-d](https://github.com/clamsproject/aapb-evaluations/tree/sr-eval-final/sr-eval/preds%40app-swt-detection5.0%40240117-aapb-collaboration-27-d).
-* [sr-eval/evaluation.py](https://github.com/clamsproject/aapb-evaluations/blob/sr-eval-final/sr-eval/evaluate.py).
+* [app-SWT-detection](https://github.com/clamsproject/app-swt-detection/tree/6b12498fc596327ec47933b7f785044da2f8cf2f), version 5.0
+* [scene-recognition/golds](https://github.com/clamsproject/aapb-annotations/tree/9cbe41aa124da73a0158bfc0b4dbf8bafe6d460d/scene-recognition/golds).
+* [preds@app-swt-detection5.0@240117-aapb-collaboration-27-d](https://github.com/clamsproject/aapb-evaluations/tree/4bfcf3250700567aae352a710d5cdb6bc1fcdca4/sr-eval/preds%40app-swt-detection5.0%40240117-aapb-collaboration-27-d).
+* [sr-eval/evaluation.py](https://github.com/clamsproject/aapb-evaluations/blob/4bfcf3250700567aae352a710d5cdb6bc1fcdca4/sr-eval/evaluate.py).
 * `python evaluate.py -m /path/to/repo/aapb-evaluations/sr-eval/preds@app-swt-detection5.0@240117-aapb-collaboration-27-d`
 
 ## Metrics
