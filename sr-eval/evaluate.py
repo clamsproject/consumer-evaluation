@@ -1,11 +1,9 @@
 import argparse
-import collections
 from collections import defaultdict, Counter
 import pathlib
-import goldretriever
 import pandas as pd
 import json
-import mmif
+from clams_utils.aapb import goldretriever
 
 # constant:
 GOLD_URL = "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8cf942ba827917938b49570d6d9/scene-recognition/golds"
@@ -110,8 +108,13 @@ def document_evaluation(combined_dict):
     average_p = 0
     average_r = 0
     average_f1 = 0
+    # counter to account for unseen labels
+    unseen = 0
     for label in total_counts:
         tp, fp, fn = total_counts[label]["tp"], total_counts[label]["fp"], total_counts[label]["fn"]
+        # if no instances are present/predicted, account for this when taking average of scores
+        if tp + fp + fn == 0:
+            unseen += 1
         precision = float(tp/(tp + fp)) if (tp + fp) > 0 else 0
         recall = float(tp/(tp + fn)) if (tp + fn) > 0 else 0
         f1 = float(2*(precision*recall)/(precision + recall)) if (precision + recall) > 0 else 0
@@ -123,9 +126,11 @@ def document_evaluation(combined_dict):
         average_r += recall
         average_f1 += f1
     # calculate macro averages for document and add to scores_by_label
-    scores_by_label["average"]["precision"] = float(average_p / len(scores_by_label))
-    scores_by_label["average"]["recall"] = float(average_r / len(scores_by_label))
-    scores_by_label["average"]["f1"] = float(average_f1 / len(scores_by_label))
+    # make sure to account for unseen unpredicted labels
+    denominator = len(scores_by_label) - unseen
+    scores_by_label["average"]["precision"] = float(average_p / denominator)
+    scores_by_label["average"]["recall"] = float(average_r / denominator)
+    scores_by_label["average"]["f1"] = float(average_f1 / denominator)
     # return both scores_by_label and total_counts (to calculate micro avg later)
     return scores_by_label, total_counts
 
@@ -190,6 +195,24 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes):
     data_scores = total_evaluation(document_counts)
     return doc_scores, data_scores
 
+def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
+    # get name for new directory
+    # with our standard, this results in "scores@" appended to the batch name
+    batch_score_name = "scores@" + mmif_dir.split('@')[-1].strip('/')
+    # create new dir for scores based on batch name
+    new_dir = pathlib.Path.cwd() / batch_score_name
+    new_dir.mkdir(parents = True, exist_ok = True)
+    # iterate through nested dict, output separate scores for each guid
+    for guid in doc_scores:
+        doc_df = pd.DataFrame(doc_scores[guid])
+        doc_df = doc_df.transpose()
+        out_path = new_dir / f"{guid}.csv"
+        doc_df.to_csv(out_path)
+    # output total dataset scores
+    dataset_df = pd.DataFrame(dataset_scores)
+    dataset_df = dataset_df.transpose()
+    dataset_df.to_csv(new_dir/"dataset_scores.csv")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -201,13 +224,10 @@ if __name__ == "__main__":
                         help='bool flag whether to consider subtypes for evaluation')
     args = parser.parse_args()
     mmif_dir = args.mmif_dir
-    GOLD_URL = "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8cf942ba827917938b49570d6d9/scene-recognition/golds"
     gold_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
     count_subtypes = args.count_subtypes
     document_scores, dataset_scores = run_dataset_eval(mmif_dir, gold_dir, count_subtypes)
     # document scores are for each doc, dataset scores are for overall (micro avg)
-    doc_df = pd.DataFrame(document_scores)
-    dataset_df = pd.DataFrame(dataset_scores)
-    doc_df.to_csv('document_scores.csv')
-    dataset_df.to_csv('dataset_scores.csv')
+    # call method to output scores for each doc and then for total scores
+    separate_score_outputs(document_scores, dataset_scores, mmif_dir)
 
