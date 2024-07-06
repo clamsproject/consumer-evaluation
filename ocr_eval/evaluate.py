@@ -191,5 +191,5 @@ if __name__ == "__main__":
         out_dir.mkdir()
 
     references = load_references(pathlib.Path(ref_dir))
-    hypotheses = load_hypotheses(pathlib.Path(hyp_dir).glob("*"))
+    hypotheses = load_hypotheses(pathlib.Path(hyp_dir).glob("*.mmif*"))
     evaluate(references, hypotheses, out_dir)
