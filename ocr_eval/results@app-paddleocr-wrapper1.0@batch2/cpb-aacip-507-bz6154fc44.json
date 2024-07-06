@@ -1,0 +1,148 @@
+{
+  "189.0271": {
+    "ref_text": "mike mccurry white house spokesman",
+    "hyp_text": "th te house ington mikemcgurry white housespokesman",
+    "cer": 0.6470588445663452
+  },
+  "324.5271": {
+    "ref_text": "john bruton prime minister, ireland",
+    "hyp_text": "john/bruton prime minister, ireland",
+    "cer": 0.02857142873108387
+  },
+  "592.2771": {
+    "ref_text": "john kornblum acting asst. secretary of state",
+    "hyp_text": "john kornblum acting asst.secretary of state",
+    "cer": 0.02222222276031971
+  },
+  "848.2771": {
+    "ref_text": "john kornblum acting asst. secretary of state",
+    "hyp_text": "john kornblum acting asst secretary of state",
+    "cer": 0.02222222276031971
+  },
+  "1034.5271": {
+    "ref_text": "john kornblum acting asst. secretary of state",
+    "hyp_text": "john kornblum acting asst. secretary of state",
+    "cer": 0.0
+  },
+  "1298.2771": {
+    "ref_text": "tony blair opposition party leader",
+    "hyp_text": "tony blair opposition party leader",
+    "cer": 0.0
+  },
+  "1320.0271": {
+    "ref_text": "brenda fleming accident and emergency consultant",
+    "hyp_text": "brenda fleming accident and emergency consultant",
+    "cer": 0.0
+  },
+  "1344.2771": {
+    "ref_text": "alex thompson itn",
+    "hyp_text": "alexthompson itn",
+    "cer": 0.05882352963089943
+  },
+  "1362.2771": {
+    "ref_text": "john major prime minister, britain",
+    "hyp_text": "john major primeminister, britain",
+    "cer": 0.029411764815449715
+  },
+  "1407.5271": {
+    "ref_text": "tony blair opposition party leader",
+    "hyp_text": "tony blair opposition party leader",
+    "cer": 0.0
+  },
+  "1506.0271": {
+    "ref_text": "rev. moira herkes dunblane cathedral",
+    "hyp_text": "rev.moira herkes dunblane cathedral",
+    "cer": 0.02777777798473835
+  },
+  "1616.5271": {
+    "ref_text": "sen. robert dole majority leader",
+    "hyp_text": "sen robert dole majority leader 000 o",
+    "cer": 0.21875
+  },
+  "1723.5271": {
+    "ref_text": "sen. kit bond (r) missouri",
+    "hyp_text": "senkit bond (rmissouri",
+    "cer": 0.1538461595773697
+  },
+  "1810.2771": {
+    "ref_text": "sen. trent lott majority whip",
+    "hyp_text": "sen.trent lott majprity whip",
+    "cer": 0.06896551698446274
+  },
+  "1873.2771": {
+    "ref_text": "sen. paul wellstone (d) minnesota",
+    "hyp_text": "sen. paul wellstone (dminnesota",
+    "cer": 0.06060606241226196
+  },
+  "1899.0271": {
+    "ref_text": "rep. bob livingston chairman, appropriations committee",
+    "hyp_text": "rep.boblivingston chairman, appropriatipns committee",
+    "cer": 0.0555555559694767
+  },
+  "1913.7771": {
+    "ref_text": "sen. trent lott majority whip",
+    "hyp_text": "sen.trent lott majoritywhip",
+    "cer": 0.06896551698446274
+  },
+  "1971.7771": {
+    "ref_text": "paul gigot wall street journal",
+    "hyp_text": "paul gigot wallstreetjourna",
+    "cer": 0.10000000149011612
+  },
+  "2040.0271": {
+    "ref_text": "mark shields syndicated columnist",
+    "hyp_text": "mark shields syndicated columnist",
+    "cer": 0.0
+  },
+  "2242.2771": {
+    "ref_text": "paul gigot wall street journal",
+    "hyp_text": "paul gigot wall street journal",
+    "cer": 0.0
+  },
+  "2601.0271": {
+    "ref_text": "terry tempest williams environmentalist",
+    "hyp_text": "terry tempestwilliams environmentalist",
+    "cer": 0.025641025975346565
+  },
+  "2643.0271": {
+    "ref_text": "mayor philip bimstein springdale, utah",
+    "hyp_text": "mayor philip bimstein springdale utah",
+    "cer": 0.02631578966975212
+  },
+  "2688.5271": {
+    "ref_text": "louise liston garfield county commissioner",
+    "hyp_text": "louise liston garfield countycommissioner",
+    "cer": 0.02380952425301075
+  },
+  "2759.2771": {
+    "ref_text": "roger holland city councilman",
+    "hyp_text": "roger holland city councilman",
+    "cer": 0.0
+  },
+  "2811.2771": {
+    "ref_text": "hardy redd",
+    "hyp_text": "hardy redd",
+    "cer": 0.0
+  },
+  "2938.2771": {
+    "ref_text": "louise liston garfield county commissioner",
+    "hyp_text": "louiseliston garfield county commissioner",
+    "cer": 0.02380952425301075
+  },
+  "2968.0271": {
+    "ref_text": "rep. james hansen (r) utah",
+    "hyp_text": "nsen ongress rep.jameshansen (r)utah",
+    "cer": 0.6153846383094788
+  },
+  "2995.2771": {
+    "ref_text": "jim baca",
+    "hyp_text": "jim baca",
+    "cer": 0.0
+  },
+  "3058.2771": {
+    "ref_text": "terry tempest williams environmentalist",
+    "hyp_text": "terry tempest williams environmentalist",
+    "cer": 0.0
+  },
+  "mean_cer": 0.07854265886647947
+}

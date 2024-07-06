@@ -1,0 +1,103 @@
+{
+  "226.2771": {
+    "ref_text": "robert gates director, cia",
+    "hyp_text": "robert gates director, cia",
+    "cer": 0.0
+  },
+  "360.2771": {
+    "ref_text": "andrei grachev chief presidential spokesman",
+    "hyp_text": "andrei grachev chief presidential spokesman",
+    "cer": 0.0
+  },
+  "389.0271": {
+    "ref_text": "eduard shevardnadze soviet foreign minister",
+    "hyp_text": "eduard shevardnadze soviet foreign minister",
+    "cer": 0.0
+  },
+  "1174.5271": {
+    "ref_text": "steven brill president, court tv",
+    "hyp_text": "steven brill president,court tv",
+    "cer": 0.03125
+  },
+  "1306.7771": {
+    "ref_text": "ellen hume press, politics & public policy center harvard university",
+    "hyp_text": "boston ellen hume press politics & public policy center harvarduniversity",
+    "cer": 0.13235294818878174
+  },
+  "1445.2771": {
+    "ref_text": "ann lewis political analyst",
+    "hyp_text": "boston ann lewis political analyst",
+    "cer": 0.25925925374031067
+  },
+  "1534.5271": {
+    "ref_text": "ellen hume press, politics & public policy center harvard university",
+    "hyp_text": "boston ellen-hume press politics & public policy center harvard oniversity",
+    "cer": 0.14705882966518402
+  },
+  "1632.5271": {
+    "ref_text": "ann lewis political analyst",
+    "hyp_text": "boston annlewis political analyst",
+    "cer": 0.29629629850387573
+  },
+  "1692.5271": {
+    "ref_text": "steven brill president, court tv",
+    "hyp_text": "steven brill president,courttv",
+    "cer": 0.0625
+  },
+  "1795.0271": {
+    "ref_text": "susan xenarios rape counselor",
+    "hyp_text": "susan-xenarios rape-counselor",
+    "cer": 0.06896551698446274
+  },
+  "1951.2771": {
+    "ref_text": "susan xenarios rape counselor",
+    "hyp_text": "susan xenarios rape-counselor",
+    "cer": 0.03448275849223137
+  },
+  "2104.7771": {
+    "ref_text": "ellen hume press, politics & public policy center harvard university",
+    "hyp_text": "boston ellen hume press, politics & public policy center harvard ohiversity",
+    "cer": 0.13235294818878174
+  },
+  "2179.5271": {
+    "ref_text": "susan xenarios rape counselor",
+    "hyp_text": "susandxenarios rape-counselor",
+    "cer": 0.06896551698446274
+  },
+  "2320.5271": {
+    "ref_text": "robert gates director, cia",
+    "hyp_text": "robert gates director, cia",
+    "cer": 0.0
+  },
+  "2481.7771": {
+    "ref_text": "robert gates director, cia",
+    "hyp_text": "robert gates director, cia",
+    "cer": 0.0
+  },
+  "2688.0271": {
+    "ref_text": "ed mierzwinski public interest research group",
+    "hyp_text": "ed mierzwinski public interest research group",
+    "cer": 0.0
+  },
+  "2767.5271": {
+    "ref_text": "barry connelly associated credit bureaus",
+    "hyp_text": "barry connelly associated creditbureaus",
+    "cer": 0.02500000037252903
+  },
+  "2826.2771": {
+    "ref_text": "ursula daniels",
+    "hyp_text": "ursula daniels",
+    "cer": 0.0
+  },
+  "2968.0271": {
+    "ref_text": "seymour shor",
+    "hyp_text": "seymiour shor",
+    "cer": 0.0833333358168602
+  },
+  "3127.7771": {
+    "ref_text": "john baker equifax",
+    "hyp_text": "john baker equifax",
+    "cer": 0.0
+  },
+  "mean_cer": 0.067090870346874
+}

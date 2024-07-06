@@ -14,8 +14,6 @@ from torchmetrics.text import CharErrorRate
 
 from clams_utils.aapb import goldretriever as gr
 
-import sys
-
 # Constants ==|
 GOLD_URL = 'https://github.com/clamsproject/aapb-annotations/tree/f96f857ef83acf85f64d9a10ac8fe919e06ce51e/newshour-chyron/golds/batch2'
 
@@ -194,5 +192,4 @@ if __name__ == "__main__":
 
     references = load_references(pathlib.Path(ref_dir))
     hypotheses = load_hypotheses(pathlib.Path(hyp_dir).glob("*"))
-    '''sys.exit()'''
     evaluate(references, hypotheses, out_dir)

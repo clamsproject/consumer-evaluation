@@ -1,0 +1,83 @@
+{
+  "232.5271": {
+    "ref_text": "brig. gen. mark kimmitt u.s. army",
+    "hyp_text": "brig. cen.mark kimmitt u.s.army u.s.arm",
+    "cer": 0.3333333432674408
+  },
+  "627.2771": {
+    "ref_text": "l. paul bremer administrator, iraq",
+    "hyp_text": "l.paul bremer administrator, irag",
+    "cer": 0.05882352963089943
+  },
+  "845.2771": {
+    "ref_text": "jeffrey gettleman the new york times",
+    "hyp_text": "jeffrey cettleman the new york times",
+    "cer": 0.02777777798473835
+  },
+  "1007.7771": {
+    "ref_text": "jeffrey gettleman the new york times",
+    "hyp_text": "jeffrey cettleman the new york times",
+    "cer": 0.02777777798473835
+  },
+  "1170.0271": {
+    "ref_text": "gwen ifill",
+    "hyp_text": "news hour news 10 gwen ifill",
+    "cer": 1.7999999523162842
+  },
+  "1215.7771": {
+    "ref_text": "samer shehata georgetown university",
+    "hyp_text": "samer shehata georgetown university",
+    "cer": 0.0
+  },
+  "1313.7771": {
+    "ref_text": "adeed dawisha miami university of ohio",
+    "hyp_text": "adeed dawisha miami university of ohio",
+    "cer": 0.0
+  },
+  "1444.7771": {
+    "ref_text": "samer shehata georgetown university",
+    "hyp_text": "samer shehata georgetown university",
+    "cer": 0.0
+  },
+  "1823.0271": {
+    "ref_text": "sen. richard lugar chairman, foreign relations committee",
+    "hyp_text": "capitol hill sen.richard lugar chairman, foreign relations committee",
+    "cer": 0.25
+  },
+  "2147.2771": {
+    "ref_text": "sen. richard lugar chairman, foreign relations committee",
+    "hyp_text": "capitol hill sen.richard lugar chairman, foreign relations committee",
+    "cer": 0.25
+  },
+  "2723.7771": {
+    "ref_text": "sen. john mccain (r) arizona",
+    "hyp_text": "mar.10 sen. john mccain (r) arizona",
+    "cer": 0.25
+  },
+  "2752.5271": {
+    "ref_text": "bud selig commissioner, major league baseball",
+    "hyp_text": "abc news \"this week\" bud selig commissioner, major league baseball",
+    "cer": 0.46666666865348816
+  },
+  "2818.2771": {
+    "ref_text": "buster olney espn the magazine",
+    "hyp_text": "buster olney espn the magazine",
+    "cer": 0.0
+  },
+  "2896.7771": {
+    "ref_text": "buster olney espn the magazine",
+    "hyp_text": "buster olney espn the magazine",
+    "cer": 0.0
+  },
+  "3046.0271": {
+    "ref_text": "buster olney espn the magazine",
+    "hyp_text": "buster olney espn the magazine",
+    "cer": 0.0
+  },
+  "3167.5271": {
+    "ref_text": "buster olney espn the magazine",
+    "hyp_text": "buster olney espn the magazine",
+    "cer": 0.0
+  },
+  "mean_cer": 0.21652369061484933
+}

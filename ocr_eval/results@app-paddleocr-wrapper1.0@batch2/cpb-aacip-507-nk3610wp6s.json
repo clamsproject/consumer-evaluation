@@ -1,0 +1,128 @@
+{
+  "181.0271": {
+    "ref_text": "sen. robert dole majority leader",
+    "hyp_text": "sen. robert dole majority leader",
+    "cer": 0.0
+  },
+  "269.0271": {
+    "ref_text": "rep. newt gingrinch speaker of the house",
+    "hyp_text": "rep.newt gingrich speaker of the house",
+    "cer": 0.05000000074505806
+  },
+  "297.2771": {
+    "ref_text": "sen. pete domenici chairman, budget committee",
+    "hyp_text": "sen. pete domenic chairman, budget committee",
+    "cer": 0.02222222276031971
+  },
+  "313.5271": {
+    "ref_text": "leon panetta white house chief of staff",
+    "hyp_text": "leon panetta white house chief of staff",
+    "cer": 0.0
+  },
+  "368.0271": {
+    "ref_text": "sen. alfonse d'amato chairman, whitewater committee",
+    "hyp_text": "sen. alfonse d'amato chairman, whitewater committee",
+    "cer": 0.0
+  },
+  "407.7771": {
+    "ref_text": "sen. paul sarbanes (d) maryland",
+    "hyp_text": "sen. paul sarbanes (dmaryland",
+    "cer": 0.06451612710952759
+  },
+  "466.5271": {
+    "ref_text": "rep. newt gingrinch speaker of the house",
+    "hyp_text": "rep.newt gingrich speaker of the house",
+    "cer": 0.05000000074505806
+  },
+  "726.0271": {
+    "ref_text": "sen. john mccain (r) arizona",
+    "hyp_text": "capitol hill sen. john mccain r)arizona",
+    "cer": 0.5357142686843872
+  },
+  "872.5271": {
+    "ref_text": "sen. john mccain (r) arizona",
+    "hyp_text": "capitol hill sen. john mccain raarizona",
+    "cer": 0.5714285969734192
+  },
+  "950.7771": {
+    "ref_text": "sen. john mccain (r) arizona",
+    "hyp_text": "capitol hill sen. johnmccain (raarizona",
+    "cer": 0.5714285969734192
+  },
+  "1100.5271": {
+    "ref_text": "sen. john mccain (r) arizona",
+    "hyp_text": "capitol hill sen. johnmccain (r)aarizpna",
+    "cer": 0.5714285969734192
+  },
+  "1189.2771": {
+    "ref_text": "warren christopher secretary of state",
+    "hyp_text": "warren christopher secretarycof state",
+    "cer": 0.027027027681469917
+  },
+  "1243.7771": {
+    "ref_text": "william perry secretary of defense",
+    "hyp_text": "william perry secretary of defense mballencer",
+    "cer": 0.3235294222831726
+  },
+  "1304.5271": {
+    "ref_text": "rep. elton gallegly (r) california",
+    "hyp_text": "rep elton gallegly r california",
+    "cer": 0.0882352963089943
+  },
+  "1338.2771": {
+    "ref_text": "rep. toby roth (r) wisconsin",
+    "hyp_text": "reptoby roth (r)wisconsin mr.roth",
+    "cer": 0.3928571343421936
+  },
+  "1420.7771": {
+    "ref_text": "rep. duncan hunter (r) california",
+    "hyp_text": "replduncan hunters mr)tcalifornia",
+    "cer": 0.1515151560306549
+  },
+  "1542.0271": {
+    "ref_text": "ronald steel university of southern california",
+    "hyp_text": "ronaldsteel university of southern california",
+    "cer": 0.021739130839705467
+  },
+  "1726.5271": {
+    "ref_text": "donald kagan yale university",
+    "hyp_text": "stamford donald kagan yale university",
+    "cer": 0.3214285671710968
+  },
+  "1875.5271": {
+    "ref_text": "ronald steel university of southern california",
+    "hyp_text": "ronaldsteel university of southern california",
+    "cer": 0.021739130839705467
+  },
+  "2033.0271": {
+    "ref_text": "john lukacs chestnut hill college",
+    "hyp_text": "philadelphia johnalukacs chestnut hill college",
+    "cer": 0.42424243688583374
+  },
+  "2291.7771": {
+    "ref_text": "ronald steel university of southern california",
+    "hyp_text": "ronald-steel university bf.sputhern california",
+    "cer": 0.08695652335882187
+  },
+  "2530.5271": {
+    "ref_text": "dr. christine berg georgetown university medical center",
+    "hyp_text": "dr. christine berg georgetown university medical center",
+    "cer": 0.0
+  },
+  "2692.5271": {
+    "ref_text": "dr. christine berg georgetown university medical center",
+    "hyp_text": "dr. christine berg georgetown university medical center",
+    "cer": 0.0
+  },
+  "2842.5271": {
+    "ref_text": "bill gates author",
+    "hyp_text": "bill gates awthor",
+    "cer": 0.05882352963089943
+  },
+  "3104.2771": {
+    "ref_text": "bill gates \"the road ahead\"",
+    "hyp_text": "bill gates \"the road ahead\"",
+    "cer": 0.0
+  },
+  "mean_cer": 0.17419327065348625
+}

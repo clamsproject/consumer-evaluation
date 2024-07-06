@@ -1,0 +1,63 @@
+{
+  "166.7771": {
+    "ref_text": "robert macneil",
+    "hyp_text": "robert-macneil",
+    "cer": 0.0714285746216774
+  },
+  "410.7771": {
+    "ref_text": "jim lehrer washington",
+    "hyp_text": "jim lehrer washington",
+    "cer": 0.0
+  },
+  "451.5271": {
+    "ref_text": "the rev. james ratigan nat. fed. of priests' councils",
+    "hyp_text": "the rev. jamesratigan nat.fed. of priestscouncils",
+    "cer": 0.07547169923782349
+  },
+  "634.0271": {
+    "ref_text": "msr. james mchugh u.s. conf. of bishops",
+    "hyp_text": "msr.james mchugh u.s.conf.of bishops",
+    "cer": 0.07692307978868484
+  },
+  "732.7771": {
+    "ref_text": "msr. james mchugh u.s. conf. of bishops",
+    "hyp_text": "msr.james mchugh u.s.conf. of bishops",
+    "cer": 0.05128205195069313
+  },
+  "870.5271": {
+    "ref_text": "betsy stengel religious coalition for abortion rights",
+    "hyp_text": "betsy stengel religious coalition for abortion rights",
+    "cer": 0.0
+  },
+  "976.7771": {
+    "ref_text": "betsy stengel religious coalition for abortion rights",
+    "hyp_text": "betsy stengel religious coalition for abortion rights",
+    "cer": 0.0
+  },
+  "1113.7771": {
+    "ref_text": "jeffrey pressman m.i.t.",
+    "hyp_text": "jeffrey pressman m.i.t..",
+    "cer": 0.043478261679410934
+  },
+  "1277.2771": {
+    "ref_text": "the rev. james ratigan nat. fed. of priests' councils",
+    "hyp_text": "the rev.jamesratigan nat.fed. of priests'councils",
+    "cer": 0.07547169923782349
+  },
+  "1344.2771": {
+    "ref_text": "msr. james mchugh u.s. conf of bishops",
+    "hyp_text": "msr.jamesmchugh u.s.conf.of bishops",
+    "cer": 0.10526315867900848
+  },
+  "1509.2771": {
+    "ref_text": "jim lehrer washington",
+    "hyp_text": "jimlehrer washington",
+    "cer": 0.0476190485060215
+  },
+  "1585.0271": {
+    "ref_text": "jeffrey pressman m.i.t.",
+    "hyp_text": "jeferey pressman m.i.t",
+    "cer": 0.08695652335882187
+  },
+  "mean_cer": 0.052824508088330425
+}

@@ -1,0 +1,33 @@
+{
+  "262.5271": {
+    "ref_text": "jim lehrer washington",
+    "hyp_text": "jim lehrer washington",
+    "cer": 0.0
+  },
+  "405.7771": {
+    "ref_text": "james scanlon university of illinois",
+    "hyp_text": "james scanlon university ofnillinois",
+    "cer": 0.02777777798473835
+  },
+  "705.0271": {
+    "ref_text": "jasper neel modern language association",
+    "hyp_text": "jasperneel modern language association",
+    "cer": 0.025641025975346565
+  },
+  "970.0271": {
+    "ref_text": "james gray bay area writing project",
+    "hyp_text": "jamesgray bay area writing project",
+    "cer": 0.02857142873108387
+  },
+  "1433.5271": {
+    "ref_text": "jasper neel modern language association",
+    "hyp_text": "jasperneel modern language associa tion",
+    "cer": 0.05128205195069313
+  },
+  "1592.2771": {
+    "ref_text": "james gray bay area writing project",
+    "hyp_text": "james cray bay area writing project",
+    "cer": 0.02857142873108387
+  },
+  "mean_cer": 0.0269739522288243
+}

@@ -1,0 +1,148 @@
+{
+  "559.2771": {
+    "ref_text": "george mitchell u.s. olympics investigation",
+    "hyp_text": "george mitchell u.s. olympics investigation",
+    "cer": 0.0
+  },
+  "723.2771": {
+    "ref_text": "howard berkes national public radio",
+    "hyp_text": "salt lake city howard berkes national public radio",
+    "cer": 0.4285714328289032
+  },
+  "771.5271": {
+    "ref_text": "howard berkes national public radio",
+    "hyp_text": "salt lake city howard berkes national public radio",
+    "cer": 0.4285714328289032
+  },
+  "927.5271": {
+    "ref_text": "howard berkes national public radio",
+    "hyp_text": "salt lake city howard berkes national public radio",
+    "cer": 0.4285714328289032
+  },
+  "1103.5271": {
+    "ref_text": "howard berkes national public radio",
+    "hyp_text": "salt lake city howard berkes national public radio",
+    "cer": 0.4285714328289032
+  },
+  "1232.0271": {
+    "ref_text": "christine brennan sports writer",
+    "hyp_text": "christine brennan sports writer",
+    "cer": 0.0
+  },
+  "1690.7771": {
+    "ref_text": "john clizbe american red cross",
+    "hyp_text": "john clizbe american red cross",
+    "cer": 0.0
+  },
+  "1821.5271": {
+    "ref_text": "bob watson world bank",
+    "hyp_text": "bob watson world bank",
+    "cer": 0.0
+  },
+  "1882.5271": {
+    "ref_text": "janet abramovitz worldwatch institute",
+    "hyp_text": "lanet abramovitz worldwatch institute",
+    "cer": 0.027027027681469917
+  },
+  "2035.5271": {
+    "ref_text": "john clizbe american red cross",
+    "hyp_text": "john clizbe american red cross",
+    "cer": 0.0
+  },
+  "2142.7771": {
+    "ref_text": "john clizbe american red cross",
+    "hyp_text": "john clizbe american red cross",
+    "cer": 0.0
+  },
+  "2250.0271": {
+    "ref_text": "bob watson world bank",
+    "hyp_text": "bob watson world bank",
+    "cer": 0.0
+  },
+  "2376.5271": {
+    "ref_text": "gray russrock boeing machinist",
+    "hyp_text": "boeing private property admittance to authorized gray russrock boeing machinist",
+    "cer": 1.6333333253860474
+  },
+  "2393.5271": {
+    "ref_text": "anthony carson boeing machinist",
+    "hyp_text": "anthony carson boeing machinist",
+    "cer": 0.0
+  },
+  "2421.0271": {
+    "ref_text": "alan mulally pres., boeing commercial airplane div.",
+    "hyp_text": "alan mulally pres., boeing commercial airplane div.",
+    "cer": 0.0
+  },
+  "2460.5271": {
+    "ref_text": "jin cho asiana airlines",
+    "hyp_text": "asianad jin cho asiana airlines",
+    "cer": 0.3478260934352875
+  },
+  "2521.2771": {
+    "ref_text": "charles hill economist, university of washington",
+    "hyp_text": "charles hill economist,university of washington",
+    "cer": 0.02083333395421505
+  },
+  "2581.0271": {
+    "ref_text": "tim goree",
+    "hyp_text": "tim goree",
+    "cer": 0.0
+  },
+  "2653.0271": {
+    "ref_text": "charles hill economist, university of washington",
+    "hyp_text": "charles hill economist,university of washington",
+    "cer": 0.02083333395421505
+  },
+  "2684.7771": {
+    "ref_text": "alan mulally pres., boeing commercial airplane div.",
+    "hyp_text": "alan mulally pres.,boeing commercial airplane div.",
+    "cer": 0.019607843831181526
+  },
+  "2732.0271": {
+    "ref_text": "dick conway economist",
+    "hyp_text": "dick conway economist",
+    "cer": 0.0
+  },
+  "2812.2771": {
+    "ref_text": "terence smith",
+    "hyp_text": "terence smith",
+    "cer": 0.0
+  },
+  "2854.0271": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia:report from a stricken land",
+    "cer": 0.03448275849223137
+  },
+  "2946.0271": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia:report from a stricken land",
+    "cer": 0.03448275849223137
+  },
+  "2998.5271": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia:report from a stricken land",
+    "cer": 0.03448275849223137
+  },
+  "3140.0271": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia:report from a stricken land",
+    "cer": 0.03448275849223137
+  },
+  "3194.7771": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia:report from a stricken land",
+    "cer": 0.03448275849223137
+  },
+  "3259.0271": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author, \"cambodia:report from a stricken land",
+    "cer": 0.03448275849223137
+  },
+  "3289.2771": {
+    "ref_text": "henry kamm author, \"cambodia: report from a stricken land\"",
+    "hyp_text": "henry kamm author,\"cambodia:report from a stricken land",
+    "cer": 0.0517241396009922
+  },
+  "mean_cer": 0.13939197862456584
+}

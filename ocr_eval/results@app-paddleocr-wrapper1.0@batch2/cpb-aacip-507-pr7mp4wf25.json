@@ -1,0 +1,143 @@
+{
+  "302.0271": {
+    "ref_text": "strobe talbott deputy secretary of state",
+    "hyp_text": "strobe talbott deputy secretary of state",
+    "cer": 0.0
+  },
+  "515.7771": {
+    "ref_text": "sen. john mccain republican presidential candidate",
+    "hyp_text": "sen. john mccain republican presidential candidate",
+    "cer": 0.0
+  },
+  "593.5271": {
+    "ref_text": "orrin hatch (r) presidential candidate",
+    "hyp_text": "orrin hatch cnw 9 (r) presidential candidate live me",
+    "cer": 0.3684210479259491
+  },
+  "654.0271": {
+    "ref_text": "alan keyes republican presidential candidate",
+    "hyp_text": "alan keyes republican presidential candidate",
+    "cer": 0.0
+  },
+  "789.5271": {
+    "ref_text": "steve forbes republican presidential candidate",
+    "hyp_text": "steve forbes republican presidentia candidate",
+    "cer": 0.021739130839705467
+  },
+  "855.2771": {
+    "ref_text": "sen. orrin hatch republican presidential candidate",
+    "hyp_text": "sen. orrin hatch republican presidential candidate",
+    "cer": 0.0
+  },
+  "955.0271": {
+    "ref_text": "alan keyes republican presidential candidate",
+    "hyp_text": "alan keyes republican presidential candidate",
+    "cer": 0.0
+  },
+  "1026.7771": {
+    "ref_text": "gary bauer republican presidential candidate",
+    "hyp_text": "garybauer republican presidential candidate",
+    "cer": 0.022727273404598236
+  },
+  "1081.0271": {
+    "ref_text": "steve forbes republican presidential candidate",
+    "hyp_text": "steve forbes republican presidential candidate",
+    "cer": 0.0
+  },
+  "1186.5271": {
+    "ref_text": "tom oliphant boston globe",
+    "hyp_text": "ur chrerd tom oliphant boston globe",
+    "cer": 0.4000000059604645
+  },
+  "1235.7771": {
+    "ref_text": "david brooks weekly standard",
+    "hyp_text": "david brooks weekly standard",
+    "cer": 0.0
+  },
+  "1314.2771": {
+    "ref_text": "tom oliphant boston globe",
+    "hyp_text": "yur echrerd tom oliphant boston globe",
+    "cer": 0.47999998927116394
+  },
+  "1374.7771": {
+    "ref_text": "david brooks weekly standard",
+    "hyp_text": "david brooks weekly standard",
+    "cer": 0.0
+  },
+  "1956.2771": {
+    "ref_text": "katie couric co-anchor, nbc news \"today\"",
+    "hyp_text": "katie couric co-anchor, nbc news \"today",
+    "cer": 0.02500000037252903
+  },
+  "1964.0271": {
+    "ref_text": "matt lauer co-anchor, nbc news \"today\"",
+    "hyp_text": "mattlauer co-anchor, nbc news \"today",
+    "cer": 0.05263157933950424
+  },
+  "1976.5271": {
+    "ref_text": "steve friedman senior executive producer cbs news \"the early show\"",
+    "hyp_text": "steve friedman senior executive producer, cbs news \"the early show\"",
+    "cer": 0.01515151560306549
+  },
+  "2067.7771": {
+    "ref_text": "terence smith",
+    "hyp_text": "news sabrina nm no could re hengih later this week they terence smith",
+    "cer": 4.307692527770996
+  },
+  "2147.7771": {
+    "ref_text": "bryant gumbel co-anchor, cbs news \"the early show\"",
+    "hyp_text": "bryant gumbel co-anchor,cbs news \"the early show\"",
+    "cer": 0.019999999552965164
+  },
+  "2179.5271": {
+    "ref_text": "steve friedman senior executive producer cbs news \"the early show\"",
+    "hyp_text": "steve friedman senior executive producer, cbs news \"the early show\"",
+    "cer": 0.01515151560306549
+  },
+  "2242.2771": {
+    "ref_text": "jack lescoulie commentator, \"today\"",
+    "hyp_text": "1953 lacklescoulie commentator,\"today",
+    "cer": 0.2571428716182709
+  },
+  "2306.0271": {
+    "ref_text": "charles gibson co-anchor, abc news \"good morning america\"",
+    "hyp_text": "rica charles gibson co-anchor, abc news \"good morning america\"",
+    "cer": 0.08771929889917374
+  },
+  "2437.5271": {
+    "ref_text": "bryant gumbel co-anchor, cbs news \"the early show\"",
+    "hyp_text": "bryant gumbe co-anchor,cbs news\"the early show\"",
+    "cer": 0.05999999865889549
+  },
+  "2471.0271": {
+    "ref_text": "steve friedman senior executive producer cbs news \"the early show\"",
+    "hyp_text": "steve friedman senior executive producer, cbs news \"the early show\"",
+    "cer": 0.01515151560306549
+  },
+  "2528.0271": {
+    "ref_text": "matt lauer co-anchor, nbc news \"today\"",
+    "hyp_text": "mattlauer co-anchor, nbc news \"today",
+    "cer": 0.05263157933950424
+  },
+  "2542.2771": {
+    "ref_text": "richard hack author",
+    "hyp_text": "richard hack author",
+    "cer": 0.0
+  },
+  "2718.5271": {
+    "ref_text": "president olusegun obasanjo nigeria",
+    "hyp_text": "march president olusegun obasanjo nigeria",
+    "cer": 0.17142857611179352
+  },
+  "2835.7771": {
+    "ref_text": "president olusegun obasanjo nigeria",
+    "hyp_text": "president olusegun obasanjo nigeria",
+    "cer": 0.0
+  },
+  "3042.0271": {
+    "ref_text": "president olusegun obasanjo nigeria",
+    "hyp_text": "president olusegun obasanjo nigeria",
+    "cer": 0.0
+  },
+  "mean_cer": 0.22759244378123963
+}

@@ -1,0 +1,133 @@
+{
+  "291.7771": {
+    "ref_text": "brig. gen. daniel menard commander of coalition forces in kandahar",
+    "hyp_text": "brig.gen.daniel menard commander of coalition forces in kandahar",
+    "cer": 0.03030303120613098
+  },
+  "339.5271": {
+    "ref_text": "joby warrick the washington post",
+    "hyp_text": "joby warrick the washingtonpost wetao",
+    "cer": 0.21875
+  },
+  "409.7771": {
+    "ref_text": "joby warrick the washington post",
+    "hyp_text": "joby warrick the washington post wetao",
+    "cer": 0.1875
+  },
+  "579.2771": {
+    "ref_text": "matt apuzzo the associated press",
+    "hyp_text": "matt apuzzo the associated press wetao",
+    "cer": 0.1875
+  },
+  "742.7771": {
+    "ref_text": "matt apuzzo the associated press",
+    "hyp_text": "matt apuzzo the associated press wetao",
+    "cer": 0.1875
+  },
+  "834.0271": {
+    "ref_text": "hari sreenivasan",
+    "hyp_text": "terror charges hari sreenivasan pbs newshour",
+    "cer": 1.75
+  },
+  "895.0271": {
+    "ref_text": "december 11 mustafa abu maryam islamic circle of north america",
+    "hyp_text": "december11 mustafa abu maryam islamic circle of north america wetao",
+    "cer": 0.11290322244167328
+  },
+  "1117.2771": {
+    "ref_text": "charles allen former intelligence official",
+    "hyp_text": "charles allen former intelligence official wetao",
+    "cer": 0.1428571492433548
+  },
+  "1194.2771": {
+    "ref_text": "tyler drumheller former cia official",
+    "hyp_text": "tyler drumheller former cia official wetao",
+    "cer": 0.1666666716337204
+  },
+  "1257.7771": {
+    "ref_text": "paul pillar former cia official",
+    "hyp_text": "paul pillar former cia official wetao",
+    "cer": 0.19354838132858276
+  },
+  "1301.2771": {
+    "ref_text": "charles allen former intelligence official",
+    "hyp_text": "charles allen former intelligence official wetao",
+    "cer": 0.1428571492433548
+  },
+  "1366.0271": {
+    "ref_text": "tyler drumheller former cia official",
+    "hyp_text": "tyler drumheller former cia official wetao",
+    "cer": 0.1666666716337204
+  },
+  "1434.5271": {
+    "ref_text": "paul pillar former cia official",
+    "hyp_text": "paul pillar former cia official wetao",
+    "cer": 0.19354838132858276
+  },
+  "1486.0271": {
+    "ref_text": "charles allen former intelligence official",
+    "hyp_text": "charles allen former intelligence official wetao",
+    "cer": 0.1428571492433548
+  },
+  "1536.0271": {
+    "ref_text": "tyler drumheller former cia official",
+    "hyp_text": "tyler drumheller former cia official wetao",
+    "cer": 0.1666666716337204
+  },
+  "1612.0271": {
+    "ref_text": "charles allen former intelligence official",
+    "hyp_text": "charles allen former intelligence official wetao",
+    "cer": 0.1428571492433548
+  },
+  "1782.0271": {
+    "ref_text": "alan blinder princeton university",
+    "hyp_text": "alan blinder princeton university",
+    "cer": 0.0
+  },
+  "1971.7771": {
+    "ref_text": "ken arrow stanford university",
+    "hyp_text": "ken arrow stanford university",
+    "cer": 0.0
+  },
+  "2047.7771": {
+    "ref_text": "george akerlof university of california, berkeley",
+    "hyp_text": "george akerlof university of california.berkeley",
+    "cer": 0.040816325694322586
+  },
+  "2073.0271": {
+    "ref_text": "andrew lo massachusetts institute of technology",
+    "hyp_text": "andrew lo massachusetts institute of technology",
+    "cer": 0.0
+  },
+  "2291.2771": {
+    "ref_text": "michael beschloss presidential historian",
+    "hyp_text": "michael beschloss presidential historian",
+    "cer": 0.0
+  },
+  "2343.5271": {
+    "ref_text": "andrew kohut pew research center",
+    "hyp_text": "andrew kohut pewresearch center",
+    "cer": 0.03125
+  },
+  "2406.7771": {
+    "ref_text": "amy walter the hotline",
+    "hyp_text": "amy walter the hotline",
+    "cer": 0.0
+  },
+  "2716.7771": {
+    "ref_text": "michael beschloss presidential historian",
+    "hyp_text": "michael beschloss presidential historian",
+    "cer": 0.0
+  },
+  "2987.0271": {
+    "ref_text": "vera pavlova",
+    "hyp_text": "vera pavlova",
+    "cer": 0.0
+  },
+  "2998.5271": {
+    "ref_text": "steven seymour",
+    "hyp_text": "steven seymour",
+    "cer": 0.0
+  },
+  "mean_cer": 0.16173261361053357
+}

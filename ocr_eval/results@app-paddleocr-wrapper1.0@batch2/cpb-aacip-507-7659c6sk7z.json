@@ -1,0 +1,18 @@
+{
+  "522.0271": {
+    "ref_text": "david mcleod hong kong businessman",
+    "hyp_text": "david mcleod hong kong businessman",
+    "cer": 0.0
+  },
+  "906.7771": {
+    "ref_text": "john barker british trader",
+    "hyp_text": "john barker british trader",
+    "cer": 0.0
+  },
+  "1184.5271": {
+    "ref_text": "bill mosely hong kong banker",
+    "hyp_text": "billmosely hong kong banker",
+    "cer": 0.0357142873108387
+  },
+  "mean_cer": 0.011904762436946234
+}

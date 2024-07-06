@@ -1,0 +1,123 @@
+{
+  "233.7771": {
+    "ref_text": "voice of interpreter djoko murjatmodjo acting director general of air transportation, indonesian transport ministry",
+    "hyp_text": "voice of interpreter djoko murjatmodjo acting director general of air transportation indonesian transportministry",
+    "cer": 0.017391303554177284
+  },
+  "608.0271": {
+    "ref_text": "boston phillip martin wgbh-fm",
+    "hyp_text": "boston phillip martin wgbh-fm kqed 9",
+    "cer": 0.24137930572032928
+  },
+  "730.5271": {
+    "ref_text": "boston phillip martin wgbh-fm",
+    "hyp_text": "boston phillip martin wgbh-fm kqed9",
+    "cer": 0.2068965584039688
+  },
+  "804.0271": {
+    "ref_text": "boston phillip martin wgbh-fm",
+    "hyp_text": "boston phillip martin wgbh-fm kqed-9",
+    "cer": 0.24137930572032928
+  },
+  "913.2771": {
+    "ref_text": "margaret warner @margaretwarner",
+    "hyp_text": "wshour margaret warner pbso news @margaretwarner hour koe",
+    "cer": 0.8387096524238586
+  },
+  "1022.0271": {
+    "ref_text": "margaret warner @margaretwarner",
+    "hyp_text": "wshour margaret warner pbso news @margaretwarner hour kqei",
+    "cer": 0.8709677457809448
+  },
+  "1292.5271": {
+    "ref_text": "arkadi gerney center for american progress",
+    "hyp_text": "arkadi gerney center for american progress kqed-9",
+    "cer": 0.1666666716337204
+  },
+  "1433.5271": {
+    "ref_text": "arkadi gerney center for american progress",
+    "hyp_text": "arkadi gerney center for american progress",
+    "cer": 0.0
+  },
+  "1467.5271": {
+    "ref_text": "david boaz cato institute",
+    "hyp_text": "david boaz cato institute kqed-9.",
+    "cer": 0.3199999928474426
+  },
+  "1517.7771": {
+    "ref_text": "arkadi gerney center for american progress",
+    "hyp_text": "arkadi gerney center for american progress",
+    "cer": 0.0
+  },
+  "1772.0271": {
+    "ref_text": "voice of interpreter steffen seibert german government spokesman",
+    "hyp_text": "voice of interpreter steffen seibert german government spokesman kqed9",
+    "cer": 0.09375
+  },
+  "1834.2771": {
+    "ref_text": "boston kenneth rogoff harvard university",
+    "hyp_text": "boston kenneth rogoff harvarduniversity kqed9",
+    "cer": 0.17499999701976776
+  },
+  "1859.0271": {
+    "ref_text": "jacob kirkegaard peterson institute for international economics",
+    "hyp_text": "jacob kirkegaard peterson institute for international economics",
+    "cer": 0.0
+  },
+  "2064.2771": {
+    "ref_text": "boston kenneth rogoff harvard university",
+    "hyp_text": "boston kenneth rogoff harvarduniversity kqed9-",
+    "cer": 0.20000000298023224
+  },
+  "2128.0271": {
+    "ref_text": "jacob kirkegaard peterson institute for international economics",
+    "hyp_text": "jacob kirkegaard peterson institute for international economics",
+    "cer": 0.0
+  },
+  "2383.5271": {
+    "ref_text": "mara keisling executive director, national center for transgender equality",
+    "hyp_text": "mara keisling executive director, national center for transgender equality",
+    "cer": 0.0
+  },
+  "2438.7771": {
+    "ref_text": "new york leo sheng transgender man",
+    "hyp_text": "newyork leo sheng transgender man kqed9",
+    "cer": 0.20588235557079315
+  },
+  "2472.2771": {
+    "ref_text": "mara keisling executive director, national center for transgender equality",
+    "hyp_text": "mara keisling executive director, national center for transgender equality",
+    "cer": 0.0
+  },
+  "2583.0271": {
+    "ref_text": "new york leo sheng transgender man",
+    "hyp_text": "new york leo sheng transgender man kqed9",
+    "cer": 0.1764705926179886
+  },
+  "2620.2771": {
+    "ref_text": "mara keisling executive director, national center for transgender equality",
+    "hyp_text": "mara keisling executive director, national center for transgender equality",
+    "cer": 0.0
+  },
+  "2715.2771": {
+    "ref_text": "courtesy: the historymakers former sen. edward brooke (r) massachusetts",
+    "hyp_text": "courtesy:the historymakers former sen.edward brooke (r)massachusetts kqed9",
+    "cer": 0.1267605572938919
+  },
+  "2834.7771": {
+    "ref_text": "grand rapids, michigan richard norton smith presidential historian",
+    "hyp_text": "grandrapids.michigan richard norton smith author,\"on his own terms:a life of nelson rockefeller\"",
+    "cer": 0.7272727489471436
+  },
+  "2952.7771": {
+    "ref_text": "grand rapids, michigan richard norton smith presidential historian",
+    "hyp_text": "grand rapids,michigan richard norton smith. author,\"on his own terms:a life of nelson rockefeller\"",
+    "cer": 0.7121211886405945
+  },
+  "3059.2771": {
+    "ref_text": "grand rapids, michigan richard norton smith presidential historian",
+    "hyp_text": "grand rapids, michigan richard norton smith. author, \"on his own terms:a life of nelson rockefeller\"",
+    "cer": 0.7121211886405945
+  },
+  "mean_cer": 0.2513653819914907
+}
