@@ -9,6 +9,7 @@ Each subdirectory of the repository is an evaluation task within the project. Ea
 * golds - The gold-truth standard, humanly-annotated files by which apps are evaluated for predictive ability. 
   * often are `.tsv` or `.csv` or `.txt`. 
 * preds/predictions - The app-predicted files with predicted-annotations of what phenomena are to be evaluated. (e.g. time durations for slate detection.)
+  * each preds directory represents a batch, with naming conventions as follows:`preds@<APP_NAME><APP_VER>@<BATCH_NAME>`
   * are always `.mmif` files with app views. 
 #### Outputs to Evaluations
 * results - This should be the result system output of the evaluation numbers from a finished evaluation. 
