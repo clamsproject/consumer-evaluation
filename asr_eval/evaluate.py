@@ -1,9 +1,15 @@
 import argparse
-import goldretriever
+from clams_utils.aapb import goldretriever
 from mmif import Mmif, Document, DocumentTypes
 from jiwer import wer
 import json
 import os
+
+# constant:
+## note that this repository is a private one and the files are not available to the public (due to IP concerns)
+## hence using goldretriever to download the gold files WILL NOT work (goldretreiver is only for public repositories)
+GOLD_URL = "https://github.com/clamsproject/aapb-collaboration/tree/89b8b123abbd4a9a67c525cc480173b52e0d05f0/21"
+
 
 def get_text_from_mmif(mmif): 
     with open(mmif, 'r') as f:
@@ -40,8 +46,8 @@ def batch_run_wer(hyp_dir, gold_dir):
     result = {}
     
     for hyp_file in hyp_files:
-        id = hyp_file.split('.')[0]
-        gold_file = gold_files_dict.get(id)
+        id_ = hyp_file.split('.')[0]
+        gold_file = gold_files_dict.get(id_)
         print("Processing file: ", hyp_file, gold_file)
 
         if gold_file:
@@ -50,7 +56,7 @@ def batch_run_wer(hyp_dir, gold_dir):
             try:
                 wer_result_exact_case = calculateWer(hyp_file_path, gold_file_path, True)
                 wer_result_ignore_case = calculateWer(hyp_file_path, gold_file_path, False)
-                result[id] = [
+                result[id_] = [
                         {
                             "wer_result": wer_result_exact_case,
                             "exact_case": True
@@ -64,14 +70,12 @@ def batch_run_wer(hyp_dir, gold_dir):
                 print(wer_exception)
     
     with open('results.json', 'w') as fp:
-        fp.write(json.dumps(result))
+        fp.write(json.dumps(result, indent=2))
 
-# constant:
-GOLD_URL = "https://github.com/clamsproject/aapb-collaboration/tree/89b8b123abbd4a9a67c525cc480173b52e0d05f0/21"
 
 if __name__ == "__main__":
     # get the absolute path of video-file-dir and hypothesis-file-dir
-    parser = argparse.ArgumentParser(description='Process some directories.')
+    parser = argparse.ArgumentParser(description='Evaluate speech recognition results using WER.')
     parser.add_argument('-m', '--mmif-dir', type=str, required=True,
                         help='directory containing machine annotated files (MMIF)')
     parser.add_argument('-g', '--gold-dir', help='directory containing gold standard', default=None)
