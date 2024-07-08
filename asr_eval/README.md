@@ -1,32 +1,31 @@
-# WER Calculation
+# Automatic Speech Recognition Evaluation
+This involves evaluating the results of the Automatic Speech Recognition apps.
 
-Suppose both preds and gold files have their file ids start with the corresponding video id:
+# Required Input
+To run this evaluation script, you need the following:
+
+* Set of predictions in MMIF format
+* Set of golds in txt format. The gold fles must either downloaded from the annotations repository
+using goldretriever.py, or your own set of files. 
+
+There are two arguments when running the script: `-m` and `-g`.
+They are directories that contain the predictions and golds, respectively. 
+Note that only the first one is required, as `-gold-dir` defaults to the set of golds downloaded 
+from the https://github.com/clamsproject/aapb-collaboration/tree/89b8b123abbd4a9a67c525cc480173b52e0d05f0/21 using `goldretriever`.
+
+# Usage
+To run the evaluation, run the following in the `asr-eval` directory:
 ```
-pred = cpb-aacip-123-1234567890.whisper-tiny.mmif
-gold = cpb-aacip-123-1234567890.txt
-```
-the app will take two arguments: 
-1. `--hyp-dir`: the directory where hypothesis MMIF files locate, and
-2. `--gold-dir`: the directory where gold .txt files locate.
-### To run the app: 
-```bash
-python3 batch_asr_eval.py --hyp-dir "your hypothesis file dir" --gold-dir "your gold file dir"
+python evaluate.py -m <pred_directory> -g <gold_directory>
 ```
 
-The output is a .json file also named after the video Id: `cpb-aacip-123-1234567890.json`. It stores a number of WER results depending on the evaluation conditions (currently two conditions: case-sensitive and non case-sensitive). In the future more conditions will be taken into consieration, so the result .json could extend accordingly. The .json file is stored in `/wer_results/`
+# Output Format
+Currently, the evaluation script produces one output files: `results.json`.
+* `results.json` is a json file the contain the result of WER Calculation for each pair of pred/gold files.
+* The WER Calculation is done by `WordErrorRate` from `torchmetrics` library.
+* The result file stores the WER results depending on the evaluation conditions (currently two conditions: case-sensitive and non case-sensitive). In the future more conditions will be taken into consieration, so the result .json could extend accordingly.
 
-A sample .json file:
+A sample results.json file:
 ```
-{"wer_results": [{"wer_result": 0.230140820145607, "exact_case": true}, {"wer_result": 0.2058475762605667, "exact_case": false}]}
+{"cpb-aacip-123-1234567890": [{"wer_result": 0.230140820145607, "exact_case": true}, {"wer_result": 0.2058475762605667, "exact_case": false}]}
 ```
-
-WER calculation is done through WordErrorRate from torchmetrics. 
-
->* Note
->`asr_eval.py` can be used to calculate WER of one MMIF file by taking two arguments: `--hyp-file` and `--gold-file`
->```
->python3 asr_eval.py --hyp-file "your hypothesis MMIF file" --gold-file "your gold .txt file", optional: --exact-case (if do not want to ignore casing)
->```
-
-### Next step:
-try to use the functions from mmif package
