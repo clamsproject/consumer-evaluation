@@ -1,4 +1,5 @@
 import argparse
+import csv
 from clams_utils.aapb import goldretriever
 from mmif import Mmif, Document, DocumentTypes
 from jiwer import wer
@@ -48,7 +49,7 @@ def batch_run_wer(hyp_dir, gold_dir):
     hyp_files = os.listdir(hyp_dir)
     gold_files = os.listdir(gold_dir)
     gold_files_dict = {x.rsplit('-transcript.txt', 1)[0]: x for x in gold_files if x.endswith('-transcript.txt')}
-    result = {}
+    result = []
     
     for hyp_file in hyp_files:
         id_ = hyp_file.split('.')[0]
@@ -61,21 +62,19 @@ def batch_run_wer(hyp_dir, gold_dir):
             try:
                 wer_result_exact_case = calculateWer(hyp_file_path, gold_file_path, True)
                 wer_result_ignore_case = calculateWer(hyp_file_path, gold_file_path, False)
-                result[id_] = [
-                        {
-                            "wer_result": wer_result_exact_case,
-                            "exact_case": True
-                        },
-                        {
-                            "wer_result": wer_result_ignore_case,
-                            "exact_case": False
-                        }
-                    ]
+                result.append((id_, wer_result_exact_case, wer_result_ignore_case))
             except Exception as wer_exception:
                 print("Error processing file: ", hyp_file, wer_exception)
     
-    with open('results.json', 'w') as fp:
-        fp.write(json.dumps(result, indent=2))
+    with open(f'results@{hyp_dir}.csv', 'w') as fp:
+        fp.write('GUID,WER-case-sensitive,WER-case-insens\n')
+        werS_sum = 0
+        werI_sum = 0
+        for r in result:
+            fp.write(','.join(map(str, r)) + '\n')
+            werS_sum += r[1]
+            werI_sum += r[2]
+        fp.write(f'Average,{werS_sum/len(result)},{werI_sum/len(result)}\n')
 
 
 if __name__ == "__main__":
