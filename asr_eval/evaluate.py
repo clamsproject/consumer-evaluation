@@ -1,5 +1,5 @@
 import argparse
-import os
+from pathlib import Path
 
 from clams_utils.aapb import goldretriever
 from jiwer import wer
@@ -49,27 +49,28 @@ def calc_wer(hyp_file, gold_file, exact_case):
 
 # check file id in preds and gold paths, and find the matching ids
 def batch_run_wer(hyp_dir, gold_dir):
-    hyp_files = os.listdir(hyp_dir)
-    gold_files = os.listdir(gold_dir)
-    gold_files_dict = {x.rsplit('-transcript.txt', 1)[0]: x for x in gold_files if x.endswith('-transcript.txt')}
+    hyp_dir = Path(hyp_dir)
+    gold_dir = Path(gold_dir)
+    
+    hyp_files = hyp_dir.glob('*.mmif')
+    gold_files = gold_dir.glob('*-transcript.txt')
+    gold_files_dict = {x.stem.rstrip('-transcript.txt'): x for x in gold_files}
     result = []
 
     for hyp_file in hyp_files:
-        id_ = hyp_file.split('.')[0]
+        id_ = hyp_file.stem.split('.')[0]
         gold_file = gold_files_dict.get(id_)
-        print("Processing file: ", hyp_file, gold_file, "PASS" if not gold_file else "EVAL")
+        print("Processing file: ", hyp_file.name, gold_file.name if  gold_file else "(skip, no gold)")
 
         if gold_file:
-            hyp_file_path = os.path.join(hyp_dir, hyp_file)
-            gold_file_path = os.path.join(gold_dir, gold_file)
             try:
-                wer_result_exact_case = calc_wer(hyp_file_path, gold_file_path, True)
-                wer_result_ignore_case = calc_wer(hyp_file_path, gold_file_path, False)
+                wer_result_exact_case = calc_wer(hyp_file, gold_file, True)
+                wer_result_ignore_case = calc_wer(hyp_file, gold_file, False)
                 result.append((id_, wer_result_exact_case, wer_result_ignore_case))
             except Exception as wer_exception:
-                print("Error processing file: ", hyp_file, wer_exception)
+                print("Error processing file: ", hyp_file.name, wer_exception)
 
-    with open(f'results@{os.path.basename(hyp_dir)}.csv', 'w') as fp:
+    with open(f'results@{hyp_dir.name}.csv', 'w') as fp:
         fp.write('GUID,WER-case-sensitive,WER-case-insens\n')
         werS_sum = 0
         werI_sum = 0
@@ -90,7 +91,4 @@ if __name__ == "__main__":
 
     ref_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
 
-    try:
-        batch_run_wer(args.mmif_dir, ref_dir)
-    except Exception as batch_run_error:
-        print(batch_run_error)
+    batch_run_wer(args.mmif_dir, ref_dir)
