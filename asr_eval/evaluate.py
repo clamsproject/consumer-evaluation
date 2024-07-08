@@ -15,8 +15,13 @@ def get_text_from_mmif(mmif):
     with open(mmif, 'r') as f:
         mmif_str = f.read()
         data = Mmif(mmif_str)
-
-        annotation: Document = data.get_documents_by_type(DocumentTypes.TextDocument)[0]
+        td_views = data.get_all_views_contain(DocumentTypes.TextDocument)
+        if not td_views:
+            for view in reversed(data.views):
+                if view.has_error():
+                    raise Exception("Error in the MMIF file: " + view.get_error().split('\n')[0])
+                raise Exception("No TextDocument found in the MMIF file")
+        annotation = next(td_views[-1].get_annotations(DocumentTypes.TextDocument))
         text = annotation.text_value
 
     return text
@@ -48,7 +53,7 @@ def batch_run_wer(hyp_dir, gold_dir):
     for hyp_file in hyp_files:
         id_ = hyp_file.split('.')[0]
         gold_file = gold_files_dict.get(id_)
-        print("Processing file: ", hyp_file, gold_file)
+        print("Processing file: ", hyp_file, gold_file, "PASS" if not gold_file else "EVAL")
 
         if gold_file:
             hyp_file_path = os.path.join(hyp_dir, hyp_file)
@@ -67,7 +72,7 @@ def batch_run_wer(hyp_dir, gold_dir):
                         }
                     ]
             except Exception as wer_exception:
-                print(wer_exception)
+                print("Error processing file: ", hyp_file, wer_exception)
     
     with open('results.json', 'w') as fp:
         fp.write(json.dumps(result, indent=2))
