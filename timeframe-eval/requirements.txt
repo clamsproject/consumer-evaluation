@@ -1,4 +1,5 @@
 mmif-python>= 1.0.9
+clams-utils
 pyannote.metrics
 pandas
 requests
