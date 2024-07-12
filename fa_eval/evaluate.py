@@ -1,12 +1,12 @@
 import argparse
 import collections
 import logging
-import os
 import re
-
 from pathlib import Path as P
+
 import pandas as pd
 import pyannote.metrics.base
+from clams_utils.aapb import goldretriever, guidhandler
 from lapps.discriminators import Uri
 from mmif.serialize import Mmif
 from mmif.vocabulary import AnnotationTypes
@@ -15,7 +15,7 @@ from pyannote.metrics.diarization import DiarizationCoverage, DiarizationPurity
 from pyannote.metrics.segmentation import SegmentationCoverage, SegmentationRecall, SegmentationPrecision, \
     SegmentationPurity
 
-import goldretriever
+DEFAULT_GOLD_URL = 'https://github.com/clamsproject/aapb-annotations/tree/f884e10d0b9d4b1d68e294d83c6e838528d2c249/newshour-transcript-sync/golds/aapb-collaboration-21'
 
 logging.basicConfig(
     level=logging.WARNING,
@@ -36,7 +36,7 @@ def read_cadet_annotation_tsv(tsv_file_list):
 
     gold_timeframes = collections.defaultdict(Annotation)
     for tsv_file in tsv_file_list:
-        guid = os.path.splitext(os.path.basename(tsv_file))[0]
+        guid = guidhandler.get_aapb_guid_from(tsv_file.stem)
         df = pd.read_csv(tsv_file, sep='\t')
         for index, row in df[['starts', 'ends', 'content']].iterrows():
             segment = Segment(cadettime_to_ms(row['starts']) / 1000, cadettime_to_ms(row['ends']) / 1000)
@@ -100,7 +100,7 @@ def read_system_mmif(mmif_file_list, reference_timeframes):
 
     test_timeframes = collections.defaultdict(Annotation)
     for mmif_file in mmif_file_list:
-        guid = os.path.splitext(os.path.basename(mmif_file))[0]
+        guid = guidhandler.get_aapb_guid_from(mmif_file.stem)
         reference = reference_timeframes[guid]
         with open(mmif_file, 'r') as file:
             mmif = Mmif(file.read())
@@ -219,8 +219,7 @@ if __name__ == "__main__":
                         default="")
     args = parser.parse_args()
     if args.gold_dir is None:
-        args.gold_dir = goldretriever.download_golds(
-            'https://github.com/clamsproject/aapb-annotations/tree/f884e10d0b9d4b1d68e294d83c6e838528d2c249/newshour-transcript-sync/golds/aapb-collaboration-21')
+        args.gold_dir = goldretriever.download_golds(DEFAULT_GOLD_URL)
     gold_timeframes = read_cadet_annotation_tsv(P(args.gold_dir).glob("*.tsv"))
     test_timeframes = read_system_mmif(P(args.machine_dir).glob("*.mmif"), gold_timeframes)
     threshold = []
