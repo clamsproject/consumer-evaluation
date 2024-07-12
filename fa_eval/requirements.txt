@@ -1,4 +1,4 @@
-mmif-python
+mmif-python==1.*
 lapps
 pyannote.metrics
 pandas
