@@ -19,12 +19,10 @@ def convert_iso_milliseconds(timestamp):
     convert ISO timestamp strings (hours:minutes:seconds.ms) back to milliseconds
     """
     ms = 0
-    # add hours
-    ms += int(timestamp.split(":")[0]) * 3600000
-    # add minutes
-    ms += int(timestamp.split(":")[1]) * 60000
-    # add seconds and milliseconds
-    ms += float(timestamp.split(":")[2]) * 1000
+
+    ms += int(timestamp.split(":")[0]) * 3600000    # add hours
+    ms += int(timestamp.split(":")[1]) * 60000      # add minutes
+    ms += float(timestamp.split(":")[2]) * 1000     # add seconds and milliseconds
     ms = int(ms)
     return ms
 
@@ -56,14 +54,11 @@ def closest_gold_timestamp(pred_stamp, gold_dict, good_range = 5):
     method to match a given predicted timestamp (key) with the closest gold timestamp:
     acceptable range is default +/- 5 ms. if nothing matches, return None
     """
-    # first check if pred in gold_dict. if yes, return pred
     if pred_stamp in gold_dict:
         return pred_stamp
-    # for i = 5 to 1 check if pred - i in gold_dict, if yes return pred - i
     for i in range(good_range, 0, -1):
         if pred_stamp - i in gold_dict:
             return pred_stamp - i
-    # for i = 1 to i = 5 check if pred + i in gold dict, if yes return pred + i
     for i in range(1, good_range + 1):
         if pred_stamp + i in gold_dict:
             return pred_stamp + i
@@ -76,41 +71,40 @@ def combine_pred_and_gold_labels(pred_path, gold_dict, count_subtypes = False):
     note that pred_path is already a filepath, not a string
     returns a dictionary with timestamps as keys and tuples of labels as values.
     """
-    # create a dictionary to fill in with timestamps -> label tuples (predicted, gold)
     combined_dict = {}
     with open(pred_path, "r") as file:
         json_data = file.read()
         pred_mmif = Mmif(json_data)
-        for view in pred_mmif["views"]:
-            if "annotations" in view:
-                for annotation in view["annotations"]:
-                    if "timePoint" in annotation['properties']:
-                        # match pred timestamp to closest gold timestamp
-                        # using default range (+/- 5ms)
-                        curr_timestamp = closest_gold_timestamp(annotation['properties']['timePoint'], gold_dict)
-                        # check if closest_gold_timestamp returned None (not within acceptable range)
-                        if not curr_timestamp:
-                            continue
-                        # truncate label if count_subtypes is false
-                        pred_label = annotation['properties']['label'] if count_subtypes else annotation['properties']['label'][0]
-                        # if NEG set to '-'
-                        if annotation['properties']['label'] == 'NEG':
-                            pred_label = '-'
-                        # put gold and pred labels into combined dictionary
-                        combined_dict[annotation.id] = (pred_label, gold_dict[curr_timestamp])
+        view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimePoint)
+        if "annotations" in view:
+            for annotation in view["annotations"]:
+                if "timePoint" in annotation['properties']:
+                    # match pred timestamp to closest gold timestamp using default range (+/- 5ms)
+                    curr_timestamp = closest_gold_timestamp(annotation['properties']['timePoint'], gold_dict)
+                    # check if closest_gold_timestamp returned None (not within acceptable range)
+                    if not curr_timestamp:
+                        continue
+                    # truncate label if count_subtypes is false
+                    pred_label = annotation['properties']['label'] if count_subtypes else annotation['properties']['label'][0]
+                    # if NEG set to '-'
+                    if annotation['properties']['label'] == 'NEG':
+                        pred_label = '-'
+                    # put gold and pred labels into combined dictionary
+                    combined_dict[annotation['id']] = (pred_label, gold_dict[curr_timestamp])
     return combined_dict
 
 
 def filter_remapped_labels(pred_path, combined_dict):
     """
-    Creates a dict that stores filtered raw and gold remapped labels.
+    Returns a dict that stores filtered raw and gold remapped labels.
     Labels that cannot be remapped and timepoints with no raw or gold label are filtered out.
     """
     filtered_combined_dict = {}
     with open(pred_path, "r") as file:
         json_data = file.read()
         pred_mmif = Mmif(json_data)
-        map_schema = pred_mmif.views['v_0']['metadata']['appConfiguration']['map']
+        tp_view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimePoint)
+        map_schema = pred_mmif.views[str(tp_view['id'])]['metadata']['appConfiguration']['map']
         for timepoint in combined_dict:
             raw_remap = "-"
             gold_remap = "-"
@@ -125,23 +119,25 @@ def filter_remapped_labels(pred_path, combined_dict):
 
 def stitched_labels(pred_path, combined_dict):
     """
-    Creates a dict that stores raw and gold remapped labels corresponding to the TF targets generated by the stitcher.
+    Returns a dict that stores raw and gold remapped labels corresponding to the TF targets generated by the stitcher.
     """
     stitched_dict = {}
     with open(pred_path, "r") as file:
         json_data = file.read()
         pred_mmif = Mmif(json_data)
-        map_schema = pred_mmif.views['v_0']['metadata']['appConfiguration']['map']
-        for view in pred_mmif["views"]:
-            if "annotations" in view:
-                for annotation in view["annotations"]:
-                    if "TimeFrame" in annotation["@type"]:
-                        for target in annotation["targets"]:
-                            stitched = annotation["properties"]["label"]
-                            gold_remap = "-"
-                            if combined_dict[target][1] in map_schema:
-                                gold_remap = map_schema[combined_dict[target][1]]
-                            stitched_dict[target] = (stitched, gold_remap)
+        tp_view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimePoint)
+        map_schema = pred_mmif.views[str(tp_view['id'])]['metadata']['appConfiguration']['map']
+        tf_view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimeFrame)
+        if "annotations" in tf_view:
+            for annotation in tf_view["annotations"]:
+                if "TimeFrame" in annotation["@type"]:
+                    for target in annotation["targets"]:
+                        target = target.split(":")[1] if target.find(":") > -1 else target
+                        stitched = annotation["properties"]["label"]
+                        gold_remap = "-"
+                        if combined_dict[target][1] in map_schema:
+                            gold_remap = map_schema[combined_dict[target][1]]
+                        stitched_dict[target] = (stitched, gold_remap)
     return stitched_dict
 
 
@@ -236,7 +232,6 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes):
     mmif_files = pathlib.Path(mmif_dir).glob("*.mmif")
     # get each mmif file
     for mmif_file in mmif_files:
-        guid = ""
         with open(mmif_file, "r") as f:
             json_data = f.read()
             curr_mmif = Mmif(json_data)
