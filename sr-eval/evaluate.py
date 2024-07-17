@@ -1,9 +1,11 @@
 import argparse
 from collections import defaultdict, Counter
 import pathlib
+
+import mmif.vocabulary.document_types
 import pandas as pd
-import json
 from clams_utils.aapb import goldretriever
+from mmif import Mmif
 
 # constant:
 GOLD_URL = "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8cf942ba827917938b49570d6d9/scene-recognition/golds"
@@ -11,10 +13,11 @@ GOLD_URL = "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8
 
 # parse SWT output into dictionary to extract label-timepoint pairs
 
-# convert ISO timestamp strings (hours:minutes:seconds.ms) back to milliseconds
-
 
 def convert_iso_milliseconds(timestamp):
+    """
+    convert ISO timestamp strings (hours:minutes:seconds.ms) back to milliseconds
+    """
     ms = 0
     # add hours
     ms += int(timestamp.split(":")[0]) * 3600000
@@ -25,8 +28,11 @@ def convert_iso_milliseconds(timestamp):
     ms = int(ms)
     return ms
 
-# extract gold pairs from each csv. note goldpath is fed in as a path object
+
 def extract_gold_labels(goldpath, count_subtypes=False):
+    """
+    extract gold pairs from each csv. note goldpath is fed in as a path object
+    """
     df = pd.read_csv(goldpath)
     # convert timestamps (iso) back to ms
     df['timestamp'] = df['timestamp'].apply(convert_iso_milliseconds)
@@ -44,10 +50,12 @@ def extract_gold_labels(goldpath, count_subtypes=False):
     # return dictionary that maps timestamps to label
     return gold_dict
 
-# method to match a given predicted timestamp (key) with the closest gold timestamp:
-# acceptable range is default +/- 5 ms. if nothing matches, return None
 
 def closest_gold_timestamp(pred_stamp, gold_dict, good_range = 5):
+    """
+    method to match a given predicted timestamp (key) with the closest gold timestamp:
+    acceptable range is default +/- 5 ms. if nothing matches, return None
+    """
     # first check if pred in gold_dict. if yes, return pred
     if pred_stamp in gold_dict:
         return pred_stamp
@@ -61,17 +69,19 @@ def closest_gold_timestamp(pred_stamp, gold_dict, good_range = 5):
             return pred_stamp + i
     return None
 
-# extract predicted label pairs from output mmif and match with gold pairs
-# note that pred_path is already a filepath, not a string
-# returns a dictionary with timestamps as keys and tuples of labels as values.
 
-
-def extract_predicted_consolidate(pred_path, gold_dict, count_subtypes = False):
+def combine_pred_and_gold_labels(pred_path, gold_dict, count_subtypes = False):
+    """
+    extract predicted label pairs from output mmif and match with gold pairs
+    note that pred_path is already a filepath, not a string
+    returns a dictionary with timestamps as keys and tuples of labels as values.
+    """
     # create a dictionary to fill in with timestamps -> label tuples (predicted, gold)
     combined_dict = {}
     with open(pred_path, "r") as file:
-        pred_json = json.load(file)
-        for view in pred_json["views"]:
+        json_data = file.read()
+        pred_mmif = Mmif(json_data)
+        for view in pred_mmif["views"]:
             if "annotations" in view:
                 for annotation in view["annotations"]:
                     if "timePoint" in annotation['properties']:
@@ -87,16 +97,63 @@ def extract_predicted_consolidate(pred_path, gold_dict, count_subtypes = False):
                         if annotation['properties']['label'] == 'NEG':
                             pred_label = '-'
                         # put gold and pred labels into combined dictionary
-                        combined_dict[curr_timestamp] = (pred_label, gold_dict[curr_timestamp])
+                        combined_dict[annotation.id] = (pred_label, gold_dict[curr_timestamp])
     return combined_dict
 
-# calculate document-level p, r, f1 for each label and macro avg. also returns total counts
-# of tp, fp, fn for each label to calculate micro avg later.
+
+def filter_remapped_labels(pred_path, combined_dict):
+    """
+    Creates a dict that stores filtered raw and gold remapped labels.
+    Labels that cannot be remapped and timepoints with no raw or gold label are filtered out.
+    """
+    filtered_combined_dict = {}
+    with open(pred_path, "r") as file:
+        json_data = file.read()
+        pred_mmif = Mmif(json_data)
+        map_schema = pred_mmif.views['v_0']['metadata']['appConfiguration']['map']
+        for timepoint in combined_dict:
+            raw_remap = "-"
+            gold_remap = "-"
+            if combined_dict[timepoint][0] in map_schema:
+                raw_remap = map_schema[combined_dict[timepoint][0]]
+            if combined_dict[timepoint][1] in map_schema:
+                gold_remap = map_schema[combined_dict[timepoint][1]]
+            if raw_remap != "-" or gold_remap != "-":
+                filtered_combined_dict[timepoint] = (raw_remap, gold_remap)
+    return filtered_combined_dict
+
+
+def stitched_labels(pred_path, combined_dict):
+    """
+    Creates a dict that stores raw and gold remapped labels corresponding to the TF targets generated by the stitcher.
+    """
+    stitched_dict = {}
+    with open(pred_path, "r") as file:
+        json_data = file.read()
+        pred_mmif = Mmif(json_data)
+        map_schema = pred_mmif.views['v_0']['metadata']['appConfiguration']['map']
+        for view in pred_mmif["views"]:
+            if "annotations" in view:
+                for annotation in view["annotations"]:
+                    if "TimeFrame" in annotation["@type"]:
+                        for target in annotation["targets"]:
+                            stitched = annotation["properties"]["label"]
+                            gold_remap = "-"
+                            if combined_dict[target][1] in map_schema:
+                                gold_remap = map_schema[combined_dict[target][1]]
+                            stitched_dict[target] = (stitched, gold_remap)
+    return stitched_dict
+
+
 def document_evaluation(combined_dict):
+    """
+    calculate document-level p, r, f1 for each label and macro avg.
+    also returns total counts of tp, fp, fn for each label to calculate micro avg later.
+    """
     # count up tp, fp, fn for each label
     total_counts = defaultdict(Counter)
-    for timestamp in combined_dict:
-        pred, gold = combined_dict[timestamp][0], combined_dict[timestamp][1]
+    for annotation_id in combined_dict:
+        pred, gold = combined_dict[annotation_id][0], combined_dict[annotation_id][1]
         if pred == gold:
             total_counts[pred]["tp"] += 1
         else:
@@ -134,10 +191,12 @@ def document_evaluation(combined_dict):
     # return both scores_by_label and total_counts (to calculate micro avg later)
     return scores_by_label, total_counts
 
-# once you have processed every document, this method runs to calculate the micro-averaged
-# scores. the input is a list of total_counts dictionaries, each obtained from running
-# document_evaluation.
+
 def total_evaluation(total_counts_list):
+    """
+    once you have processed every document, this method runs to calculate the micro-averaged scores.
+    the input is a list of total_counts dictionaries, each obtained from running document_evaluation.
+    """
     # create dict to hold total tp, fp, fn for all labels
     total_instances_by_label = defaultdict(Counter)
     # iterate through total_counts_list to get complete count of tp, fp, fn by label
@@ -164,36 +223,57 @@ def total_evaluation(total_counts_list):
         complete_micro_scores[label]["f1"] = f1
     return complete_micro_scores
 
-# run the evaluation on each predicted-gold pair of files, and then the entire dataset for
-# micro average
+
 def run_dataset_eval(mmif_dir, gold_dir, count_subtypes):
-    # create dict of guid -> scores to store each dict of document-level scores
-    doc_scores = {}
-    # create list to store each dict of document-level counts
-    document_counts = []
+    """
+    run the evaluation on each predicted-gold pair of files, and then the entire dataset for micro average
+    scores are stored in document_scores and counts are stored in document_counts
+    """
+    # create dicts of guid -> scores to store each dict of document-level scores
+    doc_scores = {"unfiltered": {}, "filtered": {}, "stitched": {}}
+    # create lists to store each dict of document-level counts
+    document_counts = {"unfiltered": [], "filtered": [], "stitched": []}
     mmif_files = pathlib.Path(mmif_dir).glob("*.mmif")
     # get each mmif file
     for mmif_file in mmif_files:
         guid = ""
         with open(mmif_file, "r") as f:
-            curr_mmif = json.load(f)
+            json_data = f.read()
+            curr_mmif = Mmif(json_data)
             # get guid
-            location = curr_mmif["documents"][0]["properties"]["location"]
+            location = curr_mmif.get_document_location("http://mmif.clams.ai/vocabulary/VideoDocument/v1")
             guid = location.split("/")[-1].split(".")[0]
         # match guid with gold file
         gold_file = next(pathlib.Path(gold_dir).glob(f"*{guid}*"))
         # process gold
         gold_dict = extract_gold_labels(gold_file, count_subtypes)
-        # process predicted and consolidate
-        combined_dict = extract_predicted_consolidate(mmif_file, gold_dict, count_subtypes)
-        # evaluate on document level, storing scores in document_scores and counts in document_counts
-        eval_result = document_evaluation(combined_dict)
-        doc_scores[guid] = eval_result[0]
-        document_counts.append(eval_result[1])
-    # now after processing each document and storing the relevant scores, we can evaluate the
-    # dataset performance as a whole
-    data_scores = total_evaluation(document_counts)
+
+        # create three dicts whose label values are: raw & gold, raw-remap & gold-remap, stitched & gold-remap
+        combined_dict = combine_pred_and_gold_labels(mmif_file, gold_dict, count_subtypes)
+        filtered_combined_dict = filter_remapped_labels(mmif_file, combined_dict)
+        stitched_dict = stitched_labels(mmif_file, combined_dict)
+
+        # evaluate raw and gold labels on document level
+        combined_eval_result = document_evaluation(combined_dict)
+        doc_scores["unfiltered"][guid] = combined_eval_result[0]
+        document_counts["unfiltered"].append(combined_eval_result[1])
+
+        # evaluate raw-remap and gold-remap labels
+        filtered_eval_result = document_evaluation(filtered_combined_dict)
+        doc_scores["filtered"][guid] = filtered_eval_result[0]
+        document_counts["filtered"].append(filtered_eval_result[1])
+
+        # evaluate stitcher and gold-remap labels
+        stitched_eval_result = document_evaluation(stitched_dict)
+        doc_scores["stitched"][guid] = stitched_eval_result[0]
+        document_counts["stitched"].append(stitched_eval_result[1])
+
+    # after processing each document and storing the relevant scores, we can evaluate the dataset performance as a whole
+    data_scores = {}
+    for eval_type in document_counts:
+        data_scores[eval_type] = total_evaluation(document_counts[eval_type])
     return doc_scores, data_scores
+
 
 def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
     # get name for new directory
@@ -202,16 +282,18 @@ def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
     # create new dir for scores based on batch name
     new_dir = pathlib.Path.cwd() / batch_score_name
     new_dir.mkdir(parents = True, exist_ok = True)
-    # iterate through nested dict, output separate scores for each guid
-    for guid in doc_scores:
-        doc_df = pd.DataFrame(doc_scores[guid])
-        doc_df = doc_df.transpose()
-        out_path = new_dir / f"{guid}.csv"
-        doc_df.to_csv(out_path)
-    # output total dataset scores
-    dataset_df = pd.DataFrame(dataset_scores)
-    dataset_df = dataset_df.transpose()
-    dataset_df.to_csv(new_dir/"dataset_scores.csv")
+
+    for eval_type in doc_scores:
+        # iterate through nested dict, output separate scores for each guid
+        for guid in doc_scores[eval_type]:
+            doc_df = pd.DataFrame(doc_scores[eval_type][guid])
+            doc_df = doc_df.transpose()
+            out_path = new_dir / f"{guid}-{eval_type}.csv"
+            doc_df.to_csv(out_path)
+        # output total dataset scores
+        dataset_df = pd.DataFrame(dataset_scores[eval_type])
+        dataset_df = dataset_df.transpose()
+        dataset_df.to_csv(new_dir/f"dataset_scores-{eval_type}.csv")
 
 
 if __name__ == "__main__":
