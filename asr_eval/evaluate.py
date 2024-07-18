@@ -1,14 +1,15 @@
 import argparse
 from pathlib import Path
+import tempfile
 
-from clams_utils.aapb import goldretriever
+from clams_utils.aapb import goldretriever, newshour_transcript_cleanup
 from jiwer import wer
 from mmif import Mmif, DocumentTypes
 
 # constant:
 ## note that this repository is a private one and the files are not available to the public (due to IP concerns)
 ## hence using goldretriever to download the gold files WILL NOT work (goldretreiver is only for public repositories)
-GOLD_URL = "https://github.com/clamsproject/aapb-collaboration/tree/89b8b123abbd4a9a67c525cc480173b52e0d05f0/21"
+GOLD_URL = "https://github.com/clamsproject/aapb-collaboration/tree/master/21"
 
 
 def get_text_from_mmif(mmif):
@@ -70,7 +71,7 @@ def batch_run_wer(hyp_dir, gold_dir):
             except Exception as wer_exception:
                 print("Error processing file: ", hyp_file.name, wer_exception)
 
-    with open(f'results@{hyp_dir.name}.csv', 'w') as fp:
+    with open(f'old_results@{hyp_dir.name}.csv', 'w') as fp:
         fp.write('GUID,WER-case-sensitive,WER-case-insens\n')
         werS_sum = 0
         werI_sum = 0
@@ -90,5 +91,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     ref_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
+    audio_tmpdir = tempfile.TemporaryDirectory()
+    newshour_transcript_cleanup.clean_and_write(ref_dir, audio_tmpdir.name)
 
-    batch_run_wer(args.mmif_dir, ref_dir)
+    batch_run_wer(args.mmif_dir, audio_tmpdir.name)
