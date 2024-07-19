@@ -1,4 +1,4 @@
-UNFILTERED
+UNFILTERED: evaluates raw predicted labels vs. gold labels
 label,precision,recall,f1
 -,0.8874425727411945,0.8827113480578828,0.8850706376479572
 B,1.0,1.0,1.0
@@ -17,7 +17,7 @@ T,0.0,0.0,0
 Y,0.0,0,0
 average,0.4894391725223373,0.4485352250809625,0.44770812837208024
 
-FILTERED
+FILTERED: evaluates remapped predicted labels vs. remapped gold labels
 label,precision,recall,f1
 -,0.0,0.0,0
 average,0.6540291116446578,0.6632890918605204,0.6560110614905136
@@ -28,7 +28,7 @@ other_opening,0.6,0.7272727272727273,0.6575342465753425
 other_text,0.5808823529411765,0.5064102564102564,0.5410958904109588
 slate,1.0,0.8571428571428571,0.923076923076923
 
-STITCHED
+STITCHED: evaluates stitched predicted labels vs. remapped gold labels
 label,precision,recall,f1
 -,0,0.0,0
 average,0.7461510920157537,0.7884353741496598,0.76378002528445

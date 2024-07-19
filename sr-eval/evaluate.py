@@ -289,7 +289,12 @@ def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
         with open(guid_out_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             for eval_type in doc_scores[guid]:
-                writer.writerow([eval_type[0].upper()])
+                if eval_type[0] == "unfiltered":
+                    writer.writerow([f"{eval_type[0].upper()}: evaluates raw predicted labels vs. gold labels"])
+                elif eval_type[0] == "filtered":
+                    writer.writerow([f"{eval_type[0].upper()}: evaluates remapped predicted labels vs. remapped gold labels"])
+                elif eval_type[0] == "stitched":
+                    writer.writerow([f"{eval_type[0].upper()}: evaluates stitched predicted labels vs. remapped gold labels"])
                 writer.writerow(csv_headers)
                 for label in sorted(eval_type[1]):
                     scores = eval_type[1][label]
@@ -301,7 +306,12 @@ def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
     with open(dataset_out_path, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         for eval_type in dataset_scores:
-            writer.writerow([eval_type.upper()])
+            if eval_type == "unfiltered":
+                writer.writerow([f"{eval_type.upper()}: evaluates raw predicted labels vs. gold labels"])
+            elif eval_type == "filtered":
+                writer.writerow([f"{eval_type.upper()}: evaluates remapped predicted labels vs. remapped gold labels"])
+            elif eval_type == "stitched":
+                writer.writerow([f"{eval_type.upper()}: evaluates stitched predicted labels vs. remapped gold labels"])
             writer.writerow(csv_headers)
             for label in sorted(dataset_scores[eval_type]):
                 scores = dataset_scores[eval_type][label]
@@ -312,10 +322,9 @@ def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Three methods are available for evaluation: '
-                    '[1] unfiltered - raw vs. gold, which evaluates the raw predicted labels against the gold labels, '
-                    '[2] filtered - raw-remap vs. gold-remap, which evaluates the predicted and gold labels '
-                    'where both sets of labels are remapped (e.g., I -> chyron), '
-                    '[3] (OPTIONAL) stitched - stitched vs. gold-remap, which evaluates the stitched predicted labels against the remapped gold labels. '
+                    '[1] unfiltered - raw vs. gold: evaluates the raw predicted labels against the gold labels, '
+                    '[2] filtered - raw-remap vs. gold-remap: evaluates the remapped predicted labels against the remapped gold labels (e.g., I -> chyron), '
+                    '[3] (OPTIONAL) stitched - stitched vs. gold-remap: evaluates the stitched predicted labels against the remapped gold labels. '
                     'Stitched labels come from the stitcher within swt-detection or externally from simple-timepoints-stitcher.'
     )
     parser.add_argument('-m', '--mmif_dir', type=str, required=True,
