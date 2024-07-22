@@ -292,26 +292,28 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, timeframe_eval):
 def write_output(doc_scores, preds_id):
     # get name for new directory
     # with our standard, this results in "scores@" appended to the batch name
-    batch_score_name = "scores@" + preds_id.split('@')[-1].strip('/')
     # create new dir for scores based on batch name
-    new_dir = pathlib.Path.cwd() / batch_score_name
-    new_dir.mkdir(parents=True, exist_ok=True)
+    out_fname = (pathlib.Path(__file__).parent / ("results." + preds_id.split('@')[-1].strip('/'))).with_suffix('.csv')
 
     csv_headers = ["label", 'precision', 'recall', 'f1']
 
+    with open(out_fname, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        
+    tabluated = {}  # scores per GUID
+    cols = ['labels', ALL_GUID]
+    # row : f"{label} {score_type[0]} {eval_type.value.upper()}"
     # iterate through nested dict, output separate scores for each guid
-    for guid in doc_scores:
-        guid_out_path = new_dir/f"{guid}.csv"
-        with open(guid_out_path, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            for i in doc_scores[guid]:
-                eval_type, scores_by_label = i
-                writer.writerow([f"{eval_type.value.upper()}: {eval_types[eval_type]}"])
-                writer.writerow(csv_headers)
-                for label in sorted(scores_by_label):
-                    scores = scores_by_label[label]
-                    writer.writerow([label, scores['precision'], scores['recall'], scores['f1']])
-                writer.writerow('')
+    for guid, scores in doc_scores.items():
+        if guid != ALL_GUID:
+            cols.append(guid)
+        for i in scores:
+            eval_type, scores_by_label = i
+            for label in sorted(scores_by_label):
+                for score_type, score in scores_by_label[label].items():
+                    row_key = f"{label} {score_type[0].upper()} {eval_type.value.upper()}"
+                    tabluated[row_key] = score
+    print(tabluated)
 
 
 if __name__ == "__main__":
