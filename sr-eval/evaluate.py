@@ -242,7 +242,7 @@ def total_evaluation(total_counts_list):
     return [(eval_type, scores) for eval_type, scores in complete_micro_scores.items()]
 
 
-def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, toggle_stitcher):
+def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, timeframe_eval):
     """
     run the evaluation on each predicted-gold pair of files, and then the entire dataset for micro average
     scores are stored in document_scores and counts are stored in document_counts
@@ -277,8 +277,8 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, toggle_stitcher):
         doc_scores[guid].append((EvalType.FILTERED, scores))
         document_counts.append((EvalType.FILTERED, counts))
 
-        # evaluate stitcher and gold-remap labels only if toggle_stitcher is on
-        if toggle_stitcher:
+        # evaluate stitcher and gold-remap labels only if timeframe_eval is on
+        if timeframe_eval:
             stitched_dict = stitched_labels(mmif_file, combined_dict)
             scores, counts = document_evaluation(stitched_dict)
             doc_scores[guid].append((EvalType.STITCHED, scores))
@@ -326,15 +326,14 @@ if __name__ == "__main__":
                         help='directory containing machine-annotated files in MMIF format')
     parser.add_argument('-g', '--gold_dir', type=str, default=None,
                         help='directory containing gold labels in csv format')
-    parser.add_argument('-s', '--count_subtypes', type=bool, default=False,
+    parser.add_argument('-s', '--subtypes', action='store_true', 
                         help='bool flag whether to consider subtypes for evaluation')
-    parser.add_argument('-t', '--toggle_stitcher', type=bool, default=False,
+    parser.add_argument('-t', '--timeframe-eval', action='store_true',
                         help='bool flag whether to run the optional stitcher evaluation')
     args = parser.parse_args()
     mmif_dir = args.mmif_dir
     gold_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
-    count_subtypes = args.count_subtypes
-    document_scores, dataset_scores = run_dataset_eval(mmif_dir, gold_dir, count_subtypes, args.toggle_stitcher)
+    document_scores = run_dataset_eval(mmif_dir, gold_dir, args.subtypes, args.timeframe_eval)
     # document scores are for each doc, dataset scores are for overall (micro avg)
     # call method to output scores for each doc and then for total scores
     write_output(document_scores, mmif_dir)
