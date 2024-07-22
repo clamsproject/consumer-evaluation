@@ -1,16 +1,35 @@
 import argparse
 from collections import defaultdict, Counter
 import pathlib
+from enum import Enum
 
 import mmif.vocabulary.document_types
 import pandas as pd
-from clams_utils.aapb import goldretriever
+from clams_utils.aapb import goldretriever, guidhandler
 from mmif import Mmif
 import csv
 
 # constant:
 GOLD_URL = "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8cf942ba827917938b49570d6d9/scene-recognition/golds"
 # note that you must first have output mmif files to compare against
+
+ALL_GUID = "@@@ALL@@@"  # dummy string to use as the id of aggregated scores
+
+
+class EvalType(Enum):
+    UNFILTERED = 'unfiltered'
+    FILTERED = 'filtered'
+    STITCHED = 'stitched'
+
+    def __str__(self):
+        return self.value
+
+eval_types = {
+    EvalType.UNFILTERED: 'evaluates raw predicted labels vs. gold labels',
+    EvalType.FILTERED: 'evaluates remapped predicted labels vs. remapped gold labels',
+    EvalType.STITCHED: 'evaluates stitched predicted labels vs. remapped gold labels'
+}
+
 
 # parse SWT output into dictionary to extract label-timepoint pairs
 
@@ -195,18 +214,17 @@ def total_evaluation(total_counts_list):
     the input is a list of total_counts dictionaries, each obtained from running document_evaluation.
     """
     # create dict to hold total tp, fp, fn for all labels
-    total_instances_by_label = {}
+    total_instances_by_label = defaultdict(lambda: defaultdict(Counter))
     # iterate through total_counts_list to get complete count of tp, fp, fn by label
-    for doc_dict in total_counts_list:
-        total_instances_by_label[doc_dict[0]] = defaultdict(Counter)
-        for label in doc_dict[1]:
-            total_instances_by_label[doc_dict[0]][label]["tp"] += doc_dict[1][label]["tp"]
-            total_instances_by_label[doc_dict[0]][label]["fp"] += doc_dict[1][label]["fp"]
-            total_instances_by_label[doc_dict[0]][label]["fn"] += doc_dict[1][label]["fn"]
+    for eval_type, scores in total_counts_list:
+        for label in scores:
+            total_instances_by_label[eval_type][label]["tp"] += scores[label]["tp"]
+            total_instances_by_label[eval_type][label]["fp"] += scores[label]["fp"]
+            total_instances_by_label[eval_type][label]["fn"] += scores[label]["fn"]
             # include a section for total tp/fp/fn for all labels
-            total_instances_by_label[doc_dict[0]]["all"]["tp"] += doc_dict[1][label]["tp"]
-            total_instances_by_label[doc_dict[0]]["all"]["fp"] += doc_dict[1][label]["fp"]
-            total_instances_by_label[doc_dict[0]]["all"]["fn"] += doc_dict[1][label]["fn"]
+            total_instances_by_label[eval_type]["all"]["tp"] += scores[label]["tp"]
+            total_instances_by_label[eval_type]["all"]["fp"] += scores[label]["fp"]
+            total_instances_by_label[eval_type]["all"]["fn"] += scores[label]["fn"]
     # create complete_micro_scores to store micro avg scores for entire dataset
     complete_micro_scores = {}
     # fill in micro scores
@@ -221,7 +239,7 @@ def total_evaluation(total_counts_list):
             complete_micro_scores[eval_type][label]["precision"] = precision
             complete_micro_scores[eval_type][label]["recall"] = recall
             complete_micro_scores[eval_type][label]["f1"] = f1
-    return complete_micro_scores
+    return [(eval_type, scores) for eval_type, scores in complete_micro_scores.items()]
 
 
 def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, toggle_stitcher):
@@ -238,10 +256,8 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, toggle_stitcher):
     for mmif_file in mmif_files:
         with open(mmif_file, "r") as f:
             json_data = f.read()
-            curr_mmif = Mmif(json_data)
-            # get guid
-            location = curr_mmif.get_document_location("http://mmif.clams.ai/vocabulary/VideoDocument/v1")
-            guid = location.split("/")[-1].split(".")[0]
+            # always assume the first document is the main "source" data for the annotations
+            guid = guidhandler.get_aapb_guid_from(list(Mmif(json_data).documents._items.values())[0].location_address())
         # match guid with gold file
         gold_file = next(pathlib.Path(gold_dir).glob(f"*{guid}*"))
         # process gold
@@ -251,32 +267,32 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, toggle_stitcher):
 
         # evaluate raw predicted labels vs. gold labels
         combined_dict = combine_pred_and_gold_labels(mmif_file, gold_dict, count_subtypes)
-        combined_eval_result = document_evaluation(combined_dict)
-        doc_scores[guid].append(("unfiltered", combined_eval_result[0]))
-        document_counts.append(("unfiltered", combined_eval_result[1]))
+        scores, counts = document_evaluation(combined_dict)
+        doc_scores[guid].append((EvalType.UNFILTERED, scores))
+        document_counts.append((EvalType.UNFILTERED, counts))
 
         # evaluate raw-remap and gold-remap labels
         filtered_combined_dict = filter_remapped_labels(mmif_file, combined_dict)
-        filtered_eval_result = document_evaluation(filtered_combined_dict)
-        doc_scores[guid].append(("filtered", filtered_eval_result[0]))
-        document_counts.append(("filtered", filtered_eval_result[1]))
+        scores, counts = document_evaluation(filtered_combined_dict)
+        doc_scores[guid].append((EvalType.FILTERED, scores))
+        document_counts.append((EvalType.FILTERED, counts))
 
         # evaluate stitcher and gold-remap labels only if toggle_stitcher is on
         if toggle_stitcher:
             stitched_dict = stitched_labels(mmif_file, combined_dict)
-            stitched_eval_result = document_evaluation(stitched_dict)
-            doc_scores[guid].append(("stitched", stitched_eval_result[0]))
-            document_counts.append(("stitched", stitched_eval_result[1]))
+            scores, counts = document_evaluation(stitched_dict)
+            doc_scores[guid].append((EvalType.STITCHED, scores))
+            document_counts.append((EvalType.STITCHED, counts))
 
     # after processing each document and storing the relevant scores, we can evaluate the dataset performance as a whole
-    dataset_scores = total_evaluation(document_counts)
-    return doc_scores, dataset_scores
+    doc_scores[ALL_GUID] = total_evaluation(document_counts)
+    return doc_scores
 
 
-def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
+def write_output(doc_scores, preds_id):
     # get name for new directory
     # with our standard, this results in "scores@" appended to the batch name
-    batch_score_name = "scores@" + mmif_dir.split('@')[-1].strip('/')
+    batch_score_name = "scores@" + preds_id.split('@')[-1].strip('/')
     # create new dir for scores based on batch name
     new_dir = pathlib.Path.cwd() / batch_score_name
     new_dir.mkdir(parents=True, exist_ok=True)
@@ -288,35 +304,14 @@ def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
         guid_out_path = new_dir/f"{guid}.csv"
         with open(guid_out_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
-            for eval_type in doc_scores[guid]:
-                if eval_type[0] == "unfiltered":
-                    writer.writerow([f"{eval_type[0].upper()}: evaluates raw predicted labels vs. gold labels"])
-                elif eval_type[0] == "filtered":
-                    writer.writerow([f"{eval_type[0].upper()}: evaluates remapped predicted labels vs. remapped gold labels"])
-                elif eval_type[0] == "stitched":
-                    writer.writerow([f"{eval_type[0].upper()}: evaluates stitched predicted labels vs. remapped gold labels"])
+            for i in doc_scores[guid]:
+                eval_type, scores_by_label = i
+                writer.writerow([f"{eval_type.value.upper()}: {eval_types[eval_type]}"])
                 writer.writerow(csv_headers)
-                for label in sorted(eval_type[1]):
-                    scores = eval_type[1][label]
+                for label in sorted(scores_by_label):
+                    scores = scores_by_label[label]
                     writer.writerow([label, scores['precision'], scores['recall'], scores['f1']])
                 writer.writerow('')
-
-    # output total dataset scores
-    dataset_out_path = new_dir/f"dataset_scores.csv"
-    with open(dataset_out_path, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        for eval_type in dataset_scores:
-            if eval_type == "unfiltered":
-                writer.writerow([f"{eval_type.upper()}: evaluates raw predicted labels vs. gold labels"])
-            elif eval_type == "filtered":
-                writer.writerow([f"{eval_type.upper()}: evaluates remapped predicted labels vs. remapped gold labels"])
-            elif eval_type == "stitched":
-                writer.writerow([f"{eval_type.upper()}: evaluates stitched predicted labels vs. remapped gold labels"])
-            writer.writerow(csv_headers)
-            for label in sorted(dataset_scores[eval_type]):
-                scores = dataset_scores[eval_type][label]
-                writer.writerow([label, scores['precision'], scores['recall'], scores['f1']])
-            writer.writerow('')
 
 
 if __name__ == "__main__":
@@ -342,4 +337,4 @@ if __name__ == "__main__":
     document_scores, dataset_scores = run_dataset_eval(mmif_dir, gold_dir, count_subtypes, args.toggle_stitcher)
     # document scores are for each doc, dataset scores are for overall (micro avg)
     # call method to output scores for each doc and then for total scores
-    separate_score_outputs(document_scores, dataset_scores, mmif_dir)
+    write_output(document_scores, mmif_dir)
