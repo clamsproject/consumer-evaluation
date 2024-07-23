@@ -24,14 +24,12 @@ class EvalType(Enum):
     def __str__(self):
         return self.value
 
+
 eval_types = {
     EvalType.UNFILTERED: 'evaluates raw predicted labels vs. gold labels',
     EvalType.FILTERED: 'evaluates remapped predicted labels vs. remapped gold labels',
     EvalType.STITCHED: 'evaluates stitched predicted labels vs. remapped gold labels'
 }
-
-
-# parse SWT output into dictionary to extract label-timepoint pairs
 
 
 def convert_iso_milliseconds(timestamp):
@@ -290,21 +288,20 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, timeframe_eval):
 
 
 def write_output(doc_scores, preds_id):
-    # get name for new directory
-    # with our standard, this results in "scores@" appended to the batch name
-    # create new dir for scores based on batch name
-    out_fname = (pathlib.Path(__file__).parent / ("results." + preds_id.split('@')[-1].strip('/'))).with_suffix('.csv')
-
-    csv_headers = ["label", 'precision', 'recall', 'f1']
-
-    with open(out_fname, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
+    """
+    Write results into output csv file.
+    Each row contains a label, score type (P/R/F), and eval type (unfiltered/filtered/stitched).
+    The '@@@ALL@@@' column shows aggregated scores across all GUIDs; other columns show scores per GUID.
+    """
+    out_fname = (pathlib.Path(__file__).parent / ("results@" + preds_id.split('@')[-1].strip('/'))).with_suffix('.csv')
         
-    tabluated = {}  # scores per GUID
+    tabulated = {}  # scores per GUID
     cols = ['labels', ALL_GUID]
-    # row : f"{label} {score_type[0]} {eval_type.value.upper()}"
+    rows = set()
+
     # iterate through nested dict, output separate scores for each guid
     for guid, scores in doc_scores.items():
+        tabulated[guid] = {}
         if guid != ALL_GUID:
             cols.append(guid)
         for i in scores:
@@ -312,8 +309,20 @@ def write_output(doc_scores, preds_id):
             for label in sorted(scores_by_label):
                 for score_type, score in scores_by_label[label].items():
                     row_key = f"{label} {score_type[0].upper()} {eval_type.value.upper()}"
-                    tabluated[row_key] = score
-    print(tabluated)
+                    rows.add(row_key)
+                    tabulated[guid][row_key] = score
+
+    with open(out_fname, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(cols)
+        for row in sorted(rows):
+            row_list = [row]
+            for col in cols[1:]:
+                if row in tabulated[col]:
+                    row_list.append(tabulated[col][row])
+                else:
+                    row_list.append(0)
+            writer.writerow(row_list)
 
 
 if __name__ == "__main__":
@@ -336,6 +345,4 @@ if __name__ == "__main__":
     mmif_dir = args.mmif_dir
     gold_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
     document_scores = run_dataset_eval(mmif_dir, gold_dir, args.subtypes, args.timeframe_eval)
-    # document scores are for each doc, dataset scores are for overall (micro avg)
-    # call method to output scores for each doc and then for total scores
     write_output(document_scores, mmif_dir)
