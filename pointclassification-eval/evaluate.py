@@ -199,9 +199,9 @@ def document_evaluation(label_dict):
     # calculate macro averages for document and add to scores_by_label
     # make sure to account for unseen unpredicted labels
     denominator = len(scores_by_label) - unseen
-    scores_by_label["average"]["precision"] = float(average_p / denominator)
-    scores_by_label["average"]["recall"] = float(average_r / denominator)
-    scores_by_label["average"]["f1"] = float(average_f1 / denominator)
+    scores_by_label["AVERAGE"]["precision"] = float(average_p / denominator)
+    scores_by_label["AVERAGE"]["recall"] = float(average_r / denominator)
+    scores_by_label["AVERAGE"]["f1"] = float(average_f1 / denominator)
     # return both scores_by_label and total_counts (to calculate micro avg later)
     return scores_by_label, total_counts
 
@@ -220,9 +220,9 @@ def total_evaluation(total_counts_list):
             total_instances_by_label[eval_type][label]["fp"] += scores[label]["fp"]
             total_instances_by_label[eval_type][label]["fn"] += scores[label]["fn"]
             # include a section for total tp/fp/fn for all labels
-            total_instances_by_label[eval_type]["all"]["tp"] += scores[label]["tp"]
-            total_instances_by_label[eval_type]["all"]["fp"] += scores[label]["fp"]
-            total_instances_by_label[eval_type]["all"]["fn"] += scores[label]["fn"]
+            total_instances_by_label[eval_type]["ALL"]["tp"] += scores[label]["tp"]
+            total_instances_by_label[eval_type]["ALL"]["fp"] += scores[label]["fp"]
+            total_instances_by_label[eval_type]["ALL"]["fn"] += scores[label]["fn"]
     # create complete_micro_scores to store micro avg scores for entire dataset
     complete_micro_scores = {}
     # fill in micro scores
@@ -297,7 +297,8 @@ def write_output(doc_scores, preds_id):
         
     tabulated = {}  # scores per GUID
     cols = ['labels', ALL_GUID]
-    rows = set()
+    pointwise_rows = set()
+    interval_rows = set()
 
     # iterate through nested dict, output separate scores for each guid
     for guid, scores in doc_scores.items():
@@ -309,20 +310,26 @@ def write_output(doc_scores, preds_id):
             for label in sorted(scores_by_label):
                 for score_type, score in scores_by_label[label].items():
                     row_key = f"{label} {score_type[0].upper()} {eval_type.value.upper()}"
-                    rows.add(row_key)
                     tabulated[guid][row_key] = score
+                    if eval_type.value.upper() == "UNFILTERED":
+                        pointwise_rows.add(row_key)
+                    else:
+                        interval_rows.add(row_key)
+
+    label_types = [pointwise_rows, interval_rows]
 
     with open(out_fname, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(cols)
-        for row in sorted(rows):
-            row_list = [row]
-            for col in cols[1:]:
-                if row in tabulated[col]:
-                    row_list.append(tabulated[col][row])
-                else:
-                    row_list.append(0)
-            writer.writerow(row_list)
+        for label_type in label_types:
+            for row in sorted(label_type):
+                row_list = [row]
+                for col in cols[1:]:
+                    if row in tabulated[col]:
+                        row_list.append(tabulated[col][row])
+                    else:
+                        row_list.append(0)
+                writer.writerow(row_list)
 
 
 if __name__ == "__main__":
