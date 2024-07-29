@@ -1,0 +1,49 @@
+Start loading gold-standard data:
+	loading file cpb-aacip-398-72p5hz1h.gold.csv... DONE
+	loading file cpb-aacip-526-r20rr1qt55.gold.csv... DONE
+	loading file cpb-aacip-189-784j16n7.gold.csv... DONE
+	loading file cpb-aacip-259-3j39316x.gold.csv... DONE
+	loading file cpb-aacip-507-ms3jw87c9c.gold.csv... DONE
+	loading file cpb-aacip-398-278sfdms.gold.csv... DONE
+	loading file cpb-aacip-526-dj58c9s78v.gold.csv... DONE
+	loading file cpb-aacip-0515ac167c0.gold.csv... DONE
+	loading file cpb-aacip-507-tq5r786f7w.gold.csv... DONE
+	loading file cpb-aacip-131-375tb64j.gold.csv... DONE
+	loading file cpb-aacip-398-87brvczv.gold.csv... DONE
+	loading file cpb-aacip-398-57np5q9c.gold.csv... DONE
+	loading file cpb-aacip-507-rj48p5w80b.gold.csv... DONE
+	loading file cpb-aacip-259-m32n9b08.gold.csv... DONE
+	loading file cpb-aacip-526-3r0pr7nr8r.gold.csv... DONE
+	loading file cpb-aacip-507-736m03zh49.gold.csv... DONE
+	loading file cpb-aacip-507-7h1dj59628.gold.csv... DONE
+	loading file cpb-aacip-283-61rfjj43.gold.csv... DONE
+	loading file cpb-aacip-221-03cz924b.gold.csv... DONE
+	loading file cpb-aacip-398-5370s4sx.gold.csv... DONE
+	loading file cpb-aacip-189-623bk932.gold.csv... DONE
+	loading file cpb-aacip-526-jh3cz33b2z.gold.csv... DONE
+	loading file cpb-aacip-41-10wpzpt5.gold.csv... DONE
+	loading file cpb-aacip-151-nc5s75735d.gold.csv... DONE
+	loading file cpb-aacip-526-6q1sf2n94w.gold.csv... DONE
+	loading file cpb-aacip-507-154dn40c26.gold.csv... DONE
+	loading file cpb-aacip-526-1j9765bd42.gold.csv... DONE
+	loading file cpb-aacip-259-3n20fq7w.gold.csv... DONE
+	loading file cpb-aacip-235-5370swqf.gold.csv... DONE
+	loading file cpb-aacip-81-902z3f9j.gold.csv... DONE
+	loading file cpb-aacip-151-5m6251g16w.gold.csv... DONE
+	loading file cpb-aacip-507-862b854459.gold.csv... DONE
+	loading file cpb-aacip-259-4j09zj5t.gold.csv... DONE
+	loading file cpb-aacip-526-th8bg2jm3n.gold.csv... DONE
+	loading file cpb-aacip-259-4x54hm72.gold.csv... DONE
+	loading file cpb-aacip-507-gm81j9807d.gold.csv... DONE
+	loading file cpb-aacip-259-ww76x89q.gold.csv... DONE
+	loading file cpb-aacip-293-30prr83h.gold.csv... DONE
+	loading file cpb-aacip-507-6t0gt5g28c.gold.csv... DONE
+	loading file cpb-aacip-901dfeea4db.gold.csv... DONE
+	loading file cpb-aacip-398-00ns1wds.gold.csv... DONE
+	loading file cpb-aacip-526-sb3ws8js1h.gold.csv... DONE
+
+Start loading predication data:
+		loading file cpb-aacip-191-40ksn47s.swt.paddleocr.rfb.mmif... DONE
+
+Overlap videos 0 found
+Writing out results... Success!
