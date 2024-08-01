@@ -1,7 +1,8 @@
 import argparse
 from pathlib import Path
+import tempfile
 
-from clams_utils.aapb import goldretriever
+from clams_utils.aapb import goldretriever, newshour_transcript_cleanup
 from jiwer import wer
 from mmif import Mmif, DocumentTypes
 
@@ -54,7 +55,7 @@ def batch_run_wer(hyp_dir, gold_dir):
     
     hyp_files = hyp_dir.glob('*.mmif')
     gold_files = gold_dir.glob('*-transcript.txt')
-    gold_files_dict = {x.stem.rstrip('-transcript.txt'): x for x in gold_files}
+    gold_files_dict = {x.stem.replace('-transcript', ''): x for x in gold_files}
     result = []
 
     for hyp_file in hyp_files:
@@ -90,5 +91,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     ref_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
+    audio_tmpdir = tempfile.TemporaryDirectory()
+    newshour_transcript_cleanup.clean_and_write(ref_dir, audio_tmpdir.name)
 
-    batch_run_wer(args.mmif_dir, ref_dir)
+    batch_run_wer(args.mmif_dir, audio_tmpdir.name)
