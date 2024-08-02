@@ -1,0 +1,73 @@
+# ASR Evaluation Report  -- Distil-Whisper `small`
+
+### App
+1. [distil-whisper-wrapper v1.1](https://github.com/clamsproject/app-distil-whisper-wrapper/tree/v1.1) is used to generated the preds MMIF files from 20 videos. For this evaluation, MMIF files are generated through the distil whisper `small` model.
+2. Preds MMIF files can be found [here](https://github.com/clamsproject/aapb-evaluations/tree/asr-new-eval/asr_eval/preds%40distil-whisper-wrapper-small%40aapb-collaboration-21).
+* **Note**: `cpb-aacip-507-vd6nz81n6r.video` does not exist, therefore no MMIF file is generated. The total number of valid MMIF files is **19**, **NOT** 20.
+
+### Evaluation Code
+The evaluation code can be found [here](https://github.com/clamsproject/aapb-evaluations/tree/asr-new-eval/asr_eval)
+
+### Evaluation Metric
+WER (Word Error Rate) is used as the evaluation metric that is implemented by 
+the above mentioned evaluation code. WER calculates the accuracy of Automatic 
+Speech Recognition (ASR) on the word level. To get a WER, the number of errors 
+is divided by the number of total words spoken. In other words, WER tells 
+"how wrong" the predicted result can be. Therefore, a smaller WER indicates a 
+better performance. More information can be found [here](https://en.wikipedia.org/wiki/Word_error_rate).
+The `jiwer` [package](https://jitsi.github.io/jiwer/) has a supports WER 
+calculations and is used in our evaluation code.
+
+### Evaluation Dataset
+Gold standard annotations are located [here](https://github.com/clamsproject/aapb-collaboration/tree/89b8b123abbd4a9a67c525cc480173b52e0d05f0/21), with file name starting with the corresponding video IDs.
+
+### Evaluation Results
+We are comparing it to our results from the [report-20240802-preds@whisper-wrapper-small@aapb-collaboration-21](link-here)
+in order to determine which ASR model of the same size yields better results. 
+Additionally, we evaluate MMIF files with and without case sensitivity.
+>1. **Case-sensitive distil-whisper (CaseSD)**: Upper case and lower case are treated differently using the dist-whisper model, e.g. Apple ≠ apple.
+>2. **Case Insensitive distil-whisper (CaseID)**: The transcripts from both gold and preds are capitalized using the distil-whisper model, thus making case insignificant, e.g. APPLE = APPLE.
+>3. **Case-sensitive whisper (CaseSW)**: Using the whisper model, e.g. Apple ≠ apple.
+>4. **Case Insensitive whisper (CaseIW)**: Using the whisper model, e.g. APPLE = APPLE.
+
+These 4 conditions generate 4 different WERs.
+
+#### A brief summary
+1. The lowest WER is **0.12475920679886686**, from `cpb-aacip-507-r785h7cp0z`, CaseIW.
+2. The highest WER is **0.3740422020511611**, from `cpb-aacip-507-zk55d8pd1h`, CaseS. This particular file has such a high WER due to the predictied transcrption being almost entirely wrong.
+3. The majority of the whisper-wrapper WERs fall within 15% ~ 25% range, and the majority of the distil-whisper-wrapper WERs fall within the 20%-35% range.
+4. When ignoring the case, **ALL** of the WERs become slighly lower, indicating a slightly higher accuracy. This is true for both models.
+5. **ALL** of the WERs of the whisper-wrapper are about 5 percentage points lower than the distil-whisper-wrapper, indicating the `whisper-wrapper` model having a slightly higher accuracy.
+5. The avarage WER among 19 MMIF files are:
+
+    | CaseSW |       CaseIW        |               CaseSD                |      Case SD       |
+    |:-------------------:|:-----------------------------------:|:------------------:| :---: |
+    | 0.21172602739726026| 0.19616438356164384 |0.26771980877156515| 0.2481812512991062 |
+
+#### Full Results
+| small                    | CaseSW              | CaseIW              | Case SD             | Case ID             |
+|--------------------------|---------------------|---------------------|---------------------|---------------------|
+| cpb-aacip-507-vm42r3pt6h | 0.1681503461918892  | 0.1554154302670623  | 0.2528618672093615  | 0.2372169931315187  |
+| cpb-aacip-507-zk55d8pd1h | 0.22514511547486724 | 0.2043966901321477  | 0.3740422020511611  | 0.3581280207473771  |
+| cpb-aacip-507-zw18k75z4h | 0.18701668701668703 | 0.17399267399267399 | 0.26771980877156515 | 0.2481812512991062  |
+| cpb-aacip-507-154dn40c26 | 0.24619995718261614 | 0.2010276172125883  | 0.22536330608537694 | 0.20878746594005448 |
+| cpb-aacip-507-1v5bc3tf81 | 0.1867215302491103  | 0.16814946619217083 | 0.28156917363045497 | 0.2639275766016713  |
+| cpb-aacip-507-4746q1t25k | 0.2214220393232739  | 0.1979881115683585  | 0.31563421828908556 | 0.2884955752212389  |
+| cpb-aacip-507-4t6f18t178 | 0.19594320486815417 | 0.1817444219066937  | 0.3066721077331157  | 0.29034890838604366 |
+| cpb-aacip-507-6h4cn6zk04 | 0.18592964824120603 | 0.1661641541038526  | 0.2733205806233825  | 0.25137841791380666 |
+| cpb-aacip-507-6w96689725 | 0.2092817679558011  | 0.19116022099447513 | 0.2147463456577816  | 0.1943250214961307  |
+| cpb-aacip-507-7659c6sk7z | 0.21949052132701422 | 0.20882701421800948 | 0.3305839656878918  | 0.3177169251072253  |
+| cpb-aacip-507-9882j68s35 | 0.297281993204983   | 0.25254813137032844 | 0.30311391407173827 | 0.2869530942057548  |
+| cpb-aacip-507-cf9j38m509 | 0.22393462970624742 | 0.2056268100951593  | 0.33319044046725965 | 0.3143285821455364  |
+| cpb-aacip-507-n29p26qt59 | 0.3545075031027869  | 0.3371318966489902  | 0.321889327220386   | 0.3022710310267619  |
+| cpb-aacip-507-nk3610wp6s | 0.1610952276226083  | 0.145150648779415   | 0.2656037991858887  | 0.2512437810945274  |
+| cpb-aacip-507-pc2t43js98 | 0.20793565683646112 | 0.1899195710455764  | 0.30646570554827435 | 0.28134556574923547 |
+| cpb-aacip-507-pr7mp4wf25 | 0.19402277039848198 | 0.17303130929791272 | 0.3247798742138365  | 0.30150943396226415 |
+| cpb-aacip-507-r785h7cp0z | 0.13552407932011332 | 0.12475920679886686 | 0.1969662408759124  | 0.18499087591240876 |
+| cpb-aacip-507-v11vd6pz5w | 0.2353726362625139  | 0.21590656284760845 | 0.3511577942229649  | 0.33038911434709956 |
+| cpb-aacip-507-v40js9j432 | 0.21172602739726026 | 0.19616438356164384 | 0.2969094922737307  | 0.27803532008830023 |
+
+### Limitations/Issues
+1. A considerable number of useless strings are found in all of the gold files. These files include titles such as `INFO`, `News Summary` as well as each speaker's name along with every utterance. These are useful information for readers, but are, in reality, non-existent in the actual speech. This significantly affects the evaluation **negatively**. Some processing needs to be done on gold files.
+2. On the other hand, some of the gold files are missing preview, summary, and add content in the video, whereas whisper preserves this information. This disprepancy also has a significant **negative** impact on evaluation results. 
+4. Considering `small` model's size, WER is expected to decrease in the future when transcribing with bigger models.
