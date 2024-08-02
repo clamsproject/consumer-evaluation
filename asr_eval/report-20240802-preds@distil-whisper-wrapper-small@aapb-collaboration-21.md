@@ -22,7 +22,7 @@ calculations and is used in our evaluation code.
 Gold standard annotations are located [here](https://github.com/clamsproject/aapb-collaboration/tree/89b8b123abbd4a9a67c525cc480173b52e0d05f0/21), with file name starting with the corresponding video IDs.
 
 ### Evaluation Results
-We are comparing it to our results from the [report-20240802-preds@whisper-wrapper-small@aapb-collaboration-21](link-here)
+We are comparing it to our results from the [report-20240802-preds@whisper-wrapper-small@aapb-collaboration-21](https://github.com/clamsproject/aapb-evaluations/blob/asr-new-eval/asr_eval/report-20240802-preds%40whisper-wrapper-small%40aapb-collaboration-21.md)
 in order to determine which ASR model of the same size yields better results. 
 Additionally, we evaluate MMIF files with and without case sensitivity.
 >1. **Case-sensitive distil-whisper (CaseSD)**: Upper case and lower case are treated differently using the dist-whisper model, e.g. Apple ≠ apple.
