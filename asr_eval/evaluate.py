@@ -54,7 +54,7 @@ def batch_run_wer(hyp_dir, gold_dir):
     
     hyp_files = hyp_dir.glob('*.mmif')
     gold_files = gold_dir.glob('*-transcript.txt')
-    gold_files_dict = {x.stem.rstrip('-transcript.txt'): x for x in gold_files}
+    gold_files_dict = {x.stem.replace('-transcript', ''): x for x in gold_files}
     result = []
 
     for hyp_file in hyp_files:
