@@ -2,9 +2,9 @@
 This script is to complete evaluation process for the app RFB(role-filler-binding).
 Used evaluation metrics include:
     + Intersection Over Union (IOU)
-    + Dice Sørensen Coefficient (DSC)
 """
 
+from abc import ABC, abstractmethod
 import json
 import os
 from typing import Dict, Set, Optional, Tuple, Union, List
@@ -12,12 +12,15 @@ from collections import defaultdict
 from io import StringIO
 from argparse import ArgumentParser, Namespace
 import logging
+import multiprocessing as mp
 
+from thefuzz import fuzz
 from mmif import Mmif, AnnotationTypes, View, Annotation
 from mmif.utils import video_document_helper as vdh
 from clams_utils.aapb import guidhandler, goldretriever #TODO: goldretriver will be used after the URL for the gold-standard data is available
 
 import pandas as pd
+import numpy as np
 
 SWT_APP = 'http://apps.clams.ai/swt-detection/v5.0'
 RFB_APP = 'http://apps.clams.ai/role-filler-binder/41cb5b8'
@@ -86,6 +89,7 @@ def load_pred(file: Union[str, os.PathLike]) -> Dict[str, Dict]:
     :return: a nested dictionary data structure that indexes GUID -> frame_num -> (role, filler)
     """
     guid = guidhandler.get_aapb_guid_from(file)
+    logging.debug("Loading prediction data for %s...", guid)
 
     rfb_mmif = Mmif(json.load(open(file, encoding='utf-8')))
     rfb_view = rfb_mmif.views.get_last_contentful_view()
@@ -124,6 +128,7 @@ def load_gold(gold_csv: Union[str, os.PathLike]) -> Dict[str, Dict]:
     str  | int   |   str    |  T/F    | csv-string
     """
     guid = guidhandler.get_aapb_guid_from(gold_csv)
+    logging.debug("Loading gold-standard data for %s...", guid)
     frames_dict = defaultdict(set)
     df = pd.read_csv(gold_csv).dropna(subset=['ANNOTATIONS'])  #FIXME: Empty annotations are dropped from this process
     for _, frame in df.iterrows():
@@ -134,57 +139,169 @@ def load_gold(gold_csv: Union[str, os.PathLike]) -> Dict[str, Dict]:
 #--------------------------------------------------------------------
 # Class of evaluation metrics
 #--------------------------------------------------------------------
-class RFBMetrics:
+class RFBMetrics(ABC):
     """
-    The class of evaluation metrics for evaluating RFB
+    The abstract class of evaluation metrics for evaluating a single video run by RFB
     """
-    @staticmethod
-    def iou(
-        pred: Dict[str, Dict],
-        gold: Dict[str, Dict],
-        key: str
-    ) -> Tuple[str, float, Dict[int, float]]:
-        """
-        Calculate the IOU value for a single frame on either role or filler
-        as well as macro-avg of each frame's IOU value
+    def __init__(self, gold: Dict[str, Dict], pred: Dict[str, Dict]) -> None:
+        self.gold = gold
+        self.pred = pred
+        self.frame_score: Dict[int, Tuple] = {}
 
-        :param: pred: the processed prediction data
-        :param: gold: the processed gold data
-        :param: key: the object to be calculated. here is either {role, filler}
-        :return: a tuple formatted as (macro-avg, {frame_num: iou})
-        """
-        def _iou(p, g):
-            try:
-                val = len(set.intersection(p, g)) / len(set.union(p, g))
-            except ZeroDivisionError:
-                val = 0
-            return val
-
-        # Check if pred and gold data refer to the same video
-        if list(pred.keys())[0] != list(gold.keys())[0]:
-            raise ValueError('The prediction file and the gold file refer to different videos.')
+        # Check if the gold and pred data refer to the same video
+        if list(self.gold.keys())[0] != list(self.pred.keys())[0]:
+            raise ValueError('The prediction file and the gold file refer to different video.')
 
         # Find intersected frames between pred and gold
-        guid = next(iter(pred.keys()))
-        intersect_frames = set(pred[guid].keys(), gold[guid].keys())
+        self.guid = next(iter(self.pred.keys()))
+        self.frames = set(self.pred[self.guid].keys() & self.gold[self.guid].keys())
 
-        # Calculate the iou
-        obj_map = {'role':0, 'filler': 1}
-        frame_score = {}
-        sum_of_iou = 0
-        for frame in intersect_frames:
-            set_in_pred = {pair[obj_map[key]] for pair in pred[guid][frame]}
-            set_in_gold = {pair[obj_map[key]] for pair in gold[guid][frame]}
-            iou_val = _iou(set_in_pred, set_in_gold)
-            frame_score[frame] = iou_val
-            sum_of_iou += iou_val
+    @abstractmethod
+    def calculate(self) -> float:
+        pass
 
-        return guid, sum_of_iou / len(intersect_frames), frame_score
+class StringList:
+    """
+    The class that represents a list of strings and it enables the "outer product" operation
+    """
+    def __init__(self, strs: List[str]) -> None:
+        self.strs = strs
+
+    def __matmul__(self, other: List[str]) -> np.ndarray:
+        if not isinstance(other, StringList):
+            raise ValueError("The right-hand operand must be an instance of StringList")
+
+        # Perform the "outer product" operation and store results in a list of lists
+        result_matrix = []
+        for str1 in self.strs:
+            row = []
+            for str2 in other.strs:
+                distance = fuzz.ratio(str1, str2)
+                row.append(distance)
+            result_matrix.append(row)
+
+        # Convert the result matrix to a NumPy array
+        return np.array(result_matrix)
+
+class IOU(RFBMetrics):
+    """
+    The class of Intersection Over Union (IOU) evaluation metric
+    """
+    def _iou(self, p: set, g: set) -> float:
+        try:
+            val = len(set.intersection(p, g)) / len(set.union(p, g))
+        except ZeroDivisionError:
+            val = 0
+        return val
+
+    def _organize(self, frame_data: Set[Tuple[str, str]]) -> Tuple[Set, Set, Dict, int]:
+        role_set, filler_set, binding = set(), set(), defaultdict(list)
+        num_binding = 0
+        for role, filler in frame_data:
+            role_set.add(role)
+            filler_set.add(filler)
+            binding[role].append(filler)
+            num_binding += 1
+        return role_set, filler_set, binding, num_binding
+
+    def _fuzzy_match(self, gold_list: StringList, pred_list: StringList) -> List[int]:
+        match_matrix = gold_list @ pred_list
+        max_indices = np.argmax(match_matrix, axis=1)
+        valid_indices = [row
+                         for col, row in enumerate(max_indices)
+                         if match_matrix[row, col] == 100
+                         ]
+        return valid_indices
+
+    def _intersect_between_binding(self, gold: Dict, pred: Dict) -> int:
+        # Index the roles in gold first
+        gold_roles = {idx: role for idx, role in enumerate(gold.keys())}
+
+        # Fuzzy match the roles in pred with the roles in gold
+        gold_array = StringList(list(gold_roles.values()))
+        pred_array = StringList(list(pred.keys()))
+        matched_roles = [gold_roles[idx] for idx in self._fuzzy_match(gold_array, pred_array)]
+
+        # Fuzzy match the fillers between gold and pred sharing the same role
+        num_intersect = 0
+        for role in matched_roles:
+            gold_fillers, pred_fillers = StringList(gold[role]), StringList(pred[role])
+            num_intersect += len(self._fuzzy_match(gold_fillers, pred_fillers))
+
+        return num_intersect
+
+    def calculate(self) -> Dict[int, Tuple]:
+        if self.frames:
+            for frame in self.frames:
+                gold_roles, gold_fillers, gold_binding, num_golds = self._organize(self.gold[self.guid][frame])
+                pred_roles, pred_fillers, pred_binding, num_preds = self._organize(self.pred[self.guid][frame])
+                role_iou = self._iou(pred_roles, gold_roles)
+                filler_iou = self._iou(pred_fillers, gold_fillers)
+                binding_iou = self._intersect_between_binding(gold_binding, pred_binding) / (num_golds + num_preds)
+                self.frame_score[frame] = (role_iou, filler_iou, binding_iou)
+        else:
+            logging.warning("No frames are found between gold and prediction data")
+            self.frame_score = {-1: (-1, -1, -1)}
+        return self.frame_score
+
+#--------------------------------------------------------------------
+# Run evaluation in parallel
+#--------------------------------------------------------------------
+def _load_data_from_dir(directory: Union[str, os.PathLike], label: str) -> Dict[str, Dict]:
+    """
+    Load data from a directory
+
+    :param: dir: the directory path of data
+    :param: label: the label of either gold or prediction data
+    :return: a dictionary whose key is a GUID and value is a dictionary of frame data
+    """
+    logging.debug("Start loading %s data:", label)
+    out = {}
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if label == 'gold':
+                out.update(load_gold(os.path.join(root, file)))
+            else:
+                out.update(load_pred(os.path.join(root, file)))
+    return out
+
+
+def run_eval(gold_dir: Union[str, os.PathLike], pred_dir: Union[str, os.PathLike]) -> List[Dict[str, Dict[int, Tuple]]]:
+    """
+    Run evaluation in parallel
+
+    :param: gold_dir: the directory path of gold standard data
+    :param: pred_dir: the directory path of prediction data
+    :return: a dictionary of evaluation results
+    """
+    def help_run_iou(args):
+        g, p = args
+        iou = IOU(g, p)
+        return iou.calculate()
+
+    golds, preds = _load_data_from_dir(gold_dir, 'gold'), _load_data_from_dir(pred_dir, 'pred')
+    overlap_videos = list(golds.keys() & preds.keys())
+    logging.debug("\nOverlap videos %s found", len(overlap_videos))
+
+    if overlap_videos:
+        num_cores = mp.cpu_count()
+        num_processes = max(1, num_cores // 2)  # Use half of the available cores at maximum
+        logging.debug("Number of processes: %s deployed", num_processes)
+
+        with mp.Pool(num_processes) as pool:
+            results = []
+            chunk_size = len(overlap_videos) // num_processes
+            for i in range(0, len(overlap_videos), chunk_size):
+                chunk = [({guid: golds[guid]}, {guid: preds[guid]})
+                         for guid in overlap_videos[i:i+chunk_size]
+                         ]
+                results.extend(pool.map(help_run_iou, chunk))
+    return results
 
 #--------------------------------------------------------------------
 # Write out evaluation results
 #--------------------------------------------------------------------
-def write_out(results: List[Tuple[str, float, Dict[int, float]]]) -> None:
+def write_out(results: List[Dict[str, Dict[int, Tuple]]]) -> None:
     """Write out a list of formatted evaluation results into a .txt
 
     :param: results: the list of formatted evaluation results
@@ -192,10 +309,10 @@ def write_out(results: List[Tuple[str, float, Dict[int, float]]]) -> None:
     """
     with open('results.txt', 'w', encoding='utf-8') as f:
         for result in results:
-            guid, macro_avg, frame_scores = result
-            f.write(f"{guid}: {macro_avg}\n")
-            for frame, score in frame_scores.items():
-                f.write(f"\t\t{frame}: {score}")
+            guid, frame_scores = result
+            f.write(f"{guid}:\n")
+            for frame, scores in frame_scores.items():
+                f.write(f"\t\t{frame}: Role={scores[0]}\tFiller={scores[1]}\tBinding={scores[2]}\n")
     f.close()
 
 
@@ -223,6 +340,12 @@ def parse_args() -> Namespace:
         required=True
     )
 
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Set the debug mode'
+    )
+
     return parser.parse_args()
 
 
@@ -232,39 +355,14 @@ def parse_args() -> Namespace:
 def main():
     """Main function for running the evaluation task for the RFB app
     """
-    logging.basicConfig(filename='evaluate.log',
-                        format='%(message)s',
-                        filemode='w')
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
-
     args = parse_args()
-    preds_dir, golds_dir = args.preds, args.golds
+    preds_dir, golds_dir, debug = args.preds, args.golds, args.debug
 
-    logger.debug("Start loading gold-standard data:")
-    golds = {}
-    for root, _, gold_files in os.walk(golds_dir):
-        for gold_file in gold_files:
-            log_msg = f"loading file {gold_file}..."
-            golds.update(load_gold(os.path.join(root, gold_file)))
-            logger.debug("\t%s DONE", log_msg)
-
-    logger.debug("\nStart loading predication data:")
-    preds = {}
-    for root, _, pred_files in os.walk(preds_dir):
-        for pred_file in pred_files:
-            log_msg = f"\tloading file {pred_file}..."
-            preds.update(load_pred(os.path.join(root, pred_file)))
-            logger.debug("\t%s DONE", log_msg)
-
-    overlap_videos = set(golds.keys() & preds.keys())
-    logger.debug("\nOverlap videos %s found", len(overlap_videos))
-
-    iou_results = [RFBMetrics.iou(preds[guid], golds[guid], 'role') for guid in overlap_videos]
-
-    write_msg = '\nWriting out results...'
+    if debug:
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+    iou_results = run_eval(golds_dir, preds_dir)
     write_out(iou_results)
-    logger.debug("%s Success!", write_msg)
 
 if __name__ == "__main__":
     main()
