@@ -22,6 +22,7 @@ from clams_utils.aapb import guidhandler, goldretriever #TODO: goldretriver will
 import pandas as pd
 import numpy as np
 
+GOLD_URL = 'https://github.com/clamsproject/aapb-annotations/tree/89-rfb-gold/role-filler-binding/golds'
 SWT_APP = 'http://apps.clams.ai/swt-detection/v5.0'
 RFB_APP = 'http://apps.clams.ai/role-filler-binder/41cb5b8'
 
@@ -283,19 +284,20 @@ def run_eval(gold_dir: Union[str, os.PathLike], pred_dir: Union[str, os.PathLike
     overlap_videos = list(golds.keys() & preds.keys())
     logging.debug("\nOverlap videos %s found", len(overlap_videos))
 
+    results = []
     if overlap_videos:
         num_cores = mp.cpu_count()
         num_processes = max(1, num_cores // 2)  # Use half of the available cores at maximum
         logging.debug("Number of processes: %s deployed", num_processes)
 
         with mp.Pool(num_processes) as pool:
-            results = []
             chunk_size = len(overlap_videos) // num_processes
             for i in range(0, len(overlap_videos), chunk_size):
                 chunk = [({guid: golds[guid]}, {guid: preds[guid]})
                          for guid in overlap_videos[i:i+chunk_size]
                          ]
                 results.extend(pool.map(help_run_iou, chunk))
+    logging.warning("No overlap videos found")
     return results
 
 #--------------------------------------------------------------------
@@ -334,13 +336,6 @@ def parse_args() -> Namespace:
     )
 
     parser.add_argument(
-        '-g',
-        '--golds',
-        help="The directory path of gold standard data",
-        required=True
-    )
-
-    parser.add_argument(
         '--debug',
         action='store_true',
         help='Set the debug mode'
@@ -356,11 +351,18 @@ def main():
     """Main function for running the evaluation task for the RFB app
     """
     args = parse_args()
-    preds_dir, golds_dir, debug = args.preds, args.golds, args.debug
+    preds_dir, debug = args.preds, args.debug
 
     if debug:
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
+
+    try:
+        golds_dir = goldretriever.download_golds(GOLD_URL)
+    except FileNotFoundError:
+        logging.error("The gold standard data is not found")
+        return
+
     iou_results = run_eval(golds_dir, preds_dir)
     write_out(iou_results)
 
