@@ -154,11 +154,9 @@ def stitched_labels(pred_path, combined_dict):
                     for target in annotation["targets"]:
                         target = target.split(":")[1] if target.find(":") > -1 else target
                         stitched = annotation["properties"]["label"]
-                        gold_remap = "-"
-                        print(pred_path, tf_view.metadata.app)
-                        if combined_dict[target][1] in map_schema:
+                        if target in combined_dict and combined_dict[target][1] in map_schema:
                             gold_remap = map_schema[combined_dict[target][1]]
-                        stitched_dict[target] = (stitched, gold_remap)
+                            stitched_dict[target] = (stitched, gold_remap)
     return stitched_dict
 
 
