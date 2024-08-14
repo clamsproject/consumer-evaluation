@@ -4,10 +4,9 @@ import pathlib
 from collections import defaultdict, Counter
 from enum import Enum
 
-import mmif.vocabulary.document_types
 import pandas as pd
 from clams_utils.aapb import goldretriever, guidhandler
-from mmif import Mmif
+from mmif import Mmif, AnnotationTypes
 
 # constant:
 GOLD_URL = "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8cf942ba827917938b49570d6d9/scene-recognition/golds"
@@ -93,22 +92,22 @@ def combine_pred_and_gold_labels(pred_path, gold_dict, count_subtypes=False):
     with open(pred_path, "r") as file:
         json_data = file.read()
         pred_mmif = Mmif(json_data)
-        view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimePoint)
-        if "annotations" in view:
-            for annotation in view["annotations"]:
-                if "timePoint" in annotation['properties']:
-                    # match pred timestamp to closest gold timestamp using default range (+/- 5ms)
-                    curr_timestamp = closest_gold_timestamp(annotation['properties']['timePoint'], gold_dict)
-                    # check if closest_gold_timestamp returned None (not within acceptable range)
-                    if not curr_timestamp:
-                        continue
-                    # truncate label if count_subtypes is false
-                    pred_label = annotation['properties']['label'] if count_subtypes else annotation['properties']['label'][0]
-                    # if NEG set to '-'
-                    if annotation['properties']['label'] == 'NEG':
-                        pred_label = '-'
-                    # put gold and pred labels into combined dictionary
-                    combined_dict[annotation['id']] = (pred_label, gold_dict[curr_timestamp])
+        for annotation in pred_mmif.get_view_contains(AnnotationTypes.TimePoint).get_annotations(AnnotationTypes.TimePoint):
+            # match pred timestamp to closest gold timestamp using default range (+/- 5ms)
+            # TODO (krim @ 8/14/24): this assumes the time unit of the time stamp is already in milliseconds, which is not always the case
+            curr_timestamp = closest_gold_timestamp(annotation.get_property('timePoint'), gold_dict)
+            # check if closest_gold_timestamp returned None (not within acceptable range)
+            if not curr_timestamp:
+                continue
+            pred_label = annotation.get_property('label')
+            if count_subtypes:
+                # truncate label if count_subtypes is false, use first letter only
+                pred_label = pred_label[0]
+            if pred_label == 'NEG':
+                # use "negative" letter instead
+                pred_label = '-'
+            # put gold and pred labels into combined dictionary
+            combined_dict[annotation.long_id] = (pred_label, gold_dict[curr_timestamp])
     return combined_dict
 
 
@@ -121,8 +120,8 @@ def filter_remapped_labels(pred_path, combined_dict):
     with open(pred_path, "r") as file:
         json_data = file.read()
         pred_mmif = Mmif(json_data)
-        tp_view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimePoint)
-        map_schema = pred_mmif.views[str(tp_view['id'])]['metadata']['appConfiguration']['map']
+        tf_view = pred_mmif.get_view_contains(AnnotationTypes.TimeFrame)
+        map_schema = tf_view.metadata.appConfiguration.get('labelMap')
         for timepoint in combined_dict:
             raw_remap = "-"
             gold_remap = "-"
@@ -143,20 +142,16 @@ def stitched_labels(pred_path, combined_dict):
     with open(pred_path, "r") as file:
         json_data = file.read()
         pred_mmif = Mmif(json_data)
-        tp_view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimePoint)
-        map_schema = pred_mmif.views[str(tp_view['id'])]['metadata']['appConfiguration']['map']
-        tf_view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimeFrame)
+        tf_view = pred_mmif.get_view_contains(AnnotationTypes.TimeFrame)
+        map_schema = tf_view.metadata.appConfiguration.get('labelMap')
         if not tf_view:
             raise RuntimeError("No TimeFrame annotations found in the MMIF file.")
-        if "annotations" in tf_view:
-            for annotation in tf_view["annotations"]:
-                if "TimeFrame" in annotation["@type"]:
-                    for target in annotation["targets"]:
-                        target = target.split(":")[1] if target.find(":") > -1 else target
-                        stitched = annotation["properties"]["label"]
-                        if target in combined_dict and combined_dict[target][1] in map_schema:
-                            gold_remap = map_schema[combined_dict[target][1]]
-                            stitched_dict[target] = (stitched, gold_remap)
+        for annotation in tf_view.get_annotations(AnnotationTypes.TimeFrame):
+            for target in annotation.get_property("targets"):
+                stitched = annotation.get_property("label")
+                if target in combined_dict and combined_dict[target][1] in map_schema:
+                    gold_remap = map_schema[combined_dict[target][1]]
+                    stitched_dict[target] = (stitched, gold_remap)
     return stitched_dict
 
 
