@@ -1,13 +1,13 @@
 import argparse
-from collections import defaultdict, Counter
+import csv
 import pathlib
+from collections import defaultdict, Counter
 from enum import Enum
 
 import mmif.vocabulary.document_types
 import pandas as pd
 from clams_utils.aapb import goldretriever, guidhandler
 from mmif import Mmif
-import csv
 
 # constant:
 GOLD_URL = "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8cf942ba827917938b49570d6d9/scene-recognition/golds"
@@ -146,6 +146,8 @@ def stitched_labels(pred_path, combined_dict):
         tp_view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimePoint)
         map_schema = pred_mmif.views[str(tp_view['id'])]['metadata']['appConfiguration']['map']
         tf_view = pred_mmif.get_view_contains(mmif.AnnotationTypes.TimeFrame)
+        if not tf_view:
+            raise RuntimeError("No TimeFrame annotations found in the MMIF file.")
         if "annotations" in tf_view:
             for annotation in tf_view["annotations"]:
                 if "TimeFrame" in annotation["@type"]:
@@ -153,6 +155,7 @@ def stitched_labels(pred_path, combined_dict):
                         target = target.split(":")[1] if target.find(":") > -1 else target
                         stitched = annotation["properties"]["label"]
                         gold_remap = "-"
+                        print(pred_path, tf_view.metadata.app)
                         if combined_dict[target][1] in map_schema:
                             gold_remap = map_schema[combined_dict[target][1]]
                         stitched_dict[target] = (stitched, gold_remap)
@@ -287,13 +290,15 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, timeframe_eval):
     return doc_scores
 
 
-def write_output(doc_scores, preds_id):
+def write_output(doc_scores, preds_dir):
     """
     Write results into output csv file.
     Each row contains a label, score type (P/R/F), and eval type (unfiltered/filtered/stitched).
     The '@@@ALL@@@' column shows aggregated scores across all GUIDs; other columns show scores per GUID.
     """
-    out_fname = (pathlib.Path(__file__).parent / ("results@" + preds_id.split('@')[-1].strip('/'))).with_suffix('.csv')
+    # this assumes the "preds" mmif files are located in the same directory as this script, and prefixed with "results@" - which is not so much portable
+    preds_dir = pathlib.Path(preds_dir)
+    out_fname = (pathlib.Path(__file__).parent / ("results@" + preds_dir.name.split('@')[-1])).with_suffix('.csv')
         
     tabulated = {}  # scores per GUID
     cols = ['labels', ALL_GUID]
