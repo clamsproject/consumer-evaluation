@@ -17,8 +17,7 @@ import multiprocessing as mp
 from thefuzz import fuzz
 from mmif import Mmif, AnnotationTypes, View, Annotation
 from mmif.utils import video_document_helper as vdh
-from clams_utils.aapb import guidhandler, goldretriever #TODO: goldretriver will be used after the URL for the gold-standard data is available
-
+from clams_utils.aapb import guidhandler, goldretriever
 import pandas as pd
 import numpy as np
 
@@ -26,10 +25,12 @@ GOLD_URL = 'https://github.com/clamsproject/aapb-annotations/tree/89-rfb-gold/ro
 SWT_APP = 'http://apps.clams.ai/swt-detection/v6.1'
 RFB_APP = 'http://apps.clams.ai/role-filler-binder/v1.0'
 
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
 # Functions needed to load predictions made by RFB
-#--------------------------------------------------------------------
-def get_adj_aligned_ann(ann: Annotation, view: View) -> Optional[Annotation]:
+# --------------------------------------------------------------------
+
+
+def get_adj_aligned_ann(ann: Annotation, view: View) -> Union[None, Annotation]:
     """
     Get the aligned annotation residing in adjacent view
 
@@ -42,12 +43,13 @@ def get_adj_aligned_ann(ann: Annotation, view: View) -> Optional[Annotation]:
         if aligned_ann := ann.aligned_to_by(al):
             return aligned_ann
 
+
 def get_aligned_ann_of(
-    mmif: Mmif,
-    source: Annotation,
-    source_app: str,
-    target_app: str
-    ) -> Optional[Annotation]:
+        mmif: Mmif,
+        source: Annotation,
+        source_app: str,
+        target_app: str
+        ) -> Optional[Annotation]:
     """
     Get the aligned annotation of the input annotation cross views in MMIF
 
@@ -64,14 +66,16 @@ def get_aligned_ann_of(
     # Validate if two apps are in mmif
     if not (source_app and target_app) in valid_views:
         raise ValueError(f"Either {source_app} or {target_app} is not in mmif")
-    #TODO: Think about more edge cases
-    current_view, target_view = valid_views[source_app], valid_views[target_app]
+    # TODO: Think about more edge cases
+    current_view = valid_views[source_app]
+    target_view = valid_views[target_app]
     current_ann = source
     while current_view.id != target_view.id:
         next_ann = get_adj_aligned_ann(current_ann, current_view)
         current_view = mmif.get_view_by_id(next_ann.parent)
         current_ann = next_ann
     return current_ann
+
 
 def csv_string_to_pair(csv_string: str) -> Set[Tuple[str, str]]:
     """
@@ -80,7 +84,9 @@ def csv_string_to_pair(csv_string: str) -> Set[Tuple[str, str]]:
     :param: csv_string: the csv-formatted string
     :return: a set of tuples of (role, filler) string
     """
-    return set(pd.read_csv(StringIO(csv_string), index_col=0).fillna('nan').itertuples(index=False, name=None))  #FIXME: Empty role/filler is filled with string 'nan'
+    return set(pd.read_csv(StringIO(csv_string), index_col=0).fillna('nan').itertuples(index=False, name=None))
+    # FIXME: Empty role/filler is filled with string 'nan'
+
 
 def load_pred(file: Union[str, os.PathLike]) -> Dict[str, Dict]:
     """
@@ -105,9 +111,11 @@ def load_pred(file: Union[str, os.PathLike]) -> Dict[str, Dict]:
 
     return {guid: frames_dict}
 
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
 # Functions needed to load gold standard data
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
 def csv_string_to_set(csv_string: str) -> Set[Tuple[str, str]]:
     """
     Convert csv-string to a set of tuples which represent (role, filler) pairs
@@ -121,6 +129,7 @@ def csv_string_to_set(csv_string: str) -> Set[Tuple[str, str]]:
         rf_set.add((role, filler))
     return rf_set
 
+
 def load_gold(gold_csv: Union[str, os.PathLike]) -> Dict[str, Dict]:
     """
     Load gold-standard csv data for RFB
@@ -133,7 +142,8 @@ def load_gold(gold_csv: Union[str, os.PathLike]) -> Dict[str, Dict]:
     guid = guidhandler.get_aapb_guid_from(gold_csv)
     logging.debug("Loading gold-standard data for %s...", guid)
     frames_dict = defaultdict(set)
-    df = pd.read_csv(gold_csv).dropna(subset=['ANNOTATIONS'])  #FIXME: Empty annotations are dropped from this process
+    df = pd.read_csv(gold_csv).dropna(subset=['ANNOTATIONS'])
+    # FIXME: Empty annotations are dropped from this process
 
     min_frame, max_frame = -1, -1
     anns = set()
@@ -153,9 +163,11 @@ def load_gold(gold_csv: Union[str, os.PathLike]) -> Dict[str, Dict]:
 
     return {guid: frames_dict}
 
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
 # Class of evaluation metrics
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
 class RFBMetrics(ABC):
     """
     The abstract class of evaluation metrics for evaluating a single video run by RFB
@@ -188,8 +200,9 @@ class RFBMetrics(ABC):
         return alignments
 
     @abstractmethod
-    def calculate(self) -> float:
+    def calculate(self) -> Dict[int, Tuple[int, Tuple[int, int, int]]]:
         pass
+
 
 class StringList:
     """
@@ -213,6 +226,7 @@ class StringList:
 
         # Convert the result matrix to a NumPy array
         return np.array(result_matrix)
+
 
 class IOU(RFBMetrics):
     """
@@ -264,24 +278,31 @@ class IOU(RFBMetrics):
         pred_bindings = [(role, f) for role, fillers in pred.items() for f in fillers]
         return len(set(gold_bindings).union(set(pred_bindings)))
 
-    def calculate(self) -> Dict[int, Tuple]:
+    def calculate(self) -> Dict[int, Tuple[int, Tuple[int, int, int]]]:
         if self.frames:
             for frame, span in self.frames.items():
                 gold_roles, gold_fillers, gold_binding = self._organize(self.gold[self.guid][span])
                 pred_roles, pred_fillers, pred_binding = self._organize(self.pred[self.guid][frame])
-                role_iou = self._iou(pred_roles, gold_roles)
-                filler_iou = self._iou(pred_fillers, gold_fillers)
-                binding_iou = self._intersect_between_binding(gold_binding, pred_binding) / self._union_between_binding(gold_binding, pred_binding)
+                role_iou = round(self._iou(pred_roles, gold_roles), 2)
+                filler_iou = round(self._iou(pred_fillers, gold_fillers), 2)
+                binding_iou = round(
+                                    self._intersect_between_binding(gold_binding, pred_binding) / self._union_between_binding(gold_binding, pred_binding),
+                                    2
+                                    )
                 self.frame_score[frame] = (role_iou, filler_iou, binding_iou)
         else:
             logging.warning("No overlap frames are found between gold and prediction data")
             self.frame_score = {-1: (-1, -1, -1)}
         return self.frame_score
 
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
 # Run evaluation in parallel
-#--------------------------------------------------------------------
-def _load_data_from_dir(directory: Union[str, os.PathLike], label: str) -> Dict[str, Dict]:
+# --------------------------------------------------------------------
+
+
+def _load_data_from_dir(directory: Union[str, os.PathLike],
+                        label: str
+                        ) -> Dict[str, Dict]:
     """
     Load data from a directory
 
@@ -300,7 +321,31 @@ def _load_data_from_dir(directory: Union[str, os.PathLike], label: str) -> Dict[
     return out
 
 
-def run_eval(gold_dir: Union[str, os.PathLike], pred_dir: Union[str, os.PathLike]) -> List[Dict[str, Dict[int, Tuple]]]:
+def run_in_sequence(gold_dir: Union[str, os.PathLike],
+                    pred_dir: Union[str, os.PathLike]
+                    ) -> List[Dict[str, Dict[int, Tuple]]]:
+    """
+    Run evaluation in serial/sequence
+
+    :param: gold_dir: the directory path of gold standard data
+    :param: pred_dir: the directory path of prediction data
+    :return: a dictionary of evaluation results with its key as GUID
+    """
+    results = []
+    golds, preds = _load_data_from_dir(gold_dir, 'gold'), _load_data_from_dir(pred_dir, 'pred')
+    overlap_videos = list(golds.keys() & preds.keys())
+    logging.debug("\nOverlap videos %s found", len(overlap_videos))
+
+    if overlap_videos:
+        for video in overlap_videos:
+            iou = IOU({video: golds[video]}, {video: preds[video]})
+            results.append({video: iou.calculate()})
+    return results
+
+
+def run_in_parallel(gold_dir: Union[str, os.PathLike],
+                    pred_dir: Union[str, os.PathLike]
+                    ) -> List[Dict[str, Dict[int, Tuple]]]:
     """
     Run evaluation in parallel
 
@@ -333,9 +378,11 @@ def run_eval(gold_dir: Union[str, os.PathLike], pred_dir: Union[str, os.PathLike
     logging.warning("No overlap videos found")
     return results
 
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
 # Write out evaluation results
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
 def write_out(results: List[Dict[str, Dict[int, Tuple]]]) -> None:
     """Write out a list of formatted evaluation results into a .txt
 
@@ -344,16 +391,18 @@ def write_out(results: List[Dict[str, Dict[int, Tuple]]]) -> None:
     """
     with open('results.txt', 'w', encoding='utf-8') as f:
         for result in results:
-            guid, frame_scores = result
-            f.write(f"{guid}:\n")
-            for frame, scores in frame_scores.items():
-                f.write(f"\t\t{frame}: Role={scores[0]}\tFiller={scores[1]}\tBinding={scores[2]}\n")
+            for guid, frame_scores in result.items():
+                f.write(f"{guid}:\n")
+                for frame, scores in frame_scores.items():
+                    f.write(f"\t\t{frame}: Role={scores[0]}\tFiller={scores[1]}\tBinding={scores[2]}\n")
     f.close()
 
 
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
 # Arguments setting
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
 def parse_args() -> Namespace:
     """Provide arguments of the script
     """
@@ -374,17 +423,25 @@ def parse_args() -> Namespace:
         help='Set the debug mode'
     )
 
+    parser.add_argument(
+        '--in_seq',
+        action='store_true',
+        help='Run evaluation in sequence'
+    )
+
     return parser.parse_args()
 
 
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
 # Main
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
 def main():
     """Main function for running the evaluation task for the RFB app
     """
     args = parse_args()
-    preds_dir, debug = args.preds, args.debug
+    preds_dir, debug, run_in_seq = args.preds, args.debug, args.in_seq
 
     if debug:
         logger = logging.getLogger()
@@ -396,8 +453,14 @@ def main():
         logging.error("The gold standard data is not found")
         return
 
-    iou_results = run_eval(golds_dir, preds_dir)
-    write_out(iou_results)
+    if run_in_seq:
+        logging.debug("Run evaluation in sequence")
+        results = run_in_sequence(golds_dir, preds_dir)
+    else:
+        logging.debug("Run evaluation in parallel")
+        results = run_in_parallel(golds_dir, preds_dir)
+    write_out(results)
+
 
 if __name__ == "__main__":
     main()
