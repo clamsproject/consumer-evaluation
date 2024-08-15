@@ -122,14 +122,10 @@ def filter_remapped_labels(pred_path, combined_dict):
         pred_mmif = Mmif(json_data)
         tf_view = pred_mmif.get_view_contains(AnnotationTypes.TimeFrame)
         map_schema = tf_view.metadata.appConfiguration.get('labelMap')
-        for timepoint in combined_dict:
-            raw_remap = "-"
-            gold_remap = "-"
-            if combined_dict[timepoint][0] in map_schema:
-                raw_remap = map_schema[combined_dict[timepoint][0]]
-            if combined_dict[timepoint][1] in map_schema:
-                gold_remap = map_schema[combined_dict[timepoint][1]]
+        for timepoint, label_tuple in combined_dict.items():
+            raw_remap, gold_remap = list(map(lambda x: map_schema.get(x, '-'), label_tuple))
             if raw_remap != "-" or gold_remap != "-":
+                #  print(raw_remap, gold_remap)
                 filtered_combined_dict[timepoint] = (raw_remap, gold_remap)
     return filtered_combined_dict
 
@@ -249,9 +245,9 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, timeframe_eval):
     # get each mmif file
     for mmif_file in mmif_files:
         with open(mmif_file, "r") as f:
-            json_data = f.read()
+            m = Mmif(f.read())
             # always assume the first document is the main "source" data for the annotations
-            guid = guidhandler.get_aapb_guid_from(list(Mmif(json_data).documents._items.values())[0].location_address())
+            guid = guidhandler.get_aapb_guid_from(list(m.documents._items.values())[0].location_address())
         # match guid with gold file
         gold_file = next(pathlib.Path(gold_dir).glob(f"*{guid}*"))
         # process gold
