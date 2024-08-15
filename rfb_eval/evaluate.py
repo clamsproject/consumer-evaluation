@@ -1,274 +1,403 @@
-#!/usr/bin/env python3
+"""Description
+This script is to complete evaluation process for the app RFB(role-filler-binding).
+Used evaluation metrics include:
+    + Intersection Over Union (IOU)
+"""
 
-# Role-Filler Binding
-# In-House Evaluation | CLAMS Team 2024
-
-# ---------------------------------------------------------------------------|
-# Imports
-# ---------------------------------------------------------------------------|
-from argparse import ArgumentParser, Namespace
-from collections import defaultdict
-import csv
-from io import StringIO
+from abc import ABC, abstractmethod
 import json
-import os 
+import os
+from typing import Dict, Set, Optional, Tuple, Union, List
+from collections import defaultdict
+from io import StringIO
+from argparse import ArgumentParser, Namespace
+import logging
+import multiprocessing as mp
+
+from thefuzz import fuzz
+from mmif import Mmif, AnnotationTypes, View, Annotation
+from mmif.utils import video_document_helper as vdh
+from clams_utils.aapb import guidhandler, goldretriever #TODO: goldretriver will be used after the URL for the gold-standard data is available
+
 import pandas as pd
-import pathlib 
+import numpy as np
 
-# local
-#import goldretriever
-import mmif
+GOLD_URL = 'https://github.com/clamsproject/aapb-annotations/tree/89-rfb-gold/role-filler-binding/golds'
+SWT_APP = 'http://apps.clams.ai/swt-detection/v6.1'
+RFB_APP = 'http://apps.clams.ai/role-filler-binder/v1.0'
 
-# type
-from typing import Dict, Union, Tuple, Set, List
-from mmif import Mmif
-
-
-# ---------------------------------------------------------------------------|
-# Data Loading
-# ---------------------------------------------------------------------------|
-def load_golds(gold_dir: Union[str, os.PathLike]) -> Dict:
-    """Load Gold Documents
-
-    Gold batches for RFB are expected to be a directory
-    of JSON annotations
-
-    ### params
-    + gold_dir := directory containing gold annotation JSON files
-    ### returns
-    + a dictionary of guid-level annotations
+#--------------------------------------------------------------------
+# Functions needed to load predictions made by RFB
+#--------------------------------------------------------------------
+def get_adj_aligned_ann(ann: Annotation, view: View) -> Optional[Annotation]:
     """
-    reference_dir = pathlib.Path(gold_dir)
-    golds = {}
-    for ref_src in reference_dir.glob("*.?sv"):
-        guid = pathlib.Path(ref_src).stem
-        golds[guid] = process_gold(ref_src)
-    return golds
+    Get the aligned annotation residing in adjacent view
 
+    :param ann: any type of annotation
+    :param view: the view that contains both input annotation and alignments
 
-def process_gold(fname: Union[str, os.PathLike]) -> Dict:
-    """Process a single Gold document
-
-    A single JSON represents a single video's 
-    annotations - thus, a single gold JSON
-    will map to a single MMIF pred file
-
-    ### params 
-
-    ### returns
+    :return: either None type or an aligned annotation found in adjacent view
     """
-    gold_annotations = {}
-    with open(fname, 'r', encoding='utf8') as f:
-        json_obj = json.load(f)
-        for frame, annotations in json_obj.items():
-            gold_annotations[frame] = {k:v for k, v in annotations.items() if k[0] != "_"}
-            #TODO Dean Cahill 06/24 - better way to handle skips than discarding?
-    return gold_annotations
+    for al in view.get_annotations(AnnotationTypes.Alignment):
+        if aligned_ann := ann.aligned_to_by(al):
+            return aligned_ann
 
-
-def load_preds(pred_dir: Union[str, os.PathLike]) -> Dict:
-    """Load Pred Documents
-
-    Pred batches for RFB are expected to be a directory
-    of MMIF annotations, with a single MMIF representing
-    a single video
-
-    ### params
-    + pred_dir := directory containing pred annotation MMIF files
-    ### returns
-    + a dictionary of frame-level RF pairs
+def get_aligned_ann_of(
+    mmif: Mmif,
+    source: Annotation,
+    source_app: str,
+    target_app: str
+    ) -> Optional[Annotation]:
     """
-    pred_dir = pathlib.Path(pred_dir)
-    preds = {}
-    for pred_src in pred_dir.glob("*.mmif"):
-        guid = pathlib.Path(pred_dir).stem 
-        preds[guid] = process_pred(pred_src)
-    return preds
+    Get the aligned annotation of the input annotation cross views in MMIF
 
+    :param: mmif: the mmif file
+    :param: source: the source annotation that looks for its aligned annotation in target view
+    :param: source_app: the app that contains source annotation
+    :param: target_app: the app that might contain target aligned annotation
 
-def process_pred(
-    pred_fname: Union[str, os.PathLike]
-) -> Dict:
-    """Convert MMIF
-
-    Within MMIF, RFB output is a raw csv string.
-    This function provides a simple means of collecting
-    these strings into python dictionaries for comparison with golds
-
-    ### params
-    + mmif    := input mmif object to parse
-    ### returns
-    + a dictionary mapping frame numbers to RF pairs
+    :return: either None type or an annotation
     """
-    vid_annotations = {}
-    with open(pred_fname, 'r', encoding='utf8') as f:
-        guid = pathlib.Path(pred_fname).stem
-        frames = json.load(f)
-        for framenum, annotations in frames.items():
-            # TODO -> get csv string
-            document_text = get_rfb_annotation(annotations)
-            vid_annotations[guid] = convert_string_to_dict(document_text)
+    valid_views = {view.metadata.app: view
+                   for view in mmif.views if not (view.has_error() or view.has_warnings())}
 
-def get_rfb_annotation(annotations: Union[Mmif, Dict]):
-    """Helper function to pull RFB-specific annotations
-    out of a MMIF document.
+    # Validate if two apps are in mmif
+    if not (source_app and target_app) in valid_views:
+        raise ValueError(f"Either {source_app} or {target_app} is not in mmif")
+    #TODO: Think about more edge cases
+    current_view, target_view = valid_views[source_app], valid_views[target_app]
+    current_ann = source
+    while current_view.id != target_view.id:
+        next_ann = get_adj_aligned_ann(current_ann, current_view)
+        current_view = mmif.get_view_by_id(next_ann.parent)
+        current_ann = next_ann
+    return current_ann
+
+def csv_string_to_pair(csv_string: str) -> Set[Tuple[str, str]]:
     """
-    if not isinstance(annotations, Mmif):
-        mmif_obj = Mmif(annotations)
+    Convert csv-string to a set of pairs represeted by tuples
 
-    # TODO - get RFB View
-    # TODO - get TextDocument properties
-    # TODO - get text @value property from textdoc
-
-
-def convert_string_to_dict(csvstring: str) -> Dict[str, List[str]]:
-    """Given a raw CSV string representing RF pairs,
-    convert it to a dictionary of RF pairs
+    :param: csv_string: the csv-formatted string
+    :return: a set of tuples of (role, filler) string
     """
-    rf_pairs = defaultdict(list)
-    df = pd.read_csv(StringIO(csvstring))
-    
-    for role, filler in zip(df["Role"], df["Filler"]):
-        rf_pairs[role].append(filler)
+    return set(pd.read_csv(StringIO(csv_string), index_col=0).fillna('nan').itertuples(index=False, name=None))  #FIXME: Empty role/filler is filled with string 'nan'
 
-    return rf_pairs
-
-# ---------------------------------------------------------------------------|
-# Evaluation
-# ---------------------------------------------------------------------------|
-class RFBMetrics:
+def load_pred(file: Union[str, os.PathLike]) -> Dict[str, Dict]:
     """
-    A collection of metric functions for the Role-Filler Binding
-    OCR structure parsing tool.
+    Load the predicted role-filler pair made by RFB
 
-    ## Available Metrics
-
-    + Dice-Sorensen Coefficient := F1-esque similarity
-    + Intersection Over Union   := a simple in-house similarity metric
+    :param: file: the file path or name of the RFB MMIF
+    :return: a nested dictionary data structure that indexes GUID -> frame_num -> (role, filler)
     """
+    guid = guidhandler.get_aapb_guid_from(file)
+    logging.debug("Loading prediction data for %s...", guid)
 
-    @staticmethod
-    def dice_sorensen_coefficient(
-        pred: Dict,
-        gold: Dict,
-    ) -> Tuple[float, Dict[str, float]]:
-        """Dice Sørensen Coefficient
+    with open(file, encoding='utf-8') as f:
+        rfb_mmif = Mmif(json.load(f))
+    f.close()
+    rfb_view = rfb_mmif.views.get_last_contentful_view()
 
-        ### params
-        + pred := a single pred RF-pair sample (a frame's preds)
-        + gold := a single gold RF-pair sample (a frame's golds)
-        ### returns
-        + average DSC for the frame
-        + map of individual DSC values for each role in the frame
-        """
-        frame_level_dsc = 0.0
-        individual_dsc_vals = {}
+    frames_dict = {}
+    for rfb_td in rfb_view.get_documents():
+        aligned_tp = get_aligned_ann_of(rfb_mmif, rfb_td, RFB_APP, SWT_APP)
+        aligned_frame = vdh.convert_timepoint(rfb_mmif, aligned_tp, 'frames')
+        frames_dict[aligned_frame] = csv_string_to_pair(rfb_td.text_value)
 
-        for role, fillers in pred.items():
-            if gold_fillers := gold[role]:
-                p = set(fillers)
-                g = set(gold_fillers)
-                dsc = _dsc(p, g)
-                frame_level_dsc += dsc
-                individual_dsc_vals.update({role: dsc})
+    return {guid: frames_dict}
 
-        def _dsc(pred: Set, gold: Set) -> float:
-            num = 2 * len(set.intersection(pred, gold))
-            denom = len(gold) + len(pred)
-            try:
-                dsc = num / denom
-            except ZeroDivisionError as e:
-                dsc = 0
-            finally:
-                return dsc
+#--------------------------------------------------------------------
+# Functions needed to load gold standard data
+#--------------------------------------------------------------------
+def csv_string_to_set(csv_string: str) -> Set[Tuple[str, str]]:
+    """
+    Convert csv-string to a set of tuples which represent (role, filler) pairs
 
-        frame_level_dsc /= len(gold)
+    :params: csv_string: the input csv-formatted string
+    :return: a set of tuples of (role, filler)
+    """
+    rf_set = set()
+    for pair in csv_string.split('\n'):
+        _, role, filler = pair.split(',', maxsplit=2)
+        rf_set.add((role, filler))
+    return rf_set
 
-        return frame_level_dsc, individual_dsc_vals
+def load_gold(gold_csv: Union[str, os.PathLike]) -> Dict[str, Dict]:
+    """
+    Load gold-standard csv data for RFB
 
-    @staticmethod
-    def intersection_over_union(
-        pred: Dict,
-        gold: Dict,
-        fuzzy: float = None,
-    ) -> Tuple[float, Dict[str, float]]:
-        """Intersection Over Union
+    As a review, its format looks like:
+    GUID | FRAME | SWT-TYPE | SKIPPED | ANNOTATIONS
+    -----------------------------------------------
+    str  | int   |   str    |  T/F    | csv-string
+    """
+    guid = guidhandler.get_aapb_guid_from(gold_csv)
+    logging.debug("Loading gold-standard data for %s...", guid)
+    frames_dict = defaultdict(set)
+    df = pd.read_csv(gold_csv).dropna(subset=['ANNOTATIONS'])  #FIXME: Empty annotations are dropped from this process
 
-        ### params
-        + pred := a single pred RF-pair sample (a frame's preds)
-        + gold := a single gold RF-pair sample (a frame's golds)
-        ### returns
-        + average IOU for the frame
-        + map of individual IOU values for each role in the frame
-        """
-        frame_iou = 0.0
-        individual_iou_vals = {}
+    min_frame, max_frame = -1, -1
+    anns = set()
+    for _, frame in df.iterrows():
+        if not frame['SKIPPED']:
+            if anns:
+                frames_dict[(min_frame, max_frame)] = anns
+            anns = csv_string_to_set(frame['ANNOTATIONS'])
+            min_frame = frame['FRAME']
+        else:
+            if frame['ANNOTATIONS'] == 'DUPLICATE':
+                max_frame = frame['FRAME']
+            else:
+                if anns:
+                    frames_dict[(min_frame, max_frame)] = anns
+                    anns = set()
 
-        # TODO => fuzzy matching
-        for role, fillers in pred.items():
-            if gold_fillers := gold[role]:
-                predset = set(fillers)
-                goldset = set(gold_fillers)
-                iou = _iou(predset, goldset)
-                frame_iou += iou
-                individual_iou_vals.update({role: iou})
+    return {guid: frames_dict}
 
-        def _iou(p, g):
-            try:
-                iou = len(set.intersection(p, g)) / len(set.union(p, g))
-            except ZeroDivisionError:
-                iou = 0
-            finally:
-                return iou
+#--------------------------------------------------------------------
+# Class of evaluation metrics
+#--------------------------------------------------------------------
+class RFBMetrics(ABC):
+    """
+    The abstract class of evaluation metrics for evaluating a single video run by RFB
+    """
+    def __init__(self, gold: Dict[str, Dict], pred: Dict[str, Dict]) -> None:
+        self.gold = gold
+        self.pred = pred
+        self.frame_score: Dict[int, Tuple] = {}
 
-        return frame_iou, individual_iou_vals
+        # Check if the gold and pred data refer to the same video
+        if list(self.gold.keys())[0] != list(self.pred.keys())[0]:
+            raise ValueError('The prediction file and the gold file refer to different video.')
+
+        # Find intersected frames between pred and gold
+        self.guid = next(iter(self.pred.keys()))
+        self.frames = self._align_frames_between(self.pred, self.gold)
+
+    def _align_frames_between(self,
+                              pred: Dict[str, Dict[int, set]],
+                              gold: Dict[str, Dict[Tuple[int, int], set]]
+                              ) -> Dict[int, Tuple[int, int]]:
+        """Help aligning frames from predictions with span from golds"""
+        alignments = defaultdict(tuple)
+        for frame in pred[self.guid]:
+            for span in gold[self.guid]:
+                if span[0] <= frame <= span[1]:
+                    alignments[frame] = span
+                    break
+
+        return alignments
+
+    @abstractmethod
+    def calculate(self) -> float:
+        pass
+
+class StringList:
+    """
+    The class that represents a list of strings and it enables the "outer product" operation
+    """
+    def __init__(self, strs: List[str]) -> None:
+        self.strs = strs
+
+    def __matmul__(self, other: List[str]) -> np.ndarray:
+        if not isinstance(other, StringList):
+            raise ValueError("The right-hand operand must be an instance of StringList")
+
+        # Perform the "outer product" operation and store results in a list of lists
+        result_matrix = []
+        for str1 in self.strs:
+            row = []
+            for str2 in other.strs:
+                distance = fuzz.ratio(str1, str2)
+                row.append(distance)
+            result_matrix.append(row)
+
+        # Convert the result matrix to a NumPy array
+        return np.array(result_matrix)
+
+class IOU(RFBMetrics):
+    """
+    The class of Intersection Over Union (IOU) evaluation metric
+    """
+    def _iou(self, p: set, g: set) -> float:
+        try:
+            val = len(set.intersection(p, g)) / len(set.union(p, g))
+        except ZeroDivisionError:
+            val = 0
+        return val
+
+    def _organize(self, frame_data: Set[Tuple[str, str]]) -> Tuple[Set, Set, Dict]:
+        role_set, filler_set, binding = set(), set(), defaultdict(list)
+        for role, filler in frame_data:
+            role_set.add(role)
+            filler_set.add(filler)
+            binding[role].append(filler)
+        return role_set, filler_set, binding
+
+    def _fuzzy_match(self, gold_list: StringList, pred_list: StringList) -> List[int]:
+        match_matrix = gold_list @ pred_list
+        max_indices = np.argmax(match_matrix, axis=0)
+        valid_indices = [row
+                         for col, row in enumerate(max_indices)
+                         if match_matrix[row, col] == 100
+                         ]
+        return valid_indices
+
+    def _intersect_between_binding(self, gold: Dict, pred: Dict) -> int:
+        # Index the roles in gold first
+        gold_roles = {idx: role for idx, role in enumerate(gold.keys())}
+
+        # Fuzzy match the roles in pred with the roles in gold
+        gold_array = StringList(list(gold_roles.values()))
+        pred_array = StringList(list(pred.keys()))
+        matched_roles = [gold_roles[idx] for idx in self._fuzzy_match(gold_array, pred_array)]
+
+        # Fuzzy match the fillers between gold and pred sharing the same role
+        num_intersect = 0
+        for role in matched_roles:
+            gold_fillers, pred_fillers = StringList(gold[role]), StringList(pred[role])
+            num_intersect += len(self._fuzzy_match(gold_fillers, pred_fillers))
+
+        return num_intersect
+
+    def _union_between_binding(self, gold: Dict, pred: Dict) -> int:
+        gold_bindings = [(role, f) for role, fillers in gold.items() for f in fillers]
+        pred_bindings = [(role, f) for role, fillers in pred.items() for f in fillers]
+        return len(set(gold_bindings).union(set(pred_bindings)))
+
+    def calculate(self) -> Dict[int, Tuple]:
+        if self.frames:
+            for frame, span in self.frames.items():
+                gold_roles, gold_fillers, gold_binding = self._organize(self.gold[self.guid][span])
+                pred_roles, pred_fillers, pred_binding = self._organize(self.pred[self.guid][frame])
+                role_iou = self._iou(pred_roles, gold_roles)
+                filler_iou = self._iou(pred_fillers, gold_fillers)
+                binding_iou = self._intersect_between_binding(gold_binding, pred_binding) / self._union_between_binding(gold_binding, pred_binding)
+                self.frame_score[frame] = (role_iou, filler_iou, binding_iou)
+        else:
+            logging.warning("No overlap frames are found between gold and prediction data")
+            self.frame_score = {-1: (-1, -1, -1)}
+        return self.frame_score
+
+#--------------------------------------------------------------------
+# Run evaluation in parallel
+#--------------------------------------------------------------------
+def _load_data_from_dir(directory: Union[str, os.PathLike], label: str) -> Dict[str, Dict]:
+    """
+    Load data from a directory
+
+    :param: dir: the directory path of data
+    :param: label: the label of either gold or prediction data
+    :return: a dictionary whose key is a GUID and value is a dictionary of frame data
+    """
+    logging.debug("Start loading %s data:", label)
+    out = {}
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if label == 'gold':
+                out.update(load_gold(os.path.join(root, file)))
+            else:
+                out.update(load_pred(os.path.join(root, file)))
+    return out
 
 
-# ---------------------------------------------------------------------------|
-# Main
-# ---------------------------------------------------------------------------|
+def run_eval(gold_dir: Union[str, os.PathLike], pred_dir: Union[str, os.PathLike]) -> List[Dict[str, Dict[int, Tuple]]]:
+    """
+    Run evaluation in parallel
+
+    :param: gold_dir: the directory path of gold standard data
+    :param: pred_dir: the directory path of prediction data
+    :return: a dictionary of evaluation results
+    """
+    def help_run_iou(args):
+        g, p = args
+        iou = IOU(g, p)
+        return iou.calculate()
+
+    golds, preds = _load_data_from_dir(gold_dir, 'gold'), _load_data_from_dir(pred_dir, 'pred')
+    overlap_videos = list(golds.keys() & preds.keys())
+    logging.debug("\nOverlap videos %s found", len(overlap_videos))
+
+    results = []
+    if overlap_videos:
+        num_cores = mp.cpu_count()
+        num_processes = max(1, num_cores // 2)  # Use half of the available cores at maximum
+        logging.debug("Number of processes: %s deployed", num_processes)
+
+        with mp.Pool(num_processes) as pool:
+            chunk_size = len(overlap_videos) // num_processes
+            for i in range(0, len(overlap_videos), chunk_size):
+                chunk = [({guid: golds[guid]}, {guid: preds[guid]})
+                         for guid in overlap_videos[i:i+chunk_size]
+                         ]
+                results.extend(pool.map(help_run_iou, chunk))
+    logging.warning("No overlap videos found")
+    return results
+
+#--------------------------------------------------------------------
+# Write out evaluation results
+#--------------------------------------------------------------------
+def write_out(results: List[Dict[str, Dict[int, Tuple]]]) -> None:
+    """Write out a list of formatted evaluation results into a .txt
+
+    :param: results: the list of formatted evaluation results
+    :return: None
+    """
+    with open('results.txt', 'w', encoding='utf-8') as f:
+        for result in results:
+            guid, frame_scores = result
+            f.write(f"{guid}:\n")
+            for frame, scores in frame_scores.items():
+                f.write(f"\t\t{frame}: Role={scores[0]}\tFiller={scores[1]}\tBinding={scores[2]}\n")
+    f.close()
+
+
+#--------------------------------------------------------------------
+# Arguments setting
+#--------------------------------------------------------------------
 def parse_args() -> Namespace:
+    """Provide arguments of the script
+    """
     parser = ArgumentParser(
-        description="Evaluation script for Role-Filler Binding",
+        description='Evaluation script for RFB (Role-Filler-Binding)'
     )
 
     parser.add_argument(
-        "-p",
-        "--preds",
-        help="The directory location of prediction files",
-        required=True,
+        '-p',
+        '--preds',
+        help='The directory path of RFB predictions',
+        required=True
     )
+
     parser.add_argument(
-        "-g",
-        "--golds",
-        help="The directory location of gold (JSON) files",
-        required=True,
+        '--debug',
+        action='store_true',
+        help='Set the debug mode'
     )
-    parser.add_argument(
-        "-m",
-        "--metric",
-        help="The metric being used for evaluation",
-        required=True,
-        default="dsc",
-    )
-    # TODO - add (more) runtime arguments
 
     return parser.parse_args()
 
 
-def main(runtime_args: Namespace):
-    # TODO run goldretriever + predretriever
-    # TODO read in data
-    # TODO primary evaluation function
-    # TODO write results + report
-    
-    raise NotImplementedError
+#--------------------------------------------------------------------
+# Main
+#--------------------------------------------------------------------
+def main():
+    """Main function for running the evaluation task for the RFB app
+    """
+    args = parse_args()
+    preds_dir, debug = args.preds, args.debug
 
+    if debug:
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+
+    try:
+        golds_dir = goldretriever.download_golds(GOLD_URL)
+    except FileNotFoundError:
+        logging.error("The gold standard data is not found")
+        return
+
+    iou_results = run_eval(golds_dir, preds_dir)
+    write_out(iou_results)
 
 if __name__ == "__main__":
-    test_string = ",Role,Filler\n0,Team,SCOTT VITBEUNBO\n1,Team,LALIE ONVOHOID\n2,Team,RICH HOYER\n3,Team,JOANNE LEGOMSKY\n"
-    print(convert_string_to_dict(test_string))
-
-
-    args = parse_args()
-    main(args)
+    main()
