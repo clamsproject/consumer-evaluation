@@ -156,6 +156,8 @@ def document_evaluation(label_dict):
     calculate document-level p, r, f1 for each label and macro avg.
     also returns total counts of tp, fp, fn for each label to calculate micro avg later.
     """
+    if len(label_dict) == 0:
+        return {"AVERAGE": {"precision": 0, "recall": 0, "f1": 0}}, {}
     # count up tp, fp, fn for each label
     total_counts = defaultdict(Counter)
     for annotation_id in label_dict:
@@ -248,8 +250,12 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, timeframe_eval):
             m = Mmif(f.read())
             # always assume the first document is the main "source" data for the annotations
             guid = guidhandler.get_aapb_guid_from(list(m.documents._items.values())[0].location_address())
-        # match guid with gold file
-        gold_file = next(pathlib.Path(gold_dir).glob(f"*{guid}*"))
+        try:
+            # match guid with gold file
+            gold_file = next(pathlib.Path(gold_dir).glob(f"*{guid}*"))
+        except StopIteration:
+            # meaning no matching gold found, skip this file
+            continue
         # process gold
         gold_dict = extract_gold_labels(gold_file, count_subtypes)
 
