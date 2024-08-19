@@ -1,0 +1,98 @@
+{
+  "317.0271": {
+    "ref_text": "sen. bob dole (r) kansas",
+    "hyp_text": "sen.bob dole r kansas",
+    "cer": 0.125
+  },
+  "395.2771": {
+    "ref_text": "william mcgowan mci",
+    "hyp_text": "william mcgowan mci",
+    "cer": 0.0
+  },
+  "485.2771": {
+    "ref_text": "merrill brown washington post",
+    "hyp_text": "merrill brown washington post",
+    "cer": 0.0
+  },
+  "687.7771": {
+    "ref_text": "merrill brown washington post",
+    "hyp_text": "merrill brown washington post",
+    "cer": 0.0
+  },
+  "1098.5271": {
+    "ref_text": "john jacob national urban league",
+    "hyp_text": "johnejacob national crban league",
+    "cer": 0.0625
+  },
+  "1256.5271": {
+    "ref_text": "john jacob national urban league",
+    "hyp_text": "toanjacob national orban deague",
+    "cer": 0.15625
+  },
+  "1362.2771": {
+    "ref_text": "sen. john danforth (r) missouri",
+    "hyp_text": "sen. john danforth (r) missouri",
+    "cer": 0.0
+  },
+  "1829.0271": {
+    "ref_text": "sister therese",
+    "hyp_text": "sister therese",
+    "cer": 0.0
+  },
+  "1862.7771": {
+    "ref_text": "father david",
+    "hyp_text": "fatherdavid",
+    "cer": 0.0833333358168602
+  },
+  "2005.2771": {
+    "ref_text": "sister maria",
+    "hyp_text": "sister maria",
+    "cer": 0.0
+  },
+  "2582.5271": {
+    "ref_text": "dr. howard ory centers for disease control",
+    "hyp_text": "atlanta dr. howard ory genters for disease control",
+    "cer": 0.2142857164144516
+  },
+  "2715.2771": {
+    "ref_text": "dr. howard ory centers for disease control",
+    "hyp_text": "atlanta dr.howard ory genters for disease control",
+    "cer": 0.2380952388048172
+  },
+  "2798.7771": {
+    "ref_text": "dr. diana petitti university of california",
+    "hyp_text": "san frangisco dr diana petitti uninversity of galifornia",
+    "cer": 0.4047619104385376
+  },
+  "2932.2771": {
+    "ref_text": "dr. diana petitti university of california",
+    "hyp_text": "san frangisco dr diana/petitti unnersity of galifornia",
+    "cer": 0.4523809552192688
+  },
+  "3048.2771": {
+    "ref_text": "dr. howard ory centers for disease control",
+    "hyp_text": "atlanta dr. howard ory genters for disease gontrol",
+    "cer": 0.2380952388048172
+  },
+  "3098.0271": {
+    "ref_text": "dr. diana petitti university of california",
+    "hyp_text": "san francisco dr.diana petitti uninersity of galifornia",
+    "cer": 0.4047619104385376
+  },
+  "3185.0271": {
+    "ref_text": "dr. diana petitti university of california",
+    "hyp_text": "san frangisco dr diana petitti uninersity of galifornia",
+    "cer": 0.4047619104385376
+  },
+  "3249.5271": {
+    "ref_text": "dr. howard ory centers for disease control",
+    "hyp_text": "atlanta dr. howardory genters for disease gontrol",
+    "cer": 0.261904776096344
+  },
+  "3344.5271": {
+    "ref_text": "dr. howard ory centers for disease control",
+    "hyp_text": "atlanta dr. howardory genters for disease gontrol",
+    "cer": 0.261904776096344
+  },
+  "mean_cer": 0.1741071457141324
+}

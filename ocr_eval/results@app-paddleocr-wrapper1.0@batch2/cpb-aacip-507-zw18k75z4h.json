@@ -1,0 +1,48 @@
+{
+  "267.7771": {
+    "ref_text": "marshall loeb money magazine",
+    "hyp_text": "new york marshalt loeb money wmagazine",
+    "cer": 0.3928571343421936
+  },
+  "393.0271": {
+    "ref_text": "marshall loeb money magazine",
+    "hyp_text": "marshall loeb money magazine",
+    "cer": 0.0
+  },
+  "511.7771": {
+    "ref_text": "john hardin savings banker",
+    "hyp_text": "washington johnhardin savings banker",
+    "cer": 0.4615384638309479
+  },
+  "742.7771": {
+    "ref_text": "john hardin savings banker",
+    "hyp_text": "john hardin savings banker",
+    "cer": 0.0
+  },
+  "799.2771": {
+    "ref_text": "sandra mclaughlin commercial banker",
+    "hyp_text": "washington sandraimclaughln commercialsbanker",
+    "cer": 0.4000000059604645
+  },
+  "979.5271": {
+    "ref_text": "sandra mclaughlin commercial banker",
+    "hyp_text": "sandramclaughln commercialbanker",
+    "cer": 0.08571428805589676
+  },
+  "1200.5271": {
+    "ref_text": "sen. jake garn (r) utah",
+    "hyp_text": "washington senjakegarn (rutah",
+    "cer": 0.6086956262588501
+  },
+  "1366.0271": {
+    "ref_text": "sen. jake garn (r) utah",
+    "hyp_text": "sen.jake garn r utaf",
+    "cer": 0.17391304671764374
+  },
+  "1458.0271": {
+    "ref_text": "marshall loeb money magazine",
+    "hyp_text": "marshall loeb money magazine",
+    "cer": 0.0
+  },
+  "mean_cer": 0.2358576183517774
+}

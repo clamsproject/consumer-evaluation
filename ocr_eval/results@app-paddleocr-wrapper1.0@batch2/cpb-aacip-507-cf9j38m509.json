@@ -1,0 +1,138 @@
+{
+  "205.2771": {
+    "ref_text": "raanan gissin adviser, israeli prime minister",
+    "hyp_text": "raanan gissin adviser,israeli prime minister",
+    "cer": 0.02222222276031971
+  },
+  "514.2771": {
+    "ref_text": "josh bolten director, office of management and budget",
+    "hyp_text": "josh bolten director, office of management and budget",
+    "cer": 0.0
+  },
+  "537.0271": {
+    "ref_text": "kwame holman",
+    "hyp_text": "kwame holman",
+    "cer": 0.0
+  },
+  "638.7771": {
+    "ref_text": "rep. john spratt (d) south carolina",
+    "hyp_text": "rep.john spratt (d south carolina",
+    "cer": 0.05714285746216774
+  },
+  "677.5271": {
+    "ref_text": "josh bolten director, office of management and budget",
+    "hyp_text": "losh bolten director, office of management and budget",
+    "cer": 0.01886792480945587
+  },
+  "722.2771": {
+    "ref_text": "sen. kent conrad (d) north dakota",
+    "hyp_text": "sen.kent conrad (d north dakota",
+    "cer": 0.06060606241226196
+  },
+  "755.5271": {
+    "ref_text": "margaret warner",
+    "hyp_text": "ws ney ur hoi .ehrer margaret warner",
+    "cer": 1.399999976158142
+  },
+  "789.7771": {
+    "ref_text": "sen. judd gregg (r) new hampshire",
+    "hyp_text": "sen.judd gregg (r) new hampshire",
+    "cer": 0.03030303120613098
+  },
+  "824.2771": {
+    "ref_text": "sen. kent conrad (d) north dakota",
+    "hyp_text": "sen.kent conrad (d north dakota",
+    "cer": 0.06060606241226196
+  },
+  "1006.2771": {
+    "ref_text": "sen. kent conrad (d) north dakota",
+    "hyp_text": "sen.kent conrad (dnorth dakota",
+    "cer": 0.09090909361839294
+  },
+  "1089.7771": {
+    "ref_text": "sen. judd gregg (r) new hampshire",
+    "hyp_text": "sen.judd gregg (r) new hampshire",
+    "cer": 0.03030303120613098
+  },
+  "1375.5271": {
+    "ref_text": "sen. kent conrad (d) north dakota",
+    "hyp_text": "sen.kent conrad (d north dakota",
+    "cer": 0.06060606241226196
+  },
+  "1406.7771": {
+    "ref_text": "sen. judd gregg (r) new hampshire",
+    "hyp_text": "sen.judd gregg (r new hampshire",
+    "cer": 0.06060606241226196
+  },
+  "1559.7771": {
+    "ref_text": "sen. kent conrad (d) north dakota",
+    "hyp_text": "sen.kent conrad d north dakota",
+    "cer": 0.09090909361839294
+  },
+  "1629.7771": {
+    "ref_text": "ray suarez",
+    "hyp_text": "new news hot iour torlelret ews ne iol 0 imle jne ray suarez",
+    "cer": 5.0
+  },
+  "1791.2771": {
+    "ref_text": "dan ephron newsweek",
+    "hyp_text": "dan ephron newsweek",
+    "cer": 0.0
+  },
+  "1928.2771": {
+    "ref_text": "dan ephron newsweek",
+    "hyp_text": "dan ephron newsweek",
+    "cer": 0.0
+  },
+  "2120.7771": {
+    "ref_text": "dr. ross fletcher chief of medical staff washington va medical center",
+    "hyp_text": "dr.ross fletcher chief of medical staff washington va medical center",
+    "cer": 0.014492753893136978
+  },
+  "2204.0271": {
+    "ref_text": "dr. lucian leape harvard school of public health",
+    "hyp_text": "dr. lucian leape harvard school of public health",
+    "cer": 0.0
+  },
+  "2232.2771": {
+    "ref_text": "dr. robert wachter ucsf school of medicine",
+    "hyp_text": "dr. robert wachter ucsf school of medicine",
+    "cer": 0.0
+  },
+  "2264.5271": {
+    "ref_text": "dr. jonathan perlin acting under sec. for health, va",
+    "hyp_text": "dr.jonathan perlin acting under sec.for health,va",
+    "cer": 0.057692307978868484
+  },
+  "2295.0271": {
+    "ref_text": "james bagian dir, va national center for patient safety",
+    "hyp_text": "james bagian dir, va national center for patient safety",
+    "cer": 0.0
+  },
+  "2546.5271": {
+    "ref_text": "dr. jonathan perlin acting under sec. for health, va",
+    "hyp_text": "dr.jonathan perlin acting under sec.for health,va",
+    "cer": 0.057692307978868484
+  },
+  "2807.5271": {
+    "ref_text": "terence smith",
+    "hyp_text": "jim new ews hou hour jinreehe halelrer ew e ior jin terence smith",
+    "cer": 4.0
+  },
+  "2826.7771": {
+    "ref_text": "john feinstein sportswriter",
+    "hyp_text": "john feinstein sportswriter",
+    "cer": 0.0
+  },
+  "3018.7771": {
+    "ref_text": "john feinstein sportswriter",
+    "hyp_text": "john feinstein sportswriter",
+    "cer": 0.0
+  },
+  "3198.2771": {
+    "ref_text": "john feinstein sportswriter",
+    "hyp_text": "john feinstein sportswriter",
+    "cer": 0.0
+  },
+  "mean_cer": 0.41159106853107613
+}

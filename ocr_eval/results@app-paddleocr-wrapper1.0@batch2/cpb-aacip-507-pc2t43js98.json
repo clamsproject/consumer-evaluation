@@ -1,0 +1,153 @@
+{
+  "445.2771": {
+    "ref_text": "dr. scott mcivor geneticist",
+    "hyp_text": "dr. scott mclvor geneticist",
+    "cer": 0.03703703731298447
+  },
+  "642.5271": {
+    "ref_text": "dr. scott mcivor geneticist",
+    "hyp_text": "dr. scott mclvor geneticist",
+    "cer": 0.03703703731298447
+  },
+  "771.5271": {
+    "ref_text": "dr. francis collins human genome project",
+    "hyp_text": "dr.francis collins human genome project",
+    "cer": 0.02500000037252903
+  },
+  "864.2771": {
+    "ref_text": "steven holtzman millennium pharmaceuticals",
+    "hyp_text": "boston steven holtzman millenniumpharmaceuticals",
+    "cer": 0.190476194024086
+  },
+  "942.0271": {
+    "ref_text": "mary jo ellis kahn patient advocate",
+    "hyp_text": "mary jo elliskahn patient advocate",
+    "cer": 0.02857142873108387
+  },
+  "992.2771": {
+    "ref_text": "patricia king georgetown law school",
+    "hyp_text": "patricia king georgetown law school",
+    "cer": 0.0
+  },
+  "1066.5271": {
+    "ref_text": "dr. francis collins human genome project",
+    "hyp_text": "dr.francis collins human genome project",
+    "cer": 0.02500000037252903
+  },
+  "1126.2771": {
+    "ref_text": "steven holtzman millennium pharmaceuticals",
+    "hyp_text": "boston steven holtzman millenniumpharmaceuticals",
+    "cer": 0.190476194024086
+  },
+  "1193.5271": {
+    "ref_text": "mary jo ellis kahn patient advocate",
+    "hyp_text": "mary jo ellis kahn patient advocate",
+    "cer": 0.0
+  },
+  "1328.5271": {
+    "ref_text": "patricia king georgetown law school",
+    "hyp_text": "patricia king georgetown law school",
+    "cer": 0.0
+  },
+  "1427.0271": {
+    "ref_text": "dr. francis collins human genome project",
+    "hyp_text": "dr. francis collins human genome project",
+    "cer": 0.0
+  },
+  "1504.7771": {
+    "ref_text": "steven holtzman millennium pharmaceuticals",
+    "hyp_text": "boston steven holtzman millenniumpharmaceuticals",
+    "cer": 0.190476194024086
+  },
+  "1590.7771": {
+    "ref_text": "patricia king georgetown law school",
+    "hyp_text": "patricia king georgetown law school",
+    "cer": 0.0
+  },
+  "1908.2771": {
+    "ref_text": "doug marlette newsday",
+    "hyp_text": "dougmarlette newsday",
+    "cer": 0.0476190485060215
+  },
+  "1979.0271": {
+    "ref_text": "michael ramirez memphis commercial appeal",
+    "hyp_text": "michaeramirez memphis commercialappeal",
+    "cer": 0.0731707289814949
+  },
+  "2090.7771": {
+    "ref_text": "ann telnaes north america syndicate",
+    "hyp_text": "ann telnaes north america syndicate",
+    "cer": 0.0
+  },
+  "2121.7771": {
+    "ref_text": "doug marlette newsday",
+    "hyp_text": "doug marlette newsday",
+    "cer": 0.0
+  },
+  "2284.0271": {
+    "ref_text": "steve kelley san diego union-tribune",
+    "hyp_text": "steve kelley san diego union-tribune",
+    "cer": 0.0
+  },
+  "2315.2771": {
+    "ref_text": "michael ramirez memphis commercial appeal",
+    "hyp_text": "san diego michaelramirez memphis commercial appeal",
+    "cer": 0.26829269528388977
+  },
+  "2376.2771": {
+    "ref_text": "steve kelley san diego union-tribune",
+    "hyp_text": "steve kelley san diego union-tribune",
+    "cer": 0.0
+  },
+  "2477.2771": {
+    "ref_text": "michael ramirez memphis commercial appeal",
+    "hyp_text": "san diego michaelramirez memphis commercial appeal",
+    "cer": 0.26829269528388977
+  },
+  "2510.5271": {
+    "ref_text": "ann telnaes north america syndicate",
+    "hyp_text": "ann telnaes north america syndicate",
+    "cer": 0.0
+  },
+  "2607.2771": {
+    "ref_text": "steve kelley san diego union-tribune",
+    "hyp_text": "steve kelley san diego union-tribune",
+    "cer": 0.0
+  },
+  "2765.2771": {
+    "ref_text": "steve kelley san diego union-tribune",
+    "hyp_text": "steve kelley san diego union-tribune",
+    "cer": 0.0
+  },
+  "2785.2771": {
+    "ref_text": "doug marlette newsday",
+    "hyp_text": "doug marlette newsday",
+    "cer": 0.0
+  },
+  "2824.0271": {
+    "ref_text": "michael ramirez memphis commercial appeal",
+    "hyp_text": "san diego michaelramirez memphis commercial appeal",
+    "cer": 0.26829269528388977
+  },
+  "2895.7771": {
+    "ref_text": "doug marlette newsday",
+    "hyp_text": "doug marlette newsday",
+    "cer": 0.0
+  },
+  "2959.0271": {
+    "ref_text": "ann telnaes north america syndicate",
+    "hyp_text": "ann telnaes north america syndicate",
+    "cer": 0.0
+  },
+  "3038.5271": {
+    "ref_text": "michael ramirez memphis commercial appeal",
+    "hyp_text": "san diego michaelramirez memphis commercial appeal",
+    "cer": 0.26829269528388977
+  },
+  "3092.7771": {
+    "ref_text": "richard rodriguez pacific news service",
+    "hyp_text": "richard rodriguez pacific news service",
+    "cer": 0.0
+  },
+  "mean_cer": 0.06393448815991482
+}

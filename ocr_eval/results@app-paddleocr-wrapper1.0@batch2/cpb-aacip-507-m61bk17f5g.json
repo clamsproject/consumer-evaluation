@@ -1,0 +1,88 @@
+{
+  "301.7771": {
+    "ref_text": "rep. lee hamilton (d) indiana",
+    "hyp_text": "rep.leehamilton oindiana",
+    "cer": 0.2068965584039688
+  },
+  "405.7771": {
+    "ref_text": "rep. edward markey (d) massachusetts",
+    "hyp_text": "rep.edward markey d mgssachusetts",
+    "cer": 0.1111111119389534
+  },
+  "434.5271": {
+    "ref_text": "rep. robert lagomarsino (r) california",
+    "hyp_text": "rep. robert lagomarsino (rcalifornia",
+    "cer": 0.05263157933950424
+  },
+  "601.5271": {
+    "ref_text": "nina totenberg national public radio",
+    "hyp_text": "ninaftotenberg national public radio",
+    "cer": 0.02777777798473835
+  },
+  "828.0271": {
+    "ref_text": "nina totenberg national public radio",
+    "hyp_text": "nina totenberg nationgl public radio",
+    "cer": 0.02777777798473835
+  },
+  "1022.7771": {
+    "ref_text": "rep. david bonior (d) michigan",
+    "hyp_text": "rep. david bonior  micnigan",
+    "cer": 0.13333334028720856
+  },
+  "1089.5271": {
+    "ref_text": "rep. trent lott (r) mississippi",
+    "hyp_text": "rep.trent lott (r)mississippi",
+    "cer": 0.06451612710952759
+  },
+  "1095.5271": {
+    "ref_text": "rep. judd gregg (r) new hampshire",
+    "hyp_text": "rep.judd gregg rnew hampshire",
+    "cer": 0.12121212482452393
+  },
+  "1100.7771": {
+    "ref_text": "rep. jon kyl (r) arizona",
+    "hyp_text": "repjon kyl r arizona",
+    "cer": 0.1666666716337204
+  },
+  "1189.5271": {
+    "ref_text": "rep. george miller (d) california",
+    "hyp_text": "rep.george miller  california",
+    "cer": 0.12121212482452393
+  },
+  "1243.2771": {
+    "ref_text": "rep. j. alex mcmillan (r) north carolina",
+    "hyp_text": "rep.j.alex mcmillan r) north caroling",
+    "cer": 0.10000000149011612
+  },
+  "1708.7771": {
+    "ref_text": "paul solman",
+    "hyp_text": "?? ? ? ? paul solman",
+    "cer": 0.8181818127632141
+  },
+  "1938.2771": {
+    "ref_text": "curt wilbur live for life",
+    "hyp_text": "curt wilbur live for life",
+    "cer": 0.0
+  },
+  "2022.7771": {
+    "ref_text": "john hughes occupational medicine specialist",
+    "hyp_text": "john hughes occupationdlmedicine specialist",
+    "cer": 0.04545454680919647
+  },
+  "2670.7771": {
+    "ref_text": "brian o'neill insurance institute",
+    "hyp_text": "brian oneill insuranceinstitute",
+    "cer": 0.06060606241226196
+  },
+  "2934.0271": {
+    "ref_text": "michael o'connell independent drivers' association",
+    "hyp_text": "michaeloconnell independent drivers'association",
+    "cer": 0.05999999865889549
+  },
+  "2948.0271": {
+    "ref_text": "brian o'neill insurance institute",
+    "hyp_text": "brianoneill insuranceinstifute",
+    "cer": 0.12121212482452393
+  },
+  "mean_cer": 0.13168174948762446
+}

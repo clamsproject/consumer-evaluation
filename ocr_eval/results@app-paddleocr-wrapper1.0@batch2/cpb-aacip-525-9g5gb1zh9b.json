@@ -1,0 +1,93 @@
+{
+  "256.7771": {
+    "ref_text": "september 2010 rep. jeb hensarling (r) texas",
+    "hyp_text": "september2010 rep.jeb hensarling r)texas kqed9",
+    "cer": 0.22727273404598236
+  },
+  "317.5271": {
+    "ref_text": "november 2010 sen.-elect mike lee (r) utah",
+    "hyp_text": "november2010 sen.-elect mike lee (r)utah kqed9",
+    "cer": 0.190476194024086
+  },
+  "382.7771": {
+    "ref_text": "rep. nancy pelosi speaker of the house",
+    "hyp_text": "rep.nancy pelosi speaker of the house kqed9",
+    "cer": 0.18421052396297455
+  },
+  "443.2771": {
+    "ref_text": "diane lim rogers the concord coalition",
+    "hyp_text": "diane lim rogers the concord coalition kqed9",
+    "cer": 0.15789473056793213
+  },
+  "502.0271": {
+    "ref_text": "james horney center on budget & policy priorities",
+    "hyp_text": "james horney center on budget s policy prioritiesqed9",
+    "cer": 0.10204081982374191
+  },
+  "632.2771": {
+    "ref_text": "james horney center on budget & policy priorities",
+    "hyp_text": "james horney center on budget s policy prioritiesqed9",
+    "cer": 0.10204081982374191
+  },
+  "749.5271": {
+    "ref_text": "diane lim rogers the concord coalition",
+    "hyp_text": "diane lim rogers the concord coalition kqed9",
+    "cer": 0.15789473056793213
+  },
+  "795.0271": {
+    "ref_text": "james horney center on budget & policy priorities",
+    "hyp_text": "james horney center on budget & policy prioritiesqed9",
+    "cer": 0.08163265138864517
+  },
+  "943.5271": {
+    "ref_text": "kwame holman",
+    "hyp_text": "relieved of command kwame holmang pbsnewshour",
+    "cer": 2.75
+  },
+  "1085.7771": {
+    "ref_text": "mayor brad carter rockhampton, queensland",
+    "hyp_text": "ock npi 1al-co r mayor brad carter rockhampton,queensland kqed9",
+    "cer": 0.5853658318519592
+  },
+  "1289.5271": {
+    "ref_text": "sen. lamar alexander (r) tennessee",
+    "hyp_text": "sen. lamar alexander (r)tennessee kqed9",
+    "cer": 0.20588235557079315
+  },
+  "1468.5271": {
+    "ref_text": "sen. lamar alexander (r) tennessee",
+    "hyp_text": "sen. lamar alexander (r)tennessee kqed9",
+    "cer": 0.20588235557079315
+  },
+  "1744.5271": {
+    "ref_text": "sen. tom udall (d) new mexico",
+    "hyp_text": "sen.tom udall d new mexico kqed9",
+    "cer": 0.3103448152542114
+  },
+  "2045.2771": {
+    "ref_text": "president goodluck jonathan nigeria",
+    "hyp_text": "president goodluck jonathan nigeria when there is a major disagreementinthe country you don't expect it to be done...",
+    "cer": 2.3428571224212646
+  },
+  "2147.2771": {
+    "ref_text": "cornelius dupree",
+    "hyp_text": "cornelius dupree",
+    "cer": 0.0
+  },
+  "2262.2771": {
+    "ref_text": "craig watkins district attorney, dallas county",
+    "hyp_text": "craig watkins district attorney,dallas county kqed9",
+    "cer": 0.15217390656471252
+  },
+  "2378.0271": {
+    "ref_text": "craig watkins district attorney, dallas county",
+    "hyp_text": "craig watkins district attorney.dallas county kqed9",
+    "cer": 0.17391304671764374
+  },
+  "2658.7771": {
+    "ref_text": "kwame dawes poet",
+    "hyp_text": "kwame dawes poet kqed9",
+    "cer": 0.375
+  },
+  "mean_cer": 0.46138236878646743
+}

@@ -1,0 +1,43 @@
+{
+  "142.7771": {
+    "ref_text": "washington, dc damian paletta the washington post",
+    "hyp_text": "pbso news hour weekend washington,dc pbs news damian paletta hour the washington post",
+    "cer": 0.7755101919174194
+  },
+  "341.0271": {
+    "ref_text": "washington, dc damian paletta the washington post",
+    "hyp_text": "pbso news hour weekend washington,dc pbs news damian paletta hour the washington post kqed9",
+    "cer": 0.8979591727256775
+  },
+  "463.5271": {
+    "ref_text": "washington, dc nahal toosi politico",
+    "hyp_text": "pbso news hour weekend washington,dc pbs news nahal toosi hour politico kqed",
+    "cer": 1.2285714149475098
+  },
+  "517.7771": {
+    "ref_text": "washington, dc nahal toosi politico",
+    "hyp_text": "pbso news hour weekend washington,dc pbs news nahal toosi hour @nahaltoosi kqed-o",
+    "cer": 1.485714316368103
+  },
+  "620.2771": {
+    "ref_text": "washington, dc nahal toosi politico",
+    "hyp_text": "pbso news hour weekend washington,dc pbs news nahal toosi hour @nahaltoosi kqed",
+    "cer": 1.4571428298950195
+  },
+  "861.2771": {
+    "ref_text": "joel brammeier alliance for the great lakes",
+    "hyp_text": "joel brammeier alliance for the great lakes kqed-9",
+    "cer": 0.1627907007932663
+  },
+  "964.0271": {
+    "ref_text": "chuck shea u.s. army corps of engineers",
+    "hyp_text": "chuck shea u.s. army corps of engineers",
+    "cer": 0.0
+  },
+  "1196.0271": {
+    "ref_text": "charlie gilpin, jr. commercial fisherman",
+    "hyp_text": "charlie gilpin,jr. commercial fisherman oed",
+    "cer": 0.125
+  },
+  "mean_cer": 0.7665860783308744
+}

@@ -1,0 +1,178 @@
+{
+  "762.5271": {
+    "ref_text": "gen. george joulwan (ret.) u.s. army",
+    "hyp_text": "gen.ceorgejoulwan (ret.) u.s.army",
+    "cer": 0.1111111119389534
+  },
+  "825.2771": {
+    "ref_text": "john isaacs council for a livable world",
+    "hyp_text": "john isaacs council for a livable world",
+    "cer": 0.0
+  },
+  "993.0271": {
+    "ref_text": "gen. george joulwan (ret.) u.s. army",
+    "hyp_text": "gen. ceorgejoulwan (ret.) u.s.army",
+    "cer": 0.0833333358168602
+  },
+  "1061.2771": {
+    "ref_text": "john isaacs council for a livable world",
+    "hyp_text": "lohn isaacs council for a livable world",
+    "cer": 0.025641025975346565
+  },
+  "1136.0271": {
+    "ref_text": "gen. george joulwan (ret.) u.s. army",
+    "hyp_text": "gen. ceorge joulwan (ret.) u.s.army",
+    "cer": 0.0555555559694767
+  },
+  "1158.2771": {
+    "ref_text": "james woolsey former cia director",
+    "hyp_text": "jameswoolsey former cia director",
+    "cer": 0.03030303120613098
+  },
+  "1245.0271": {
+    "ref_text": "john isaacs council for a livable world",
+    "hyp_text": "john isaacs council for a livable world",
+    "cer": 0.0
+  },
+  "1297.7771": {
+    "ref_text": "james woolsey former cia director",
+    "hyp_text": "james woolsey former cia director",
+    "cer": 0.0
+  },
+  "1384.0271": {
+    "ref_text": "john isaacs council for a livable world",
+    "hyp_text": "lohn isaacs council for a livable world",
+    "cer": 0.025641025975346565
+  },
+  "1421.5271": {
+    "ref_text": "james woolsey former cia director",
+    "hyp_text": "james woolsey former cia director",
+    "cer": 0.0
+  },
+  "1488.2771": {
+    "ref_text": "gen. george joulwan (ret.) u.s. army",
+    "hyp_text": "gen. ceorge joulwan (ret.) u.s.army",
+    "cer": 0.0555555559694767
+  },
+  "1664.7771": {
+    "ref_text": "paul solman",
+    "hyp_text": "paul solman",
+    "cer": 0.0
+  },
+  "1696.7771": {
+    "ref_text": "vanessa kirsch new profit, inc.",
+    "hyp_text": "vanessa kirsch new profit, inc.",
+    "cer": 0.0
+  },
+  "1710.2771": {
+    "ref_text": "kelly fitzsimmons new profit, inc.",
+    "hyp_text": "kelly fitzsimmons new profit, inc.",
+    "cer": 0.0
+  },
+  "1804.0271": {
+    "ref_text": "ned rimer citizen schools",
+    "hyp_text": "ned rimer citizen schools",
+    "cer": 0.0
+  },
+  "1883.7771": {
+    "ref_text": "robert kaplan harvard business school",
+    "hyp_text": "robert kaplan harvard business school",
+    "cer": 0.0
+  },
+  "1996.5271": {
+    "ref_text": "aaron lieberman jumpstart",
+    "hyp_text": "aaron lieberman jumpstart",
+    "cer": 0.0
+  },
+  "2081.2771": {
+    "ref_text": "kelly fitzsimmons new profit, inc.",
+    "hyp_text": "kelly fitzsimmons new profit, inc.",
+    "cer": 0.0
+  },
+  "2140.5271": {
+    "ref_text": "peter karoff the philanthropic initiative",
+    "hyp_text": "peter karoff the philanthropic initiative",
+    "cer": 0.0
+  },
+  "2190.7771": {
+    "ref_text": "christopher clark citizen schools graduate",
+    "hyp_text": "christopher clark citizen schoos graduate",
+    "cer": 0.02380952425301075
+  },
+  "2399.0271": {
+    "ref_text": "joshua muscat american health foundation",
+    "hyp_text": "joshua muscat american health foundation",
+    "cer": 0.0
+  },
+  "2488.2771": {
+    "ref_text": "joshua muscat american health foundation",
+    "hyp_text": "joshuamuscat american health foundation",
+    "cer": 0.02500000037252903
+  },
+  "2557.7771": {
+    "ref_text": "susan dentzer",
+    "hyp_text": "susan dentzer",
+    "cer": 0.0
+  },
+  "2615.7771": {
+    "ref_text": "richard norton smith presidential historian",
+    "hyp_text": "grand rapids richard norton smith presidential historian",
+    "cer": 0.302325576543808
+  },
+  "2669.7771": {
+    "ref_text": "haynes johnson journalist/author",
+    "hyp_text": "haynes johnson journalist/author",
+    "cer": 0.0
+  },
+  "2784.2771": {
+    "ref_text": "michael beschloss presidential historian",
+    "hyp_text": "phoenix michael beschloss presidential historian",
+    "cer": 0.20000000298023224
+  },
+  "2868.0271": {
+    "ref_text": "richard norton smith presidential historian",
+    "hyp_text": "grand rapids richard norton smith presidential historian",
+    "cer": 0.302325576543808
+  },
+  "2941.0271": {
+    "ref_text": "haynes johnson journalist/author",
+    "hyp_text": "haynes johnson journalist/author",
+    "cer": 0.0
+  },
+  "2996.5271": {
+    "ref_text": "roger wilkins george mason university",
+    "hyp_text": "roger wilkins george mason university",
+    "cer": 0.0
+  },
+  "3077.7771": {
+    "ref_text": "richard norton smith presidential historian",
+    "hyp_text": "grand rapids richard norton smith presidential historian",
+    "cer": 0.302325576543808
+  },
+  "3111.2771": {
+    "ref_text": "michael beschloss presidential historian",
+    "hyp_text": "phoenix michae beschloss presidential historian",
+    "cer": 0.22499999403953552
+  },
+  "3166.2771": {
+    "ref_text": "haynes johnson journalist/author",
+    "hyp_text": "haynes johnson lournalist/author",
+    "cer": 0.03125
+  },
+  "3204.7771": {
+    "ref_text": "roger wilkins george mason university",
+    "hyp_text": "roger wilkins george mason university",
+    "cer": 0.0
+  },
+  "3231.2771": {
+    "ref_text": "richard norton smith presidential historian",
+    "hyp_text": "grand rapids richard norton smith presidential historian",
+    "cer": 0.302325576543808
+  },
+  "3286.7771": {
+    "ref_text": "michael beschloss presidential historian",
+    "hyp_text": "phoenix michaebeschloss presidential historian",
+    "cer": 0.25
+  },
+  "mean_cer": 0.06718578487634659
+}
