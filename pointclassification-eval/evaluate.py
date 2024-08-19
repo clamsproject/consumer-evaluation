@@ -246,13 +246,16 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, timeframe_eval):
     mmif_files = pathlib.Path(mmif_dir).glob("*.mmif")
     # get each mmif file
     for mmif_file in mmif_files:
+        # ignore hidden files
+        if mmif_file.name.startswith('.'):
+            continue
         with open(mmif_file, "r") as f:
             m = Mmif(f.read())
             # always assume the first document is the main "source" data for the annotations
             guid = guidhandler.get_aapb_guid_from(list(m.documents._items.values())[0].location_address())
         try:
             # match guid with gold file
-            gold_file = next(pathlib.Path(gold_dir).glob(f"*{guid}*"))
+            gold_file = next(g for g in pathlib.Path(gold_dir).glob(f"*{guid}*") if not g.name.startswith('.'))
         except StopIteration:
             # meaning no matching gold found, skip this file
             continue
