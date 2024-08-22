@@ -43,7 +43,7 @@ This script takes the arguments necessary for each evaluation type. To run this 
 * `-m`: Set of predictions in MMIF format (either from the preds folder in repo of the evaluation, or generated from one of the [CLAMS apps](https://apps.clams.ai)     )
 * `-g`: Set of golds in csv format (either downloaded from the annotations repository using goldretriever.py, or your own set that exactly matches the format present in aapb-annotations)
 
-There are currently 7 supported evaluation packages. The following is a list along with the arguments necessary to them in addition to -m and -g:
+There are currently 7 supported evaluation packages. The following is a list along with the arguments necessary to them (in order for implementing) in addition to `-m` and `-g`:
 * Automatic Speech Recognition `asr`
 * Forced Alignment `fa` 
   * `-r`, `--result_file`: file to store evaluation results
