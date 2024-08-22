@@ -220,7 +220,7 @@ if __name__ == "__main__":
                         help='directory containing machine-annotated files in MMIF format')
     parser.add_argument('-g', '--gold_dir', type=str, default=None,
                         help='directory containing gold labels in csv format')
-    parser.add_argument('-s', '--count_subtypes', type=bool, default=False,
+    parser.add_argument('-s', '--count_subtypes', action='store_true', default=False,
                         help='bool flag whether to consider subtypes for evaluation')
     args = parser.parse_args()
     mmif_dir = args.mmif_dir

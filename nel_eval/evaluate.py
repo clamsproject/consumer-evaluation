@@ -74,7 +74,7 @@ def mmif_to_ne(mmif_path) -> list:
     with open(mmif_path) as fh_in:
         mmif_serialized = fh_in.read()
     mmif = Mmif(mmif_serialized)
-    ne_views = mmif.get_all_views_contain(at_types=Uri.NE)
+    ne_views = mmif.get_all_views_contain(Uri.NE)
     view = ne_views[-1]  # read only the first view (from last) with Uri.NE
     annotations = view.get_annotations(at_type=Uri.NE)
     ne_list = []

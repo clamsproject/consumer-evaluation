@@ -1,0 +1,10 @@
+#WIP:
+asr_eval: "https://github.com/clamsproject/aapb-collaboration/tree/89b8b123abbd4a9a67c525cc480173b52e0d05f0/21"
+fa_eval: 'https://github.com/clamsproject/aapb-annotations/tree/f884e10d0b9d4b1d68e294d83c6e838528d2c249/newshour-transcript-sync/golds/aapb-collaboration-21'
+nel_eval: 'https://github.com/clamsproject/aapb-annotations/tree/feaf342477fc27e57dcdcbb74c067aba4a02e40d/newshour-namedentity-wikipedialink/golds/aapb-collaboration-21'
+ocr_eval: 'https://github.com/clamsproject/aapb-annotations/tree/f96f857ef83acf85f64d9a10ac8fe919e06ce51e/newshour-chyron/golds/batch2'
+sr-eval: "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8cf942ba827917938b49570d6d9/scene-recognition/golds"
+timeframe-eval:
+  GOLD_CHYRON_URL: "https://github.com/clamsproject/aapb-annotations/tree/cc0d58e16a06a8f10de5fc0e5333081c107d5937/newshour-chyron/golds"
+  GOLD_SLATES_URL: "https://github.com/clamsproject/aapb-annotations/tree/b1d6476b6be6f9ffcb693872931d4d40e84449c8/january-slates/golds"
+

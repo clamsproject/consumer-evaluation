@@ -4,6 +4,7 @@ import csv
 import math
 import pathlib
 import sys
+import re
 
 import pandas as pd
 from mmif import Mmif, DocumentTypes, AnnotationTypes
@@ -18,16 +19,16 @@ import goldretriever
 GOLD_CHYRON_URL = "https://github.com/clamsproject/aapb-annotations/tree/cc0d58e16a06a8f10de5fc0e5333081c107d5937/newshour-chyron/golds"
 GOLD_SLATES_URL = "https://github.com/clamsproject/aapb-annotations/tree/b1d6476b6be6f9ffcb693872931d4d40e84449c8/january-slates/golds"
 
-
 def load_gold_standard(gold_dir):
     gold_timeframes = collections.defaultdict(Timeline)
     for gold_fname in pathlib.Path(gold_dir).glob("*.csv"):
         with open(gold_fname, 'r') as gold_file:
-            aapb_guid = gold_fname.stem
+            # aapb_guid = gold_fname.stem
             r = csv.DictReader(gold_file, delimiter=',')
             for i, row in enumerate(r):
                 try:
-                    start, end = (tuh.convert(row[time_key], 'iso', 'sec', 0) for time_key in ["start", "end"])
+                    start, end = (tuh.convert(re.sub(r'[^\d:.]', '', row[time_key].replace(";", ".")), 'iso', 'ms', 0)/1000 for time_key in ["Slate Start ,", "Slate End   ,"])
+                    aapb_guid = row['GUID']
                     gold_timeframes[aapb_guid].add(Segment(start, end))
                 except ValueError:
                     sys.stderr.write(f"Invalid time format in {gold_fname}: {row} @ {i}\n")
@@ -48,6 +49,7 @@ def process_mmif_file(mmif_dir, gold_timeframe_dict, frame_types):
             continue
         aapb_guid = pathlib.Path(vd.location).stem
         if aapb_guid in gold_timeframe_dict:
+            print(f"evaluating {aapb_guid}...")
             v = mmif.get_view_contains(AnnotationTypes.TimeFrame)
             if v is None:
                 sys.stderr.write(f"No TimeFrame found in {mmif_file}\n")

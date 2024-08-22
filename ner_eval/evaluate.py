@@ -69,7 +69,7 @@ def mmif_to_tokens(index, mmif_path):
         mmif_serialized = fh_in.read()
 
     mmif = Mmif(mmif_serialized)
-    ner_views = mmif.get_all_views_contain(at_types=Uri.NE)
+    ner_views = mmif.get_all_views_contain(Uri.NE)
     view = ner_views[-1]  # read only the first view (from last) with Uri.NE
     annotations = view.get_annotations(at_type=Uri.NE)
 
@@ -227,7 +227,7 @@ def mmif_labels(mmif_path):
         mmif_serialized = fh_in.read()
 
     mmif = Mmif(mmif_serialized)
-    ner_views = mmif.get_all_views_contain(at_types=Uri.NE)
+    ner_views = mmif.get_all_views_contain(Uri.NE)
     view = ner_views[-1]  # read only the first view (from last) with Uri.NE
     annotations = view.get_annotations(at_type=Uri.NE)
 
