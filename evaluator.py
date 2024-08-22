@@ -11,7 +11,7 @@ import subprocess
 # TODO: make the script errors less ambiguous?
 # TODO: currently accepts both directories and files, but an error is thrown if you assign a directory to an existing file, so potentially fix something here
 # TODO: consider making the structure of this script more like a module, and refactor the other evaluation.py, so that it can be used for future evaluation scripts as wellc
-
+# TODO: standardize output
 
 def run_script(script_name, constructed_arguments):
     """"Running the command script for the specific evaluation"""

@@ -24,21 +24,46 @@ Each subdirectory of the repository is an evaluation task within the project. Ea
 _See Remaining Work for continued filename convention issues._
 
 ## Workflow of Evaluations
-> [!Important]  
-> In the future, evaluations should be invoked in the same manner. Likely through a Docker module, or via a CLI command that is the same.  
-> `cd into the appropriate task_eval directory`
-> example command: `python3 -m evaluate -g url/to/gold/web -p path/to/local/mmifpreds -r results_printout_filename.txt` 
-> Many of the evaluations should also retrieve the golds automatically by using `from clams_utils.aapb import goldretriever` and `goldretriever.download_golds(<params>)`. Thus, it is usually not required to provide -g. 
+> [!Important]
+> In the future, many of the evaluations should also retrieve the golds automatically by using `from clams_utils.aapb import goldretriever` and `goldretriever.download_golds(<params>)`. Thus, it is usually not required to provide -g. 
 
 1. Choose evaluation task, create batch with GUIDs.
 2. In [AAPB Annotations](https://github.com/clamsproject/aapb-annotations), create raw annotations, then `process.py` into golds. Upload those golds via a github commit. (Requires preprocessing and access to videos)
 3. Run app/pipeline-of-apps to create output pred `.mmif`s locally on your machine. (Also requires access to videos)
-4. Run the evaluation code inputting **url-to-golds-commit** and **path-to-local-mmifs**. Obtain result files. 
-5. Have python code and hand-generation of `nameconvention-report.txt` to generate summary of results. 
+4. Run `evaluator.py` with the appropriate evaluation type `-e` and inputting ` -m path-to-local-mmifs -g url-to-golds-commit`, and any other necessary arguments. Obtain result files. 
+5. `evaluator.py` will generate summary of results in the form of `generate summary of results` or a directory, depending on the evaluation type.
 
 ### Instructions to Run Apps
 [CLAMS Apps Manual](https://apps.clams.ai/clamsapp/).  
 [TestDrive Instructions (Alternate)](https://gist.github.com/keighrim/5e97a41a40d623d6ad4f1d0e325786a9).
+
+### Instructions to run `evaluator.py`
+This script takes the arguments necessary for each evaluation type. To run this evaluation script, you need the following:
+* `-e`: Type of evaluation to run, see supported evaluation packages and their additional necessary arguments below
+* `-m`: Set of predictions in MMIF format (either from the preds folder in repo of the evaluation, or generated from one of the [CLAMS apps](https://apps.clams.ai)     )
+* `-g`: Set of golds in csv format (either downloaded from the annotations repository using goldretriever.py, or your own set that exactly matches the format present in aapb-annotations)
+
+There are currently 7 supported evaluation packages. The following is a list along with the arguments necessary to them in addition to -m and -g:
+* Automatic Speech Recognition `asr`
+* Forced Alignment `fa` 
+  * `-r`, `--result_file`: file to store evaluation results
+  * `-t`, `--thresholds`: comma-separated thresholds in seconds to count as "near-miss", use decimals
+* Named-entity Linking `nel`
+  * `-r`, `--result_file`: file to store evaluation results 
+* Named-entity Recognition `ner`
+  * `--side-by-side`: directory to publish the side by side comparison  
+  * `-r`, `--result_file`: file to store evaluation results 
+  * `--source_directory`: directory that contains original source files (without annotations)
+* Optical Character Recognition `ocr`
+  * `-r`, `--result_file`: file to store evaluation results  
+* Scene Recognition `sr`
+  * `--count_subtypes`:  bool flag whether to consider subtypes for evaluation
+* Timeframes `timeframe`
+  * `--slate` / `--chyron`: use one of these flags so that timeframe either evaluates for slate or chyron annotations
+  * `--side-by-side`: directory to publish the side by side comparison
+  * `-r`, `--result_file`: file to store evaluation results
+
+The output of these evaluations currently depends on the evaluation type, see the relevant evaluation package for it's specific output type.
 
 ## Remaining Work
 The users and use cases of this evaluation workflow remain under discussion. For the moment, the work expected has been converted into [issues](https://github.com/clamsproject/aapb-evaluations/issues).  
