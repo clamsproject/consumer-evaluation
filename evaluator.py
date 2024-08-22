@@ -2,7 +2,8 @@ import argparse
 import subprocess
 
 # TODO: create a single requirements.txt (add clams_utils), take advantage of golds.yaml too, make args_for_eval a yaml
-# TODO: implement a -h for each one, make --specific-help/-e and slate/chyron an either/or situation
+# TODO: -e and slate/chyron an either/or situation
+# TODO: either remove --speficic-help fully and just rely on the README or change --specific-help to show the correct flags and order for evaluator.py (this is why I didn't mention it in the README)
 # TODO: NER needs a warning that you can only use [-s [SOURCE_DIRECTORY]] [-o [OUT_DIRECTORY]] together, right now mixed up
 # TODO: change specific help to show the future arguments yaml-m
 # TODO: have results files be produced in their specific eval directory

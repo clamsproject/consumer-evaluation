@@ -38,8 +38,17 @@ _See Remaining Work for continued filename convention issues._
 [TestDrive Instructions (Alternate)](https://gist.github.com/keighrim/5e97a41a40d623d6ad4f1d0e325786a9).
 
 ### Instructions to run `evaluator.py`
+Command structure:
+```
+python evaluator.py -e <type_eval> -m <path-to-preds> -g <path-to-golds> additional arguments...
+```
+Example command:
+```
+python evaluator.py -e timeframe_eval -m timeframe_eval/test-slate-preds -g golds/timeframe-slate-test --slate
+```
+
 This script takes the arguments necessary for each evaluation type. To run this evaluation script, you need the following:
-* `-e`: Type of evaluation to run, see supported evaluation packages and their additional necessary arguments below
+* `-e`: Type of evaluation to run, see supported evaluation packages and their additional necessary arguments below. (i.e. 'asr_eval', currently will not accept 'asr')
 * `-m`: Set of predictions in MMIF format (either from the preds folder in repo of the evaluation, or generated from one of the [CLAMS apps](https://apps.clams.ai)     )
 * `-g`: Set of golds in csv format (either downloaded from the annotations repository using goldretriever.py, or your own set that exactly matches the format present in aapb-annotations)
 
