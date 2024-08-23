@@ -72,6 +72,11 @@ There are currently 7 supported evaluation packages. The following is a list alo
   * `--side-by-side`: directory to publish the side by side comparison
   * `-r`, `--result_file`: file to store evaluation results
 
+If there is every confusion on which arguments to use for a given evaluation, call the `--specific-help` flag after naming the evaluation type `-e` to see which arguments it uses, as shown in the command below:
+```
+python evaluator.py -e ner_eval/ --specific-help
+```
+
 The output of these evaluations currently depends on the evaluation type, see the relevant evaluation package for it's specific output type.
 
 ## Remaining Work
