@@ -1,18 +1,20 @@
 import argparse
 import subprocess
 
-# TODO: create a single requirements.txt (add clams_utils), take advantage of golds.yaml too, make args_for_eval a yaml
-# TODO: -e and slate/chyron an either/or situation
-# TODO: NER needs a warning that you can only use [-s [SOURCE_DIRECTORY]] [-o [OUT_DIRECTORY]] together, right now mixed up
-# TODO: change specific help to show the future arguments yaml-m
-# TODO: have results files be produced in their specific eval directory
-# TODO: refactor slate/chyron and count-subtypes to be consistent in how they take arguments
-# TODO: remove tests or format them correctly for python tests, if keep, add more of the tests I had done before adding them here
-# TODO: make the script errors less ambiguous?
-# TODO: currently accepts both directories and files, but an error is thrown if you assign a directory to an existing file, so potentially fix something here
-# TODO: consider making the structure of this script more like a module, and refactor the other evaluation.py, so that it can be used for future evaluation scripts as wellc
-# TODO: standardize output
-# TODO: standardize eval pathnames
+# TODO: implement golds.yaml
+    # currently goldretriever only works for fa and sr, the rest have a default gold URL in their script but fail to run
+    # there is also no url for NER's evaluate.py, but we could just use the permalink in ner report
+# TODO: reorganize file structure:
+    # create a single requirements.txt (add clams_utils), take advantage of golds.yaml too
+    # make args_for_eval a yaml called yaml.help, implement it with specific-help
+    # have results files be produced in their specific eval directory
+    # standardize output naming convention
+# TODO: update, delete, or move tests to a different file
+    # remove tests or format them correctly for python tests, if keep, add more of the tests I had done before adding them here
+# TODO: improve edgecase warning quality
+    # make the script errors less ambiguous, find a way to read out what the errors are
+    # currently accepts both directories and files, but an error is thrown if you assign a directory to an existing file, so potentially fix something here
+    # NER needs a warning that you can only use [-s [SOURCE_DIRECTORY]] [-o [OUT_DIRECTORY]] together, right now mixed up
 
 
 def run_script(script_name, constructed_arguments):
@@ -42,8 +44,8 @@ def construct_arguments(arg_dict, eval_type):
                      'nel_eval': {'result_file': '-o', 'pred_file': None, 'gold_file': None},
                      'ner_eval': {'gold_file': '-g', 'pred_file': '-m', 'result_file': '-r', 'source_directory': '-s', 'side_by_side': '-o'},
                      'ocr_eval': {'pred_file': '-t', 'gold_file': '-g', 'result_file': '-o'},
-                     'sr-eval': {'pred_file': '-m', 'gold_file': '-g', 'count_subtypes': '-s'},
-                     'timeframe-eval': {'pred_file': '-m', 'side_by_side': '-s', 'result_file': '-r', 'gold_file': '-g', 'slate': '--slate', 'chyron': '--chyron'}
+                     'sr_eval': {'pred_file': '-m', 'gold_file': '-g', 'count_subtypes': '-s'},
+                     'timeframe_eval': {'pred_file': '-m', 'side_by_side': '-s', 'result_file': '-r', 'gold_file': '-g', 'slate': '--slate', 'chyron': '--chyron'}
                      }
 
     if eval_type in args_for_eval:
@@ -71,8 +73,8 @@ def specific_help(eval_type):
         "nel_eval": ["-m", "-g", "[-r]"],
         "ner_eval": ["-g", "-m", "[-r]", "[--side-by-side]", "[--source-directory]"],
         "ocr_eval": ["-m", "-g", "[-r]"],
-        "sr-eval": ["-m", "-g", "[--count-subtypes]"],
-        "timeframe-eval": ["-m",  "-g", "[-r]", "[--side-by-side]", "(--slate | --chyron)"]
+        "sr_eval": ["-m", "-g", "[--count-subtypes]"],
+        "timeframe_eval": ["-m",  "-g", "[-r]", "[--side-by-side]", "(--slate | --chyron)"]
     }
 
     if eval_type in eval_dict:
@@ -84,11 +86,13 @@ def specific_help(eval_type):
 def main():
     parser = argparse.ArgumentParser(description='Run different types of evaluations.')
     parser.add_argument('-e', '--eval-type', type=str, required=True, help='Type of evaluation (e.g., eval1, eval2)')
-    parser.add_argument('--specific-help', action='store_true', help='Call -h for the given eval-type')
-    parser.add_argument('-m', '--pred-file', type=str, help='File containing predictions')
+    command_type = parser.add_mutually_exclusive_group(required=True)
+    command_type.add_argument('--specific-help', action='store_true', help='Call -h for the given eval-type')
+    command_type.add_argument('-m', '--pred-file', type=str, help='File containing predictions')
     parser.add_argument('-g', '--gold-file', type=str, help='File containing gold standard')
-    parser.add_argument('--slate', action='store_true', help='slate annotations')
-    parser.add_argument('--chyron', action='store_true', help='chyron annotations')
+    timeframe_gold_group = parser.add_mutually_exclusive_group(required=False)
+    timeframe_gold_group.add_argument('--slate', action='store_true', help='slate annotations')
+    timeframe_gold_group.add_argument('--chyron', action='store_true', help='chyron annotations')
     parser.add_argument('--side-by-side', nargs='?', help='directory to publish side-by-side results', default=None)
     parser.add_argument('-f', '--result-file', nargs='?', help='file to store evaluation results', default='results.txt')
     # parser.add_argument('-o', '--output', nargs='?', help='path to print out eval result.', default=None)
@@ -101,8 +105,14 @@ def main():
                         help='bool flag whether to consider subtypes for evaluation')
 
     args = parser.parse_args()
-    script_path = f"{args.eval_type.strip('/')}/evaluate.py"  # make this more flexible later
-    eval_type = vars(args)['eval_type'].strip('/')
+    # making sure eval_type is always the name of the directory
+    if args.eval_type[-5:] == "_eval" or args.eval_type[-6:] == "_eval/":
+        normalized_eval_type = args.eval_type
+    else:
+        normalized_eval_type = args.eval_type + "_eval"
+
+    script_path = f"{normalized_eval_type.rstrip('/')}/evaluate.py"
+    eval_type = normalized_eval_type.rstrip('/')
 
     # print(vars(args))  # run this for debugging or making tests
     if args.specific_help:
@@ -150,13 +160,13 @@ def tests():
 
     # timeframe tests:
     print("testing timeframe...")
-    script_path = "timeframe-eval/evaluate.py"
+    script_path = "timeframe_eval/evaluate.py"
     # test 1
     arguments = construct_arguments(
-        {'eval_type': 'timeframe-eval/', 'specific_help': False, 'pred_file': 'timeframe-eval/test-slate-preds/',
+        {'eval_type': 'timeframe_eval/', 'specific_help': False, 'pred_file': 'timeframe_eval/test-slate-preds/',
          'gold_file': 'golds/timeframe-slate-test/', 'slate': True, 'chyron': False, 'side_by_side': None,
          'result_file': 'results.txt', 'thresholds': '', 'source_directory': None, 'count_subtypes': False},
-        'timeframe-eval')
+        'timeframe_eval')
     run_script(script_path, arguments)
 
     # nel tests:
@@ -181,17 +191,17 @@ def tests():
 
     # sr tests:
     print("testing sr...")
-    script_path = "sr-eval/evaluate.py"
+    script_path = "sr_eval/evaluate.py"
     # test 1
     arguments = construct_arguments(
-        {'eval_type': 'sr-eval/', 'specific_help': False, 'pred_file': 'sr-eval/preds@app-swt-detection5.0@240117-aapb-collaboration-27-d', 'gold_file': 'golds/sr/', 'slate': False,
+        {'eval_type': 'sr_eval/', 'specific_help': False, 'pred_file': 'sr_eval/preds@app-swt-detection5.0@240117-aapb-collaboration-27-d', 'gold_file': 'golds/sr/', 'slate': False,
          'chyron': False, 'side_by_side': None, 'result_file': 'results.txt', 'thresholds': '',
-         'source_directory': None, 'count_subtypes': False}, 'sr-eval')
+         'source_directory': None, 'count_subtypes': False}, 'sr_eval')
     run_script(script_path, arguments)
 
 
 if __name__ == "__main__":
-    main()
+    # main()
 
     # tests
-    # tests()
+     tests()
