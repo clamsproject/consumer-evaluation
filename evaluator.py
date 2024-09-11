@@ -9,11 +9,9 @@ import subprocess
     # make args_for_eval a yaml called yaml.help, implement it with specific-help
     # have results files be produced in their specific eval directory
     # standardize output naming convention
-# TODO: update, delete, or move tests to a different file
-    # remove tests or format them correctly for python tests, if keep, add more of the tests I had done before adding them here
 # TODO: improve edgecase warning quality
-    # make the script errors less ambiguous, find a way to read out what the errors are
     # currently accepts both directories and files, but an error is thrown if you assign a directory to an existing file, so potentially fix something here
+        # solution to this will likely be standardizing the output
     # NER needs a warning that you can only use [-s [SOURCE_DIRECTORY]] [-o [OUT_DIRECTORY]] together, right now mixed up
 
 
@@ -28,7 +26,8 @@ def run_script(script_name, constructed_arguments):
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Error while running {script_name}: {e}")
-        print(e.output)
+        print(f"Standard Output:\n{e.stdout}")  # In case there's useful stdout before the error
+        print(f"Error Output:\n{e.stderr}")  # The actual error message
     except FileNotFoundError:
         print(f"Script {script_name} not found.")
     except Exception as e:
