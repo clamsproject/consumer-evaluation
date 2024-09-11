@@ -5,14 +5,16 @@ import subprocess
     # currently goldretriever only works for fa and sr, the rest have a default gold URL in their script but fail to run
     # there is also no url for NER's evaluate.py, but we could just use the permalink in ner report
 # TODO: reorganize file structure:
+    # implement arguments.yaml now that I've made the file
     # create a single requirements.txt (add clams_utils), take advantage of golds.yaml too
-    # make args_for_eval a yaml called yaml.help, implement it with specific-help
     # have results files be produced in their specific eval directory
     # standardize output naming convention
+    # simplify the directory structure as a whole to make it more user-friendly
 # TODO: improve edgecase warning quality
     # currently accepts both directories and files, but an error is thrown if you assign a directory to an existing file, so potentially fix something here
         # solution to this will likely be standardizing the output
     # NER needs a warning that you can only use [-s [SOURCE_DIRECTORY]] [-o [OUT_DIRECTORY]] together, right now mixed up
+        # consider handling this in NER itself, rather than within this script
 
 
 def run_script(script_name, constructed_arguments):

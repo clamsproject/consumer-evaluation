@@ -1,0 +1,36 @@
+# This file provides the current supported arguments for each evaluation
+
+args_for_eval:
+  asr_eval:
+    pred_file: "-m"
+    gold_file: "-g"
+  fa_eval:
+    pred_file: "-m"
+    gold_file: "-g"
+    result_file: "-r"
+    thresholds: "-t"
+  nel_eval:
+    result_file: "-o"
+    pred_file: null
+    gold_file: null
+  ner_eval:
+    gold_file: "-g"
+    pred_file: "-m"
+    result_file: "-r"
+    source_directory: "-s"
+    side_by_side: "-o"
+  ocr_eval:
+    pred_file: "-t"
+    gold_file: "-g"
+    result_file: "-o"
+  sr_eval:
+    pred_file: "-m"
+    gold_file: "-g"
+    count_subtypes: "-s"
+  timeframe_eval:
+    pred_file: "-m"
+    side_by_side: "-s"
+    result_file: "-r"
+    gold_file: "-g"
+    slate: "--slate"
+    chyron: "--chyron"
