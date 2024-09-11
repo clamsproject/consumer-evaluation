@@ -1,5 +1,6 @@
 import argparse
 import subprocess
+import yaml
 
 # TODO: implement golds.yaml
     # currently goldretriever only works for fa and sr, the rest have a default gold URL in their script but fail to run
@@ -38,16 +39,12 @@ def run_script(script_name, constructed_arguments):
 
 def construct_arguments(arg_dict, eval_type):
     """"Building the string argument from the input"""
-    scripted_argument = []  # argument to run in subprocess
-    # below will be a yaml, but it is how we match each of our arguments to the subprocess arguments
-    args_for_eval = {'asr_eval': {'pred_file': '-m', 'gold_file': '-g'},
-                     'fa_eval': {'pred_file': '-m', 'gold_file': '-g', 'result_file': '-r', 'thresholds': '-t'},
-                     'nel_eval': {'result_file': '-o', 'pred_file': None, 'gold_file': None},
-                     'ner_eval': {'gold_file': '-g', 'pred_file': '-m', 'result_file': '-r', 'source_directory': '-s', 'side_by_side': '-o'},
-                     'ocr_eval': {'pred_file': '-t', 'gold_file': '-g', 'result_file': '-o'},
-                     'sr_eval': {'pred_file': '-m', 'gold_file': '-g', 'count_subtypes': '-s'},
-                     'timeframe_eval': {'pred_file': '-m', 'side_by_side': '-s', 'result_file': '-r', 'gold_file': '-g', 'slate': '--slate', 'chyron': '--chyron'}
-                     }
+    # argument to run in subprocess
+    scripted_argument = []
+
+    # get the dict of arguments from our yaml
+    with open('arguments.yaml', 'r') as file:
+        args_for_eval = yaml.safe_load(file)
 
     if eval_type in args_for_eval:
         for arg in args_for_eval[eval_type]:
@@ -57,29 +54,25 @@ def construct_arguments(arg_dict, eval_type):
                 scripted_argument.extend([args_for_eval[eval_type][arg], arg_dict[arg]])
             elif arg_dict[arg] is not None and arg_dict[arg] is True:  # in cases of boolean flags (i.e. --slate)
                 scripted_argument.extend([args_for_eval[eval_type][arg]])
-            # handle any remaining args in the arg_dict that weren't used? currently the error is ambiguous
     else:
         raise ValueError(f"{eval_type} not a valid evaluation type, note that WIP evaluations are not supported")
 
     return scripted_argument
 
 
+# this function could also include more information in the future
 def specific_help(eval_type):
     """Prints the specific arguments that can be used for a certain eval when --specific-help is called"""
-    # get this from gold.yaml once gold.yaml is updated
-    # this could also include more information
-    eval_dict = {
-        "asr_eval": ["-m", "-g"],
-        "fa_eval": ["-m", "-g", "[-r]", "[-t]"],
-        "nel_eval": ["-m", "-g", "[-r]"],
-        "ner_eval": ["-g", "-m", "[-r]", "[--side-by-side]", "[--source-directory]"],
-        "ocr_eval": ["-m", "-g", "[-r]"],
-        "sr_eval": ["-m", "-g", "[--count-subtypes]"],
-        "timeframe_eval": ["-m",  "-g", "[-r]", "[--side-by-side]", "(--slate | --chyron)"]
-    }
 
-    if eval_type in eval_dict:
-        print(" ".join(eval_dict[eval_type]))
+    # get the dict of arguments from our yaml
+    with open('arguments.yaml', 'r') as file:
+        args_for_eval = yaml.safe_load(file)
+
+    # print the valid arguments
+    if eval_type in args_for_eval:
+        print("The following is the list of valid arguments (unordered) for this evaluation:")
+        for argument in args_for_eval[eval_type]:
+            print(argument)
     else:
         raise ValueError(f"{eval_type} not a valid evaluation type, note that WIP evaluations are not supported")
 
