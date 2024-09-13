@@ -44,7 +44,7 @@ python evaluator.py -e <type_eval> -m <path-to-preds> -g <path-to-golds> additio
 ```
 Example command:
 ```
-python evaluator.py -e timeframe-eval -m timeframe-eval/test-slate-preds -g golds/timeframe-slate-test --slate
+python evaluator.py -e timeframe_eval -m timeframe_eval/test-slate-preds -g golds/timeframe-slate-test --slate
 ```
 
 This script takes the arguments necessary for each evaluation type. To run this evaluation script, you need the following:
