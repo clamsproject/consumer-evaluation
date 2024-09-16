@@ -9,6 +9,11 @@ from seqeval.metrics import classification_report
 
 from goldretriever import download_golds
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from eval_utils import standardized_parser
+
 label_dict = {'PERSON': 'person', 'ORG': 'organization', 'FAC': 'location', 'GPE': 'location', 'LOC': 'location',
               'EVENT': 'event', 'PRODUCT': 'product', 'WORK_OF_ART': 'program/publication_title',
               'program_title': 'program/publication_title', 'publication_title': 'program/publication_title'}
@@ -307,25 +312,17 @@ def evaluate(golddirectory, testdirectory, sourcedirectory, resultpath, outdir):
 
 
 if __name__ == "__main__":
+    args = standardized_parser.parse_args()
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-g', '--gold_directory', nargs='?', help="directory that contains gold annotations")
-    parser.add_argument('-m', '--machine_directory', nargs='?', help="directory that contains machine annotations")
-    parser.add_argument('-r', '--result_path', nargs='?', help="path to print out eval result", default='results.txt')
-    parser.add_argument('-s', '--source_directory', nargs='?',
-                        help="directory that contains original source files (without annotations)", default=None)
-    parser.add_argument('-o', '--out_directory', nargs='?', help="directory to publish the side by side comparison",
-                        default=None)
-    args = parser.parse_args()
-    if args.out_directory:
-        outdir = pathlib.Path(args.out_directory)
+    if args.side_by_side:
+        outdir = pathlib.Path(args.side_by_side)
     else:
         outdir = pathlib.Path(__file__).parent
-    if args.gold_directory:
-        evaluate(args.gold_directory, args.machine_directory, args.source_directory, args.result_path, outdir)
+    if args.gold_file:
+        evaluate(args.gold_file, args.pred_file, args.source_directory, args.result_file, outdir)
     else:
         url = 'https://github.com/clamsproject/aapb-annotations/tree/main/newshour-namedentity/golds/aapb-collaboration-21'
-        evaluate(download_golds(url), args.machine_directory, args.source_directory, args.result_path, outdir)
+        evaluate(download_golds(url), args.pred_file, args.source_directory, args.result_file, outdir)
 
 """
 example usage:

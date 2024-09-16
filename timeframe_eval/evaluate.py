@@ -15,6 +15,11 @@ from pyannote.metrics.detection import DetectionErrorRate, DetectionPrecisionRec
 
 import goldretriever
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from eval_utils import standardized_parser
+
 # Constants
 GOLD_CHYRON_URL = "https://github.com/clamsproject/aapb-annotations/tree/cc0d58e16a06a8f10de5fc0e5333081c107d5937/newshour-chyron/golds"
 GOLD_SLATES_URL = "https://github.com/clamsproject/aapb-annotations/tree/b1d6476b6be6f9ffcb693872931d4d40e84449c8/january-slates/golds"
@@ -163,16 +168,7 @@ def generate_side_by_side(golddir, testdir, outdir):
 
 if __name__ == "__main__":
     # get the absolute path of video-file-dir and hypothesis-file-dir
-    parser = argparse.ArgumentParser(description='Process some directories.')
-    parser.add_argument('-m', '--mmif-dir', type=str, required=True,
-                        help='directory containing machine annotated files (MMIF)')
-    parser.add_argument('-s', '--side-by-side', help='directory to publish side-by-side results', default=None)
-    parser.add_argument('-r', '--result-file', help='file to store evaluation results', default='results.txt')
-    parser.add_argument('-g', '--gold-dir', help='file to store gold standard', default=None)
-    gold_group = parser.add_mutually_exclusive_group(required=True)
-    gold_group.add_argument('--slate', action='store_true', help='slate annotations')
-    gold_group.add_argument('--chyron', action='store_true', help='chyron annotations')
-    args = parser.parse_args()
+    args = standardized_parser.parse_args()
 
     if args.side_by_side:
         outdir = pathlib.Path(args.side_by_side)
@@ -182,8 +178,8 @@ if __name__ == "__main__":
         outdir = pathlib.Path(__file__).parent
 
     ref_dir = None
-    if args.gold_dir:
-        ref_dir = args.gold_dir
+    if args.gold_file:
+        ref_dir = args.gold_file
     else:
         if args.slate:
             ref_dir = goldretriever.download_golds(GOLD_SLATES_URL)
@@ -196,7 +192,7 @@ if __name__ == "__main__":
     gold_timeframes_dict = load_gold_standard(ref_dir)
 
     # create the 'test_timeframes'
-    test_timeframes = process_mmif_file(args.mmif_dir, gold_timeframes_dict, frame_types=['slate' if args.slate else 'chyron' if args.chyron else ''])
+    test_timeframes = process_mmif_file(args.pred_file, gold_timeframes_dict, frame_types=['slate' if args.slate else 'chyron' if args.chyron else ''])
 
     # final calculation
     calculate_detection_metrics(gold_timeframes_dict, test_timeframes, args.result_file)

@@ -1,5 +1,7 @@
 # This file provides the current supported arguments for each evaluation
 
+# TODO: all of these point to the flag we have to use to call each argument, but we could change the evaluator script
+
 asr_eval:
   pred_file: "-m"
   gold_file: "-g"
@@ -9,26 +11,26 @@ fa_eval:
   result_file: "-r"
   thresholds: "-t"
 nel_eval:
-  result_file: "-o"
-  pred_file: null
-  gold_file: null
+  result_file: "-r"
+  pred_file: "-m"
+  gold_file: "-g"
 ner_eval:
   gold_file: "-g"
   pred_file: "-m"
+  side_by_side: "--side_by_side"
   result_file: "-r"
-  source_directory: "-s"
-  side_by_side: "-o"
+  source_directory: "--source_directory"
 ocr_eval:
-  pred_file: "-t"
+  pred_file: "-m"
   gold_file: "-g"
-  result_file: "-o"
+  result_file: "-r"
 sr_eval:
   pred_file: "-m"
   gold_file: "-g"
-  count_subtypes: "-s"
+  count_subtypes: "--count_subtypes"
 timeframe_eval:
   pred_file: "-m"
-  side_by_side: "-s"
+  side_by_side: "--side_by_side"
   result_file: "-r"
   gold_file: "-g"
   slate: "--slate"

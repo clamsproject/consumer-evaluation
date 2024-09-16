@@ -6,6 +6,11 @@ from clams_utils.aapb import goldretriever, newshour_transcript_cleanup
 from jiwer import wer
 from mmif import Mmif, DocumentTypes
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from eval_utils import standardized_parser
+
 # constant:
 ## note that this repository is a private one and the files are not available to the public (due to IP concerns)
 ## hence using goldretriever to download the gold files WILL NOT work (goldretreiver is only for public repositories)
@@ -84,14 +89,10 @@ def batch_run_wer(hyp_dir, gold_dir):
 
 if __name__ == "__main__":
     # get the absolute path of video-file-dir and hypothesis-file-dir
-    parser = argparse.ArgumentParser(description='Evaluate speech recognition results using WER.')
-    parser.add_argument('-m', '--mmif-dir', type=str, required=True,
-                        help='directory containing machine annotated files (MMIF)')
-    parser.add_argument('-g', '--gold-dir', help='directory containing gold standard', default=None)
-    args = parser.parse_args()
+    args = standardized_parser.parse_args()
 
-    ref_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
+    ref_dir = goldretriever.download_golds(GOLD_URL) if args.gold_file is None else args.gold_file
     audio_tmpdir = tempfile.TemporaryDirectory()
     newshour_transcript_cleanup.clean_and_write(ref_dir, audio_tmpdir.name)
 
-    batch_run_wer(args.mmif_dir, audio_tmpdir.name)
+    batch_run_wer(args.pred_file, audio_tmpdir.name)

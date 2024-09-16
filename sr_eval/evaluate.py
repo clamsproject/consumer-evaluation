@@ -5,6 +5,11 @@ import pandas as pd
 import json
 from clams_utils.aapb import goldretriever
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from eval_utils import standardized_parser
+
 # constant:
 GOLD_URL = "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8cf942ba827917938b49570d6d9/scene-recognition/golds"
 # note that you must first have output mmif files to compare against
@@ -215,16 +220,9 @@ def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-m', '--mmif_dir', type=str, required=True,
-                        help='directory containing machine-annotated files in MMIF format')
-    parser.add_argument('-g', '--gold_dir', type=str, default=None,
-                        help='directory containing gold labels in csv format')
-    parser.add_argument('-s', '--count_subtypes', action='store_true', default=False,
-                        help='bool flag whether to consider subtypes for evaluation')
-    args = parser.parse_args()
-    mmif_dir = args.mmif_dir
-    gold_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
+    args = standardized_parser.parse_args()
+    mmif_dir = args.pred_file
+    gold_dir = goldretriever.download_golds(GOLD_URL) if args.gold_file is None else args.gold_file
     count_subtypes = args.count_subtypes
     document_scores, dataset_scores = run_dataset_eval(mmif_dir, gold_dir, count_subtypes)
     # document scores are for each doc, dataset scores are for overall (micro avg)

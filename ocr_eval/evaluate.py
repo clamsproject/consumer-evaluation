@@ -14,6 +14,11 @@ from torchmetrics.text import CharErrorRate
 
 from clams_utils.aapb import goldretriever as gr
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from eval_utils import standardized_parser
+
 # Constants ==|
 GOLD_URL = 'https://github.com/clamsproject/aapb-annotations/tree/f96f857ef83acf85f64d9a10ac8fe919e06ce51e/newshour-chyron/golds/batch2'
 
@@ -169,24 +174,11 @@ if __name__ == "__main__":
     APPNAME = "app-doctr-wrapper"  # default app
     APPVERSION = 1.0  # default version 
 
-    parser = argparse.ArgumentParser(description="compare the results of CLAMS OCR apps to a gold standard")
-    parser.add_argument('-t', '--test-dir',
-                        type=str,
-                        default=None,
-                        help="Directory of non-gold/hypothesis mmif files")
-    parser.add_argument('-g', '--gold-dir',
-                        type=str,
-                        default=None,
-                        help="Directory of gold annotations")
-    parser.add_argument('-o', '--output-dir',
-                        type=str,
-                        default=None,
-                        help="Directory to store results")
-    args = parser.parse_args()
+    args = standardized_parser.parse_args()
 
-    ref_dir = gr.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
-    hyp_dir = f"preds@{APPNAME}{APPVERSION}@batch2" if args.test_dir is None else args.test_dir
-    out_dir = pathlib.Path(args.output_dir) if args.output_dir else pathlib.Path(f"results@{APPNAME}{APPVERSION}@batch2")
+    ref_dir = gr.download_golds(GOLD_URL) if args.gold_file is None else args.gold_file
+    hyp_dir = f"preds@{APPNAME}{APPVERSION}@batch2" if args.pred_file is None else args.pred_file
+    out_dir = pathlib.Path(args.result_file) if args.result_file else pathlib.Path(f"results@{APPNAME}{APPVERSION}@batch2")
     if not out_dir.exists():
         out_dir.mkdir()
 

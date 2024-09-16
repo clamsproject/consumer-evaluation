@@ -7,7 +7,7 @@ def asr_test():
     print("testing asr...")
     script_path = "asr_eval/evaluate.py"
     # test 1
-    arguments = construct_arguments({'eval_type': 'asr_eval/', 'specific_help': False,
+    arguments = construct_arguments({
                                      'pred_file': 'asr_eval/preds@whisper-wrapper-base@aapb-collaboration-21',
                                      'gold_file': 'golds/asr',
                                      'slate': False, 'chyron': False, 'side_by_side': None,
@@ -19,7 +19,7 @@ def fa_test():
     print("testing fa...")
     script_path = "fa_eval/evaluate.py"
     # test 1
-    arguments = construct_arguments({'eval_type': 'fa_eval/', 'specific_help': False,
+    arguments = construct_arguments({
                                      'pred_file': 'fa_eval/preds@gentle-forced-aligner-wrapper@aapb-collaboration-21-nongoldtext/',
                                      'gold_file': '/Users/blambright/Downloads/clams/test-data/fa', 'slate': False,
                                      'chyron': False, 'side_by_side': None, 'result_file': 'results.txt',
@@ -30,7 +30,7 @@ def ner_test():
     print("testing ner...")
     script_path = "ner_eval/evaluate.py"
     # test 1
-    arguments = construct_arguments({'eval_type': 'ner_eval/', 'specific_help': False,
+    arguments = construct_arguments({
                                      'pred_file': 'ner_eval/preds@spacy-wrapper@aapb-collaboration-21/',
                                      'gold_file': 'golds/ner/', 'slate': False, 'chyron': False, 'side_by_side': None,
                                      'result_file': 'results_ner', 'thresholds': '', 'source_directory': None,
@@ -53,19 +53,21 @@ def nel_test():
     script_path = "nel_eval/evaluate.py"
     # test 1
     arguments = construct_arguments(
-        {'eval_type': 'nel_eval/', 'specific_help': False, 'pred_file': 'nel_eval/preds-test/',
+        {'specific_help': False, 'pred_file': 'nel_eval/preds-test/',
          'gold_file': 'golds/nel-test/', 'slate': False, 'chyron': False, 'side_by_side': None,
          'result_file': 'results.txt', 'thresholds': '', 'source_directory': None, 'count_subtypes': False}, 'nel_eval')
     run_script(script_path, arguments)
 
 def ocr_test():
-    print("testing nel...")
-    script_path = "nel_eval/evaluate.py"
+    print("testing ocr...")
+    script_path = "ocr_eval/evaluate.py"
     # test 1
+    # note that this is only replicable with preds@parseqocr-wrapper1.0@batch2
     arguments = construct_arguments(
-        {'eval_type': 'nel_eval/', 'specific_help': False, 'pred_file': 'nel_eval/preds-test/',
-         'gold_file': 'golds/nel-test/', 'slate': False, 'chyron': False, 'side_by_side': None,
-         'result_file': 'results.txt', 'thresholds': '', 'source_directory': None, 'count_subtypes': False}, 'nel_eval')
+        {'pred_file': 'ocr_eval/preds@parseqocr-wrapper1.0@batch2',
+         'gold_file': 'golds/ocr-batch2/', 'slate': False, 'chyron': False, 'side_by_side': None,
+         'result_file': 'results_dir', 'thresholds': '', 'source_directory': None, 'count_subtypes': False}, 'ocr_eval')
+    print(arguments)
     run_script(script_path, arguments)
 
 def sr_test():

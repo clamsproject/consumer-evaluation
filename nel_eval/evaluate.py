@@ -25,6 +25,11 @@ import pandas as pd
 import goldretriever
 from nel import NamedEntityLink
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from eval_utils import standardized_parser
+
 
 def match_files(test_dir, gold_dir) -> list:
     """Compare the files in the gold and test directories. Return pairs of matching files in a list.
@@ -144,13 +149,7 @@ def write_results(data: dict, result_path: str):
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description='Evaluate accuracy of NEL mmif files against gold labeled data.')
-    ap.add_argument('system_data_directory', metavar='sys-dir', nargs='?',
-                    help='directory containing system output data in .mmif format.')
-    ap.add_argument('gold_directory', metavar='gold-dir', nargs='?',
-                    help='directory containing gold data in .tsv format.')
-    ap.add_argument('-o', '--output', nargs='?', help='path to print out eval result.', default='results.txt')
-    args = ap.parse_args()
+    args = standardized_parser.parse_args()
 
-    data = evaluate(args.system_data_directory, args.gold_directory)
-    write_results(data, args.output)
+    data = evaluate(args.pred_file, args.gold_file)
+    write_results(data, args.result_file)

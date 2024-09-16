@@ -15,6 +15,11 @@ from pyannote.metrics.diarization import DiarizationCoverage, DiarizationPurity
 from pyannote.metrics.segmentation import SegmentationCoverage, SegmentationRecall, SegmentationPrecision, \
     SegmentationPurity
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from eval_utils import standardized_parser
+
 DEFAULT_GOLD_URL = 'https://github.com/clamsproject/aapb-annotations/tree/f884e10d0b9d4b1d68e294d83c6e838528d2c249/newshour-transcript-sync/golds/aapb-collaboration-21'
 
 logging.basicConfig(
@@ -210,18 +215,12 @@ def calculate_detection_metrics(gold_timeframes, test_timeframes, result_path, t
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Process some directories.')
-    parser.add_argument('-m', '--machine_dir', help='directory containing machine annotated files', default=None)
-    parser.add_argument('-g', '--gold_dir', help='directory containing human annotated files', default=None)
-    parser.add_argument('-r', '--result_file', help='file to store evaluation results', default=None)
-    parser.add_argument('-t', '--thresholds',
-                        help='comma-separated thresholds in seconds to count as "near-miss", use decimals ', type=str,
-                        default="")
-    args = parser.parse_args()
-    if args.gold_dir is None:
-        args.gold_dir = goldretriever.download_golds(DEFAULT_GOLD_URL)
-    gold_timeframes = read_cadet_annotation_tsv(P(args.gold_dir).glob("*.tsv"))
-    test_timeframes = read_system_mmif(P(args.machine_dir).glob("*.mmif"), gold_timeframes)
+    args = standardized_parser.parse_args()
+
+    if args.gold_file is None:
+        args.gold_file = goldretriever.download_golds(DEFAULT_GOLD_URL)
+    gold_timeframes = read_cadet_annotation_tsv(P(args.gold_file).glob("*.tsv"))
+    test_timeframes = read_system_mmif(P(args.pred_file).glob("*.mmif"), gold_timeframes)
     threshold = []
     for t in args.thresholds.split(','):
         if t:

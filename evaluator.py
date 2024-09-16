@@ -2,6 +2,10 @@ import argparse
 import subprocess
 import yaml
 
+# TODO: revert the edits I've currently made?
+    # implement a standardized argparser
+    # implement other standardized functions
+
 # TODO: implement golds.yaml
     # currently goldretriever only works for fa and sr, the rest have a default gold URL in their script but fail to run
     # there is also no url for NER's evaluate.py, but we could just use the permalink in ner report
