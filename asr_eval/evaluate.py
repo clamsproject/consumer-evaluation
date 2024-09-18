@@ -9,7 +9,7 @@ from mmif import Mmif, DocumentTypes
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from eval_utils import standardized_parser
+from eval_utils import standardized_parser, basic_eval
 
 # constant:
 ## note that this repository is a private one and the files are not available to the public (due to IP concerns)
@@ -76,15 +76,26 @@ def batch_run_wer(hyp_dir, gold_dir):
             except Exception as wer_exception:
                 print("Error processing file: ", hyp_file.name, wer_exception)
 
-    with open(f'results@{hyp_dir.name}.csv', 'w') as fp:
-        fp.write('GUID,WER-case-sensitive,WER-case-insens\n')
-        werS_sum = 0
-        werI_sum = 0
-        for r in result:
-            fp.write(','.join(map(str, r)) + '\n')
-            werS_sum += r[1]
-            werI_sum += r[2]
-        fp.write(f'Average,{werS_sum / len(result)},{werI_sum / len(result)}\n')
+    output_dict = {}
+    werS_sum = 0
+    werI_sum = 0
+    for r in result:
+        output_dict[r[0]] = {'WER-case-sensitive': r[1], 'WER-case-insens': r[2]}
+        werS_sum += r[1]
+        werI_sum += r[2]
+    output_dict['Average'] = {'WER-case-sensitive': werS_sum / len(result), 'WER-case-insens': werI_sum / len(result)}
+
+    return output_dict
+
+    # with open(f'results@{hyp_dir.name}.csv', 'w') as fp:
+    #     fp.write('GUID,WER-case-sensitive,WER-case-insens\n')
+    #     werS_sum = 0
+    #     werI_sum = 0
+    #     for r in result:
+    #         fp.write(','.join(map(str, r)) + '\n')
+    #         werS_sum += r[1]
+    #         werI_sum += r[2]
+    #     fp.write(f'Average,{werS_sum / len(result)},{werI_sum / len(result)}\n')
 
 
 if __name__ == "__main__":
@@ -95,4 +106,7 @@ if __name__ == "__main__":
     audio_tmpdir = tempfile.TemporaryDirectory()
     newshour_transcript_cleanup.clean_and_write(ref_dir, audio_tmpdir.name)
 
-    batch_run_wer(args.pred_file, audio_tmpdir.name)
+    data = batch_run_wer(args.pred_file, audio_tmpdir.name)
+
+    evaluator = basic_eval.Eval(args, dict_data=data)
+    evaluator.write_results()

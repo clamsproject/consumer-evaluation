@@ -17,7 +17,7 @@ from clams_utils.aapb import goldretriever as gr
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from eval_utils import standardized_parser
+from eval_utils import standardized_parser, basic_eval
 
 # Constants ==|
 GOLD_URL = 'https://github.com/clamsproject/aapb-annotations/tree/f96f857ef83acf85f64d9a10ac8fe919e06ce51e/newshour-chyron/golds/batch2'
@@ -151,7 +151,7 @@ def cer_by_timeframe(ref: Dict[tuple, str], hyp: Dict[float, str]):
 
 
 def evaluate(gold_data: Dict[str, Dict[tuple, str]], test_data: Dict[str, Dict[float, str]],
-             outdir: pathlib.Path) -> None:
+             outdir: pathlib.Path) -> Tuple[Dict[str, dict[float, dict[str, str]]], str]:
     output = {}
     for guid, annotations in test_data.items():
         if guid in gold_data:
@@ -159,14 +159,14 @@ def evaluate(gold_data: Dict[str, Dict[tuple, str]], test_data: Dict[str, Dict[f
             output[guid] = results
             cers = [comp['cer'] for comp in results.values()]
             output[guid]['mean_cer'] = numpy.mean(cers)
-            with open(outdir/f'{guid}.json', 'w') as b:
-                json.dump(results, b, indent=2)
     cers = []
-    with open(outdir/'results.txt', 'w') as f:
-        for guid, results in output.items():
-            cers.append(results['mean_cer'])
-            f.write(f'{guid}:\t{results["mean_cer"]}\n')
-        f.write(f"Total Mean CER:\t{numpy.mean(cers)}\n")
+    mean = "\nAverages: \n"
+    for guid, results in output.items():
+        cers.append(results['mean_cer'])
+        mean = mean + f'{guid}:\t{results["mean_cer"]}\n'
+    mean = mean + f"Total Mean CER:\t{numpy.mean(cers)}\n"
+
+    return output, mean
 
 
 # Main Block
@@ -178,10 +178,13 @@ if __name__ == "__main__":
 
     ref_dir = gr.download_golds(GOLD_URL) if args.gold_file is None else args.gold_file
     hyp_dir = f"preds@{APPNAME}{APPVERSION}@batch2" if args.pred_file is None else args.pred_file
-    out_dir = pathlib.Path(args.result_file) if args.result_file else pathlib.Path(f"results@{APPNAME}{APPVERSION}@batch2")
-    if not out_dir.exists():
-        out_dir.mkdir()
+    # out_dir = pathlib.Path(args.result_file) if args.result_file else pathlib.Path(f"results@{APPNAME}{APPVERSION}@batch2")
+    # if not out_dir.exists():
+    #     out_dir.mkdir()
 
     references = load_references(pathlib.Path(ref_dir))
     hypotheses = load_hypotheses(pathlib.Path(hyp_dir).glob("*.mmif*"))
-    evaluate(references, hypotheses, out_dir)
+    data, mean = evaluate(references, hypotheses, args.result_file)
+
+    evaluator = basic_eval.Eval(args, dict_data=data, str_data=mean)
+    evaluator.write_results()

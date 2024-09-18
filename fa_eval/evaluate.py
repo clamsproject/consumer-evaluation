@@ -18,7 +18,7 @@ from pyannote.metrics.segmentation import SegmentationCoverage, SegmentationReca
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from eval_utils import standardized_parser
+from eval_utils import standardized_parser, basic_eval
 
 DEFAULT_GOLD_URL = 'https://github.com/clamsproject/aapb-annotations/tree/f884e10d0b9d4b1d68e294d83c6e838528d2c249/newshour-transcript-sync/golds/aapb-collaboration-21'
 
@@ -208,10 +208,12 @@ def calculate_detection_metrics(gold_timeframes, test_timeframes, result_path, t
     data = pd.DataFrame(data, columns=cols)
     res_str = (f'Individual file results:\n{data.to_string(index=False)}\n\n\n'
                f'Average results:\n{data.loc[:, data.columns != "GUID"].mean(axis=0)}')
-    print(res_str)
-    if result_path is not None:
-        with open(result_path, 'w') as fh_out:
-            fh_out.write(res_str)
+
+    return res_str
+    # print(res_str)
+    # if result_path is not None:
+    #     with open(result_path, 'w') as fh_out:
+    #         fh_out.write(res_str)
 
 
 if __name__ == "__main__":
@@ -225,4 +227,7 @@ if __name__ == "__main__":
     for t in args.thresholds.split(','):
         if t:
             threshold.append(float(t))
-    calculate_detection_metrics(gold_timeframes, test_timeframes, args.result_file, threshold)
+    data = calculate_detection_metrics(gold_timeframes, test_timeframes, args.result_file, threshold)
+
+    evaluator = basic_eval.Eval(args, str_data=data)
+    evaluator.write_results()

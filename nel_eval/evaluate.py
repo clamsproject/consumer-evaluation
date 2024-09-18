@@ -28,7 +28,7 @@ from nel import NamedEntityLink
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from eval_utils import standardized_parser
+from eval_utils import standardized_parser, basic_eval
 
 
 def match_files(test_dir, gold_dir) -> list:
@@ -150,6 +150,7 @@ def write_results(data: dict, result_path: str):
 
 if __name__ == "__main__":
     args = standardized_parser.parse_args()
-
     data = evaluate(args.pred_file, args.gold_file)
-    write_results(data, args.result_file)
+
+    evaluator = basic_eval.Eval(args, dict_data=data)
+    evaluator.write_results()

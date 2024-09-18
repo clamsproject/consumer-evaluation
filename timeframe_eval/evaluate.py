@@ -18,7 +18,7 @@ import goldretriever
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from eval_utils import standardized_parser
+from eval_utils import standardized_parser, basic_eval
 
 # Constants
 GOLD_CHYRON_URL = "https://github.com/clamsproject/aapb-annotations/tree/cc0d58e16a06a8f10de5fc0e5333081c107d5937/newshour-chyron/golds"
@@ -116,9 +116,12 @@ def calculate_detection_metrics(gold_timeframes_dict, test_timeframes, result_pa
         f1 = 0.0
     else:
         f1 = (2 * precision * recall) / (precision + recall)
-    with open(result_path, 'w') as out_f:
-        out_f.write(f'Total Precision = {str(precision)}\t Total Recall = {str(recall)}\t Total F1 = {str(f1)}\n\n\nIndividual file results: \n')
-        out_f.write(data.to_string(index=True))
+
+    return f'Total Precision = {str(precision)}\t Total Recall = {str(recall)}\t Total F1 = {str(f1)}' \
+           f'\n\n\nIndividual file results: \n {data.to_string(index=True)}'
+    # with open(result_path, 'w') as out_f:
+    #     out_f.write(f'Total Precision = {str(precision)}\t Total Recall = {str(recall)}\t Total F1 = {str(f1)}\n\n\nIndividual file results: \n')
+    #     out_f.write(data.to_string(index=True))
 
 
 def generate_side_by_side(golddir, testdir, outdir):
@@ -195,8 +198,11 @@ if __name__ == "__main__":
     test_timeframes = process_mmif_file(args.pred_file, gold_timeframes_dict, frame_types=['slate' if args.slate else 'chyron' if args.chyron else ''])
 
     # final calculation
-    calculate_detection_metrics(gold_timeframes_dict, test_timeframes, args.result_file)
+    data = calculate_detection_metrics(gold_timeframes_dict, test_timeframes, args.result_file)
     generate_side_by_side(gold_timeframes_dict, test_timeframes, outdir)
+
+    evaluator = basic_eval.Eval(args, str_data=data)
+    evaluator.write_results()
 
     print("Done!")
 

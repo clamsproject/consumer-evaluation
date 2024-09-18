@@ -2,6 +2,7 @@ import argparse
 import yaml
 
 # TODO: potentially make the parsing of directories more flexible using regex
+# TODO: see if we even need the construct arguments function
 
 
 def construct_arguments(arg_dict, eval_type):
@@ -36,14 +37,14 @@ def parse_args():
     timeframe_gold_group = parser.add_mutually_exclusive_group(required=False)
     timeframe_gold_group.add_argument('--slate', action='store_true', help='slate annotations')
     timeframe_gold_group.add_argument('--chyron', action='store_true', help='chyron annotations')
-    parser.add_argument('--side-by-side', nargs='?', help='directory to publish side-by-side results', default=None)
+    parser.add_argument('--side_by_side', nargs='?', help='directory to publish side-by-side results', default=None)
     parser.add_argument('-r', '--result-file', nargs='?', help='file to store evaluation results',
                         default='results.txt')
     parser.add_argument('-t', '--thresholds',
                         help='comma-separated thresholds in seconds to count as "near-miss", use decimals ',
                         type=str,
                         default="")
-    parser.add_argument('--source-directory', nargs='?',
+    parser.add_argument('--source_directory', nargs='?',
                         help="directory that contains original source files (without annotations)", default=None)
     parser.add_argument('--count-subtypes', action='store_true', default=False,
                         help='bool flag whether to consider subtypes for evaluation')

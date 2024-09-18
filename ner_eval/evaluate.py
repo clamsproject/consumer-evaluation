@@ -12,7 +12,7 @@ from goldretriever import download_golds
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from eval_utils import standardized_parser
+from eval_utils import standardized_parser, basic_eval
 
 label_dict = {'PERSON': 'person', 'ORG': 'organization', 'FAC': 'location', 'GPE': 'location', 'LOC': 'location',
               'EVENT': 'event', 'PRODUCT': 'product', 'WORK_OF_ART': 'program/publication_title',
@@ -120,8 +120,9 @@ difference between B- and I- is disregarded\n"
 any column of the following table will be discarded\n")
     s += ("\n" + label_dict_to_string())
 
-    with open(resultpath, 'w') as fh_out:
-        fh_out.write(s)
+    return s
+    # with open(resultpath, 'w') as fh_out:
+    #     fh_out.write(s)
 
 
 def directory_to_tokens(directory):
@@ -307,9 +308,8 @@ def evaluate(golddirectory, testdirectory, sourcedirectory, resultpath, outdir):
         # do NOT change mode to 'token' here even if we're doing token-based eval, since \
         # we have already dealt with that in the tokens_to_tags function
 
-    write_result(result, golddirectory, testdirectory, resultpath)
     print("evaluation for " + testdirectory + " is complete")
-
+    return write_result(result, golddirectory, testdirectory, resultpath)
 
 if __name__ == "__main__":
     args = standardized_parser.parse_args()
@@ -319,10 +319,13 @@ if __name__ == "__main__":
     else:
         outdir = pathlib.Path(__file__).parent
     if args.gold_file:
-        evaluate(args.gold_file, args.pred_file, args.source_directory, args.result_file, outdir)
+        data = evaluate(args.gold_file, args.pred_file, args.source_directory, args.result_file, outdir)
     else:
         url = 'https://github.com/clamsproject/aapb-annotations/tree/main/newshour-namedentity/golds/aapb-collaboration-21'
-        evaluate(download_golds(url), args.pred_file, args.source_directory, args.result_file, outdir)
+        data = evaluate(download_golds(url), args.pred_file, args.source_directory, args.result_file, outdir)
+
+    evaluator = basic_eval.Eval(args, str_data=data)
+    evaluator.write_results()
 
 """
 example usage:

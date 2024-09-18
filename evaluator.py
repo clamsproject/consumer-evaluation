@@ -91,7 +91,7 @@ def main():
     timeframe_gold_group = parser.add_mutually_exclusive_group(required=False)
     timeframe_gold_group.add_argument('--slate', action='store_true', help='slate annotations')
     timeframe_gold_group.add_argument('--chyron', action='store_true', help='chyron annotations')
-    parser.add_argument('--side-by-side', nargs='?', help='directory to publish side-by-side results', default=None)
+    parser.add_argument('--side_by_side', nargs='?', help='directory to publish side-by-side results', default=None)
     parser.add_argument('-f', '--result-file', nargs='?', help='file to store evaluation results', default='results.txt')
     # parser.add_argument('-o', '--output', nargs='?', help='path to print out eval result.', default=None)
     parser.add_argument('-t', '--thresholds',

@@ -8,7 +8,7 @@ from clams_utils.aapb import goldretriever
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from eval_utils import standardized_parser
+from eval_utils import standardized_parser, basic_eval
 
 # constant:
 GOLD_URL = "https://github.com/clamsproject/aapb-annotations/tree/bebd93af0882b8cf942ba827917938b49570d6d9/scene-recognition/golds"
@@ -208,15 +208,17 @@ def separate_score_outputs(doc_scores, dataset_scores, mmif_dir):
     new_dir = pathlib.Path.cwd() / batch_score_name
     new_dir.mkdir(parents = True, exist_ok = True)
     # iterate through nested dict, output separate scores for each guid
-    for guid in doc_scores:
-        doc_df = pd.DataFrame(doc_scores[guid])
-        doc_df = doc_df.transpose()
-        out_path = new_dir / f"{guid}.csv"
-        doc_df.to_csv(out_path)
+    # for guid in doc_scores:
+    #     doc_df = pd.DataFrame(doc_scores[guid])
+    #     doc_df = doc_df.transpose()
+    #     out_path = new_dir / f"{guid}.csv"
+    #     doc_df.to_csv(out_path)
     # output total dataset scores
-    dataset_df = pd.DataFrame(dataset_scores)
-    dataset_df = dataset_df.transpose()
-    dataset_df.to_csv(new_dir/"dataset_scores.csv")
+    # dataset_df = pd.DataFrame(dataset_scores)
+    # dataset_df = dataset_df.transpose()
+    # dataset_df.to_csv(new_dir/"dataset_scores.csv")
+    doc_scores["Average"] = dataset_scores
+    return doc_scores
 
 
 if __name__ == "__main__":
@@ -227,5 +229,7 @@ if __name__ == "__main__":
     document_scores, dataset_scores = run_dataset_eval(mmif_dir, gold_dir, count_subtypes)
     # document scores are for each doc, dataset scores are for overall (micro avg)
     # call method to output scores for each doc and then for total scores
-    separate_score_outputs(document_scores, dataset_scores, mmif_dir)
+    data = separate_score_outputs(document_scores, dataset_scores, mmif_dir)
 
+    evaluator = basic_eval.Eval(args, dict_data=data)
+    evaluator.write_results()

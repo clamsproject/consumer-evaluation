@@ -2,6 +2,7 @@ from evaluator import construct_arguments, run_script
 
 # TODO: change the output directory to always be in a tests folder, and put this in the test folder too
 # TODO: potentially implement these as assertions so we don't have to check the outputs manually?
+# TODO: make sure none of my own absolute paths are in this
 
 def asr_test():
     print("testing asr...")
@@ -32,8 +33,9 @@ def ner_test():
     # test 1
     arguments = construct_arguments({
                                      'pred_file': 'ner_eval/preds@spacy-wrapper@aapb-collaboration-21/',
-                                     'gold_file': 'golds/ner/', 'slate': False, 'chyron': False, 'side_by_side': None,
-                                     'result_file': 'results_ner', 'thresholds': '', 'source_directory': None,
+                                     'gold_file': 'golds/ner/', 'slate': False, 'chyron': False,
+                                     'side_by_side': None, 'result_file': 'results.txt', 'thresholds': '',
+                                     'source_directory': None,
                                      'count_subtypes': False}, 'ner_eval')
     run_script(script_path, arguments)
 
@@ -66,7 +68,7 @@ def ocr_test():
     arguments = construct_arguments(
         {'pred_file': 'ocr_eval/preds@parseqocr-wrapper1.0@batch2',
          'gold_file': 'golds/ocr-batch2/', 'slate': False, 'chyron': False, 'side_by_side': None,
-         'result_file': 'results_dir', 'thresholds': '', 'source_directory': None, 'count_subtypes': False}, 'ocr_eval')
+         'result_file': 'results.txt', 'thresholds': '', 'source_directory': None, 'count_subtypes': False}, 'ocr_eval')
     print(arguments)
     run_script(script_path, arguments)
 
