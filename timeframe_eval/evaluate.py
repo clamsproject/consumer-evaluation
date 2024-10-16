@@ -201,7 +201,7 @@ if __name__ == "__main__":
     data = calculate_detection_metrics(gold_timeframes_dict, test_timeframes, args.result_file)
     generate_side_by_side(gold_timeframes_dict, test_timeframes, outdir)
 
-    evaluator = basic_eval.Eval(args, str_data=data)
+    evaluator = basic_eval.OutputEval(args, str_data=data)
     evaluator.write_results()
 
     print("Done!")

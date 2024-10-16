@@ -1,23 +1,45 @@
 import json
+import os
+import fnmatch
+import goldretriever
+from clams_utils.aapb import guidhandler
+import csv
+from brat_parser import get_entities_relations_attributes_groups  # install this dependency for tests
+from mmif import Mmif
+from typing import Any
+from pyannote.metrics.diarization import DiarizationCoverage, DiarizationPurity
+from pyannote.metrics.segmentation import SegmentationCoverage, SegmentationRecall, SegmentationPrecision, \
+    SegmentationPurity
 
-# TODO: implement a side-by-side output function?
+
 # TODO: implement a function for common evaluation metrics?
-# TODO: see if we can have a common mmif extraction function
-# TODO: see if we can have a common gold data extraction function
+# TODO: merge these three classes
 # TODO: see if we can standardize the use of goldretriever and the other stuff in the main() of eval scripts
-# TODO: see if we can match golds to preds in a standard way? is it worth it?
-# TODO: standardize a get guid function?
+# TODO: reconsider implementing something for side-by-side?
+
+# going to start working on standardizing metrics next
+# then will combine all of these annotations
 
 
-class Eval:
+# STATIC EVALUATION TOOLS:
+def filename_to_guid(filename) -> str:
+    """Extracts the guid from a filename using the clams utils aapb extraction"""
+    return guidhandler.get_aapb_guid_from(filename)
+
+
+# CLASS-BASED EVALUATION TOOLS:
+class OutputEval:
     def __init__(self, arguments, dict_data=None, str_data=None):
         self.arguments = arguments
-        self.dict_data = dict_data  # refactored to be in the form of a str
+        self.dict_data = dict_data
         self.str_data = str_data
 
+    def write_data(self, dict_data):
+        """Adds the evaluation data to the class"""
+        self.dict_data = dict_data
+
     def write_results(self):
-        """Write evaluation results to txt file."""
-        # write to a txt file, we'll do this for every eval
+        """Write evaluation results to either a dict or string, to be outputted as a txt file"""
         try:
             with open(self.arguments.result_file, 'w') as fh_out:
                 if self.dict_data:
@@ -28,55 +50,103 @@ class Eval:
         except AttributeError as e:
             print(f"Error result_file not in args: {e}")
 
-    # TODO: implement this function
-    # TODO: implentation of this is different when extracting timeframes
-    # from asr
-    # see if the nel is comparable, and ner
-    # ocr has something slightly similar
-    # timeframe eval has a nice one too that is timeframe level
-    def get_text_from_mmif(self, mmif):
-        """Getting data from a mmif file"""
-        ...
+    def get_gold(self, gold_link):
+        """If the gold file wasn't listed, get the gold file from the goldretriever"""
+        if self.arguments.gold_file is None:
+            self.arguments.gold_file = goldretriever.download_golds(gold_link)
+        return self.arguments.gold_file
 
-    # from asr
-    # TODO: implement this function, potentially just combine it with get_text_from_mmif
-    # ner has something similar
-    def get_text_from_txt(self, txt):
-        """Getting the data from a text file"""
-        ...
 
-    # TODO: see if this is worth it, or we would only use it for the timeframes
-    # from fa
-    # see if the nel is comparable
-    # ocr has a kind of csv version of this
-    # sr has a version of this, it's basically extracting data from gold labels, but this is the case for csv and tsv
-    # In general, there are a lot of things related to extracting timestamps in general, maybe generalize that?
-    # timeframes and sr have something kinda similar too
-    def read_cadet_annotation_tsv(self, tsv_file_list):
-        """Converts tsv to timeframes"""
-        ...
+class PreProcessEval:
+    def __init__(self, test_dir, gold_dir):
+        self.test_dir = test_dir
+        self.gold_dir = gold_dir
+        self.test_files = os.listdir(self.test_dir)
+        self.gold_files = os.listdir(self.gold_dir)
 
-    # TODO: see if we can implement this for every file, I feel like every one has a version
-    # from nel
-    # ner has something similar
-    def match_files(self, test_dir, gold_dir) -> list:
+    def match_files(self) -> list[tuple]:
         """Compare the files in the gold and test directories. Return pairs of matching files in a list.
         :param test_dir: Directory of test .mmif files
         :param gold_dir: Directory of gold .tsv files
         :return: list of tuples containing corresponding data file locations in (test, gold) format.
         """
+        file_matches = []
+        for gold_file in self.gold_files:
+            pattern = gold_file[:24] + "*"
+            for test_file in self.test_files:
+                if fnmatch.fnmatch(test_file, pattern):
+                    gold_match = os.path.join(self.gold_dir, gold_file)
+                    test_match = os.path.join(self.test_dir, test_file)
+                    file_matches.append((test_match, gold_match))
+                    self.test_files.remove(test_file)
+                    break
+
+        return file_matches
+
+    def load_references(self, process_pred, process_gold) -> dict[str, tuple[Any, Any]]:
+        """Processes each gold and pred file at the same time
+            :param process_gold: function that generates gold data from gold file
+            :param process_gold: function that generates pred data from pred file
+            :return: list of tuples containing corresponding data file locations in (test, gold) format, keyed by the guid
+        """
+        refs = {}
+
+        for match in self.match_files():
+            pred, gold = match
+
+            # get the guid
+            guid = filename_to_guid(pred)
+
+            # process the preds
+            mmif = Mmif(open(pred).read())
+            pred_data = process_pred(mmif)
+
+            # process the golds
+            with open(gold, 'r', encoding='utf8') as f:
+                # identify the file type
+                if gold.endswith('.ann'):
+                    entities, relations, attributes, groups = get_entities_relations_attributes_groups(gold)
+                    reader = (entities, relations, attributes, groups)
+                elif gold.endswith('.txt'):
+                    reader = f.read()
+                else:  # for csv or tsv
+                    reader = csv.reader(f)
+
+                # process the file
+                gold_data = process_gold(reader)
+
+            refs[guid] = (pred_data, gold_data)
+
+        return refs
+
+
+class MetricsEval:
+    def __init__(self):
         ...
 
-    # TODO: standardize these should be in all of them
-    # from ner, ocr
-    def get_guid(triple):
-        """returns guid for a triple of files"""
+    # from ASR
+    def wer(self):
         ...
 
-    # TODO: see if this is useful for standardization, could include identifying other file types too
-    # from nel
-    # ner has something very similar
-    def file_to_ne(file_path: str) -> list:
-        """Checks whether the file is in .mmif or .tsv format and calls the appropriate function
-        to get a list of NEL objects"""
+    # from ocr
+    def cet(self):
+        ...
+
+    # from nel, sr, timeframe eval
+    def basic_metrics(self):
+        # precision
+        # recall
+        # f1
+
+        # include micro and macro average?
+        ...
+
+    # from FA
+    def timeframe_detection_metrics(self):
+        coverage = DiarizationCoverage()
+        purity = DiarizationPurity()
+        scoverage = SegmentationCoverage()
+        spurity = SegmentationPurity()
+        precision = SegmentationPrecision()
+        recall = SegmentationRecall()
         ...

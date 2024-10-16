@@ -108,5 +108,5 @@ if __name__ == "__main__":
 
     data = batch_run_wer(args.pred_file, audio_tmpdir.name)
 
-    evaluator = basic_eval.Eval(args, dict_data=data)
+    evaluator = basic_eval.OutputEval(args, dict_data=data)
     evaluator.write_results()

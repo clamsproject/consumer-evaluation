@@ -229,5 +229,5 @@ if __name__ == "__main__":
             threshold.append(float(t))
     data = calculate_detection_metrics(gold_timeframes, test_timeframes, args.result_file, threshold)
 
-    evaluator = basic_eval.Eval(args, str_data=data)
+    evaluator = basic_eval.OutputEval(args, str_data=data)
     evaluator.write_results()

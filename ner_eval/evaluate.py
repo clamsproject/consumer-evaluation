@@ -324,7 +324,7 @@ if __name__ == "__main__":
         url = 'https://github.com/clamsproject/aapb-annotations/tree/main/newshour-namedentity/golds/aapb-collaboration-21'
         data = evaluate(download_golds(url), args.pred_file, args.source_directory, args.result_file, outdir)
 
-    evaluator = basic_eval.Eval(args, str_data=data)
+    evaluator = basic_eval.OutputEval(args, str_data=data)
     evaluator.write_results()
 
 """

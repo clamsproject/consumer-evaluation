@@ -231,5 +231,5 @@ if __name__ == "__main__":
     # call method to output scores for each doc and then for total scores
     data = separate_score_outputs(document_scores, dataset_scores, mmif_dir)
 
-    evaluator = basic_eval.Eval(args, dict_data=data)
+    evaluator = basic_eval.OutputEval(args, dict_data=data)
     evaluator.write_results()

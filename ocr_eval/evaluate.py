@@ -186,5 +186,5 @@ if __name__ == "__main__":
     hypotheses = load_hypotheses(pathlib.Path(hyp_dir).glob("*.mmif*"))
     data, mean = evaluate(references, hypotheses, args.result_file)
 
-    evaluator = basic_eval.Eval(args, dict_data=data, str_data=mean)
+    evaluator = basic_eval.OutputEval(args, dict_data=data, str_data=mean)
     evaluator.write_results()

@@ -108,11 +108,11 @@ def tsv_to_ne(gold_tsv_path) -> list:
     return ne_list
 
 
-def evaluate(test_dir, gold_dir=None):
-    if gold_dir is None:
-        gold_dir = goldretriever.download_golds('https://github.com/clamsproject/aapb-annotations/tree/feaf342477fc27e57dcdcbb74c067aba4a02e40d/newshour-namedentity-wikipedialink/golds/aapb-collaboration-21')
+def evaluate(file_matches):
+    # if gold_dir is None:
+    #     gold_dir = goldretriever.download_golds('https://github.com/clamsproject/aapb-annotations/tree/feaf342477fc27e57dcdcbb74c067aba4a02e40d/newshour-namedentity-wikipedialink/golds/aapb-collaboration-21')
     results = defaultdict(dict)
-    file_matches = match_files(test_dir, gold_dir)
+    # file_matches = match_files(test_dir, gold_dir)
     for sys_file, gold_file in file_matches:
         print(f'>>> Evaluating {os.path.basename(sys_file)}')
         guid = os.path.basename(sys_file)[:24]
@@ -150,7 +150,10 @@ def write_results(data: dict, result_path: str):
 
 if __name__ == "__main__":
     args = standardized_parser.parse_args()
-    data = evaluate(args.pred_file, args.gold_file)
 
-    evaluator = basic_eval.Eval(args, dict_data=data)
+    # restructuring experiment to test 'match_files' It might make this part of a utilites package
+    # that isn't part of an eval class, though
+    evaluator = basic_eval.OutputEval(args)
+    processor = basic_eval.PreProcessEval(args.pred_file, evaluator.get_gold('https://github.com/clamsproject/aapb-annotations/tree/feaf342477fc27e57dcdcbb74c067aba4a02e40d/newshour-namedentity-wikipedialink/golds/aapb-collaboration-21'))
+    evaluator.write_data(evaluate(processor.match_files()))
     evaluator.write_results()
