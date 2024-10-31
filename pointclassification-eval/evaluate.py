@@ -73,12 +73,13 @@ def closest_gold_timestamp(pred_stamp, gold_dict, good_range=5):
     """
     if pred_stamp in gold_dict:
         return pred_stamp
-    for i in range(good_range, 0, -1):
-        if pred_stamp - i in gold_dict:
-            return pred_stamp - i
-    for i in range(1, good_range + 1):
-        if pred_stamp + i in gold_dict:
-            return pred_stamp + i
+    gold_tss = sorted(gold_dict.keys())
+    # do bisect to find the closest timestamp
+    import bisect
+    idx = bisect.bisect_left(gold_tss, pred_stamp)
+    closest = sorted(gold_tss[idx-1:idx+2], key=lambda x: abs(x - pred_stamp))[0]
+    if closest - pred_stamp <= good_range:
+        return closest
     return None
 
 
@@ -97,7 +98,7 @@ def combine_pred_and_gold_labels(pred_path, gold_dict, count_subtypes=False):
             # TODO (krim @ 8/14/24): this assumes the time unit of the time stamp is already in milliseconds, which is not always the case
             curr_timestamp = closest_gold_timestamp(annotation.get_property('timePoint'), gold_dict)
             # check if closest_gold_timestamp returned None (not within acceptable range)
-            if not curr_timestamp:
+            if curr_timestamp is None:
                 continue
             pred_label = annotation.get_property('label')
             if count_subtypes:
@@ -121,7 +122,8 @@ def filter_remapped_labels(pred_path, combined_dict):
         json_data = file.read()
         pred_mmif = Mmif(json_data)
         tf_view = pred_mmif.get_view_contains(AnnotationTypes.TimeFrame)
-        map_schema = tf_view.metadata.appConfiguration.get('labelMap')
+        map_schema_key = next(k for k in tf_view.metadata.appConfiguration.keys() if k.endswith('abelMap'))
+        map_schema = tf_view.metadata.appConfiguration.get(map_schema_key)
         for timepoint, label_tuple in combined_dict.items():
             raw_remap, gold_remap = list(map(lambda x: map_schema.get(x, '-'), label_tuple))
             if raw_remap != "-" or gold_remap != "-":
@@ -139,7 +141,7 @@ def stitched_labels(pred_path, combined_dict):
         json_data = file.read()
         pred_mmif = Mmif(json_data)
         tf_view = pred_mmif.get_view_contains(AnnotationTypes.TimeFrame)
-        map_schema = tf_view.metadata.appConfiguration.get('labelMap')
+        map_schema = tf_view.metadata.appConfiguration.get('tfLabelMap')
         if not tf_view:
             raise RuntimeError("No TimeFrame annotations found in the MMIF file.")
         for annotation in tf_view.get_annotations(AnnotationTypes.TimeFrame):
@@ -283,6 +285,8 @@ def run_dataset_eval(mmif_dir, gold_dir, count_subtypes, timeframe_eval):
             doc_scores[guid].append((EvalType.STITCHED, scores))
             document_counts.append((EvalType.STITCHED, counts))
 
+    if len(doc_scores) == 0:
+        raise FileNotFoundError("No mmif files found in the directory.")
     # after processing each document and storing the relevant scores, we can evaluate the dataset performance as a whole
     doc_scores[ALL_GUID] = total_evaluation(document_counts)
     return doc_scores
@@ -352,7 +356,6 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--timeframe-eval', action='store_true',
                         help='bool flag whether to run the optional stitcher evaluation')
     args = parser.parse_args()
-    mmif_dir = args.mmif_dir
     gold_dir = goldretriever.download_golds(GOLD_URL) if args.gold_dir is None else args.gold_dir
-    document_scores = run_dataset_eval(mmif_dir, gold_dir, args.subtypes, args.timeframe_eval)
-    write_output(document_scores, mmif_dir)
+    document_scores = run_dataset_eval(args.mmif_dir, gold_dir, args.subtypes, args.timeframe_eval)
+    write_output(document_scores, args.mmif_dir)
