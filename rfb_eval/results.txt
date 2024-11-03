@@ -1,0 +1,153 @@
+cpb-aacip-0515ac167c0:
+		52118: Role=0.17	Filler=0.0	Binding=0.0
+		52238: Role=0.0	Filler=0.0	Binding=0.0
+		52418: Role=0.5	Filler=0.0	Binding=0.0
+		52898: Role=0.0	Filler=0.0	Binding=0.0
+		53137: Role=1.0	Filler=0.0	Binding=0.0
+		53257: Role=0.0	Filler=0.0	Binding=0.0
+cpb-aacip-526-sb3ws8js1h:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-507-tq5r786f7w:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-398-72p5hz1h:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-526-th8bg2jm3n:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-398-57np5q9c:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-41-10wpzpt5:
+		52957: Role=1.0	Filler=0.0	Binding=0.0
+		53167: Role=1.0	Filler=1.0	Binding=1.0
+		53557: Role=1.0	Filler=0.0	Binding=0.0
+		53647: Role=0.0	Filler=0.0	Binding=0.0
+		53737: Role=0.5	Filler=0.0	Binding=0.0
+cpb-aacip-283-61rfjj43:
+		102738: Role=0.0	Filler=1.0	Binding=0.0
+		102828: Role=0.5	Filler=0.33	Binding=0.33
+		102917: Role=0.25	Filler=0.0	Binding=0.0
+		103277: Role=0.67	Filler=0.67	Binding=0.67
+		104596: Role=1.0	Filler=1.0	Binding=1.0
+cpb-aacip-259-3j39316x:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-398-5370s4sx:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-507-736m03zh49:
+		105015: Role=0.33	Filler=0.0	Binding=0.0
+		105105: Role=1.0	Filler=0.38	Binding=0.38
+		105195: Role=0.0	Filler=0.38	Binding=0.0
+		105285: Role=0.0	Filler=0.25	Binding=0.0
+		105375: Role=0.2	Filler=0.33	Binding=0.0
+		105465: Role=0.0	Filler=0.27	Binding=0.0
+		105555: Role=0.5	Filler=0.67	Binding=0.5
+		105645: Role=0.0	Filler=0.2	Binding=0.0
+		105735: Role=0.0	Filler=0.25	Binding=0.0
+		105825: Role=0.0	Filler=0.54	Binding=0.0
+		105914: Role=0.0	Filler=0.08	Binding=0.0
+		106094: Role=0.25	Filler=0.25	Binding=0.25
+		106184: Role=1.0	Filler=0.0	Binding=0.0
+		106364: Role=0.0	Filler=0.0	Binding=0.0
+cpb-aacip-507-rj48p5w80b:
+		51219: Role=0.25	Filler=0.0	Binding=0.0
+cpb-aacip-151-5m6251g16w:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-235-5370swqf:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-398-278sfdms:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-507-154dn40c26:
+		105165: Role=0.0	Filler=0.5	Binding=0.0
+		105315: Role=1.0	Filler=1.0	Binding=1.0
+		105435: Role=0.0	Filler=0.25	Binding=0.0
+		105525: Role=0.0	Filler=0.0	Binding=0.0
+		105615: Role=0.0	Filler=0.4	Binding=0.0
+		105765: Role=0.0	Filler=0.25	Binding=0.0
+		106004: Role=1.0	Filler=1.0	Binding=1.0
+		106274: Role=0.0	Filler=0.0	Binding=0.0
+cpb-aacip-901dfeea4db:
+		107683: Role=0.0	Filler=0.0	Binding=0.0
+cpb-aacip-526-1j9765bd42:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-293-30prr83h:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-526-3r0pr7nr8r:
+		49271: Role=0.5	Filler=0.5	Binding=0.2
+		49361: Role=0.2	Filler=0.2	Binding=0.2
+cpb-aacip-507-7h1dj59628:
+		102108: Role=1.0	Filler=1.0	Binding=1.0
+		102528: Role=1.0	Filler=0.5	Binding=0.5
+		102708: Role=1.0	Filler=1.0	Binding=1.0
+cpb-aacip-526-dj58c9s78v:
+		104236: Role=0.5	Filler=0.67	Binding=0.25
+cpb-aacip-259-m32n9b08:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-221-03cz924b:
+		50350: Role=0.25	Filler=0.67	Binding=0.25
+		50440: Role=0.0	Filler=0.5	Binding=0.0
+cpb-aacip-507-6t0gt5g28c:
+		53707: Role=0.33	Filler=0.0	Binding=0.0
+		53857: Role=0.67	Filler=0.38	Binding=0.38
+		53947: Role=0.0	Filler=0.17	Binding=0.0
+		54156: Role=0.67	Filler=0.2	Binding=0.09
+		54276: Role=0.4	Filler=0.6	Binding=0.33
+cpb-aacip-151-nc5s75735d:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-526-r20rr1qt55:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-259-ww76x89q:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-507-gm81j9807d:
+		106544: Role=1.0	Filler=1.0	Binding=1.0
+		106634: Role=0.0	Filler=0.0	Binding=0.0
+cpb-aacip-131-375tb64j:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-398-87brvczv:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-526-jh3cz33b2z:
+		49781: Role=0.0	Filler=1.0	Binding=0.0
+		49871: Role=0.0	Filler=1.0	Binding=0.0
+		49960: Role=0.0	Filler=0.67	Binding=0.0
+		50050: Role=0.0	Filler=0.0	Binding=0.0
+		50170: Role=1.0	Filler=0.0	Binding=0.0
+		50350: Role=0.33	Filler=0.0	Binding=0.0
+		50590: Role=0.0	Filler=0.17	Binding=0.0
+cpb-aacip-526-6q1sf2n94w:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-259-3n20fq7w:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-259-4x54hm72:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-398-00ns1wds:
+		49571: Role=0.0	Filler=0.5	Binding=0.0
+		49691: Role=1.0	Filler=0.33	Binding=0.33
+		49871: Role=0.33	Filler=0.5	Binding=0.5
+		50260: Role=0.0	Filler=0.2	Binding=0.0
+		50380: Role=0.5	Filler=0.0	Binding=0.0
+		50590: Role=0.0	Filler=0.0	Binding=0.0
+		50710: Role=0.0	Filler=1.0	Binding=0.0
+		50800: Role=0.0	Filler=0.0	Binding=0.0
+		50890: Role=0.0	Filler=0.14	Binding=0.0
+		51009: Role=0.0	Filler=0.17	Binding=0.0
+		51099: Role=1.0	Filler=0.0	Binding=0.0
+		51369: Role=0.0	Filler=1.0	Binding=0.0
+		51459: Role=1.0	Filler=0.0	Binding=0.0
+cpb-aacip-507-ms3jw87c9c:
+		103697: Role=1.0	Filler=1.0	Binding=1.0
+		103817: Role=0.5	Filler=1.0	Binding=0.5
+		104326: Role=0.33	Filler=1.0	Binding=0.33
+		104416: Role=1.0	Filler=0.0	Binding=0.0
+		104776: Role=0.33	Filler=0.33	Binding=0.0
+		104955: Role=0.0	Filler=0.0	Binding=0.0
+		105045: Role=0.0	Filler=0.0	Binding=0.0
+cpb-aacip-189-784j16n7:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-259-4j09zj5t:
+		-1: Role=-1	Filler=-1	Binding=-1
+cpb-aacip-507-862b854459:
+		101629: Role=1.0	Filler=1.0	Binding=1.0
+		101749: Role=0.0	Filler=0.0	Binding=0.0
+cpb-aacip-81-902z3f9j:
+		51968: Role=0.0	Filler=0.0	Binding=0.0
+		52238: Role=1.0	Filler=1.0	Binding=1.0
+		52328: Role=1.0	Filler=1.0	Binding=1.0
+cpb-aacip-189-623bk932:
+		-1: Role=-1	Filler=-1	Binding=-1
