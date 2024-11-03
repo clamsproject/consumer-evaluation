@@ -1,3 +1,0 @@
-clams_utils
-pandas==2.0.3
-Requests==2.32.3
