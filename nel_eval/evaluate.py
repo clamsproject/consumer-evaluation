@@ -151,9 +151,7 @@ def write_results(data: dict, result_path: str):
 if __name__ == "__main__":
     args = standardized_parser.parse_args()
 
-    # restructuring experiment to test 'match_files' It might make this part of a utilites package
-    # that isn't part of an eval class, though
-    evaluator = basic_eval.OutputEval(args)
-    processor = basic_eval.PreProcessEval(args.pred_file, evaluator.get_gold('https://github.com/clamsproject/aapb-annotations/tree/feaf342477fc27e57dcdcbb74c067aba4a02e40d/newshour-namedentity-wikipedialink/golds/aapb-collaboration-21'))
-    evaluator.write_data(evaluate(processor.match_files()))
+    evaluator = basic_eval.OutputEval(args, gold_link='https://github.com/clamsproject/aapb-annotations/tree/feaf342477fc27e57dcdcbb74c067aba4a02e40d/newshour-namedentity-wikipedialink/golds/aapb-collaboration-21')
+    # processor = basic_eval.PreProcessEval(args.pred_file, evaluator.get_gold('https://github.com/clamsproject/aapb-annotations/tree/feaf342477fc27e57dcdcbb74c067aba4a02e40d/newshour-namedentity-wikipedialink/golds/aapb-collaboration-21'))
+    evaluator.write_data(evaluate(evaluator.match_files()))
     evaluator.write_results()

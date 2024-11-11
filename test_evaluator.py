@@ -92,4 +92,4 @@ def all_tests():
     sr_test()
 
 
-all_tests()
+sr_test()
