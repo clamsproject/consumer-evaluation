@@ -139,6 +139,9 @@ def parse_structured_prediction(text: str) -> Dict[str, str]:
     """
     Parse the JSON prediction from the model's response
     """
+    if not text:
+        return {}
+        
     # Remove ```json and ``` markers and any surrounding whitespace/newlines
     text = re.sub(r'^```json\s*', '', text)
     text = re.sub(r'\s*```\s*$', '', text)
@@ -146,7 +149,9 @@ def parse_structured_prediction(text: str) -> Dict[str, str]:
     text = text.strip()
     
     try:
-        return json.loads(text)
+        result = json.loads(text)
+        # Ensure all values are strings or None
+        return {k: str(v) if v is not None else None for k, v in result.items()}
     except json.JSONDecodeError as e:
         print(f"Warning: Skipping invalid JSON prediction: {e}")
         return {}
@@ -216,18 +221,62 @@ def evaluate_dates(gold_dict: Dict[str, str], pred_dict: Dict[str, str]) -> Dict
 
     # Extract and normalize all dates from predictions
     pred_dates = set()
+    incorrect_dates = set()  # Track incorrect dates
     for value in pred_dict.values():
         normalized_date = normalize_date(value)
         try:
             datetime.strptime(normalized_date, '%Y-%m-%d')
             pred_dates.add(normalized_date)
+            if normalized_date not in gold_dates:
+                incorrect_dates.add(normalized_date)
         except (ValueError, TypeError):
             continue
 
     return {
         "correct_dates": len(gold_dates & pred_dates),  # intersection
         "total_gold_dates": len(gold_dates),
-        "incorrect_pred_dates": len(pred_dates - gold_dates)  # dates in pred but not in gold
+        "incorrect_pred_dates": len(pred_dates - gold_dates),  # dates in pred but not in gold
+        "incorrect_dates_examples": list(incorrect_dates)  # Add examples of incorrect dates
+    }
+
+def evaluate_non_date_fields(gold_dict: Dict[str, str], pred_dict: Dict[str, str]) -> Dict[str, int]:
+    """
+    Evaluate non-date field matching across all fields, regardless of field names
+    """
+    # Extract all non-date values from gold standard
+    gold_values = set()
+    date_fields = {'CREATE-DATE', 'AIR-DATE', 'DATE'}
+    
+    for field, value in gold_dict.items():
+        if field not in date_fields and value and isinstance(value, str):
+            cleaned_value = value.strip()
+            if cleaned_value:
+                gold_values.add(cleaned_value.lower())
+    
+    # Extract all non-date values from predictions
+    pred_values = set()
+    incorrect_values = set()
+    
+    for field, value in pred_dict.items():
+        if value and isinstance(value, str):
+            cleaned_value = value.strip()
+            if cleaned_value:
+                # Skip if it looks like a date
+                try:
+                    datetime.strptime(normalize_date(cleaned_value), '%Y-%m-%d')
+                    continue
+                except (ValueError, TypeError):
+                    normalized_value = cleaned_value.lower()
+                    pred_values.add(normalized_value)
+                    if normalized_value not in gold_values:
+                        incorrect_values.add(cleaned_value)  # Keep original case for display
+    
+    return {
+        "correct_values": len(gold_values & {v.lower() for v in pred_values}),  # intersection
+        "total_gold_values": len(gold_values),
+        "total_pred_values": len(pred_values),
+        "incorrect_values": len(incorrect_values),
+        "incorrect_values_examples": list(incorrect_values)
     }
 
 def evaluate_predictions(gold_data: Dict, pred_data: Dict) -> Dict:
@@ -238,7 +287,10 @@ def evaluate_predictions(gold_data: Dict, pred_data: Dict) -> Dict:
         "raw_transcription": defaultdict(list),
         "structured_fields": defaultdict(list),
         "dates": defaultdict(list),
-        "overall": {}
+        "non_date_fields": defaultdict(list),
+        "overall": {},
+        "incorrect_dates_all": set(),
+        "incorrect_values_all": set()
     }
     
     # Evaluate each image
@@ -256,6 +308,8 @@ def evaluate_predictions(gold_data: Dict, pred_data: Dict) -> Dict:
         
         if len(preds) >= 2:
             pred_struct = parse_structured_prediction(preds[1]["response"])
+            
+            # Existing evaluations
             struct_metrics = evaluate_structured_fields(
                 gold["structured_transcription"],
                 pred_struct
@@ -263,13 +317,26 @@ def evaluate_predictions(gold_data: Dict, pred_data: Dict) -> Dict:
             for metric, value in struct_metrics.items():
                 results["structured_fields"][metric].append(value)
             
-            # Add date evaluation
             date_metrics = evaluate_dates(
                 gold["structured_transcription"],
                 pred_struct
             )
             for metric, value in date_metrics.items():
-                results["dates"][metric].append(value)
+                if metric != "incorrect_dates_examples":
+                    results["dates"][metric].append(value)
+                else:
+                    results["incorrect_dates_all"].update(value)
+            
+            # Add non-date field evaluation
+            non_date_metrics = evaluate_non_date_fields(
+                gold["structured_transcription"],
+                pred_struct
+            )
+            for metric, value in non_date_metrics.items():
+                if metric != "incorrect_values_examples":
+                    results["non_date_fields"][metric].append(value)
+                else:
+                    results["incorrect_values_all"].update(value)
     
     # Calculate averages
     for eval_type in ["raw_transcription", "structured_fields"]:
@@ -292,15 +359,45 @@ if __name__ == "__main__":
         results = evaluate_predictions(gold_data, pred_data)
         
         # Print results
-        print("\nEvaluation Results:")
-        print("\nRaw Transcription Metrics:")
-        print(f"Average CER: {results['overall']['raw_transcription_cer_avg']:.3f}")
-        print(f"Average WER: {results['overall']['raw_transcription_wer_avg']:.3f}")
+        print("\nDetailed Evaluation Report:")
+        print("\n1. Raw Transcription Metrics:")
+        print(f"  - Character Error Rate (CER): {results['overall']['raw_transcription_cer_avg']:.3f}")
+        print(f"  - Word Error Rate (WER): {results['overall']['raw_transcription_wer_avg']:.3f}")
         
-        print("\nStructured Fields Metrics:")
-        print(f"Average Accuracy: {results['overall']['structured_fields_accuracy_avg']:.3f}")
+        print("\n2. Structured Fields Metrics (Exact field name and value matches):")
+        print(f"  - Field-level Accuracy: {results['overall']['structured_fields_accuracy_avg']:.3f}")
         
-        print("\nDate Matching Metrics:")
-        print(f"Average Correct Dates: {results['overall']['dates_correct_dates_avg']:.2f}")
-        print(f"Average Gold Dates per Image: {results['overall']['dates_total_gold_dates_avg']:.2f}")
-        print(f"Average Incorrect Predicted Dates: {results['overall']['dates_incorrect_pred_dates_avg']:.2f}")
+        # Date metrics
+        total_gold_dates = sum(results['dates']['total_gold_dates'])
+        total_correct_dates = sum(results['dates']['correct_dates'])
+        total_incorrect_dates = sum(results['dates']['incorrect_pred_dates'])
+        
+        print("\n3. Date Identification Metrics:")
+        print("  These metrics evaluate date matching regardless of field names")
+        print(f"  - Total dates in gold standard: {total_gold_dates}")
+        print(f"  - Dates correctly identified: {total_correct_dates} ({(total_correct_dates/total_gold_dates)*100:.1f}% recall)")
+        print(f"  - Incorrect dates in predictions: {total_incorrect_dates}")
+        
+        # Non-date field metrics
+        total_gold_values = sum(results['non_date_fields']['total_gold_values'])
+        total_correct_values = sum(results['non_date_fields']['correct_values'])
+        total_pred_values = sum(results['non_date_fields']['total_pred_values'])
+        total_incorrect_values = sum(results['non_date_fields']['incorrect_values'])
+        
+        print("\n4. Non-Date Field Metrics:")
+        print("  These metrics evaluate value matching regardless of field names")
+        print(f"  - Total values in gold standard: {total_gold_values}")
+        print(f"  - Values correctly identified: {total_correct_values} ({(total_correct_values/total_gold_values)*100:.1f}% recall)")
+        print(f"  - Total values in predictions: {total_pred_values}")
+        print(f"  - Incorrect values in predictions: {total_incorrect_values}")
+        print(f"  - Precision: {(total_correct_values/total_pred_values)*100:.1f}%")
+        
+        print("\n5. Sample of incorrect dates found in predictions:")
+        incorrect_dates_sample = list(results["incorrect_dates_all"])[:10]
+        for date in incorrect_dates_sample:
+            print(f"  - {date}")
+            
+        print("\n6. Sample of incorrect non-date values found in predictions:")
+        incorrect_values_sample = list(results["incorrect_values_all"])[:10]
+        for value in incorrect_values_sample:
+            print(f"  - {value}")
