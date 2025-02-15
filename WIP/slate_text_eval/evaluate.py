@@ -352,25 +352,54 @@ def evaluate_predictions(gold_data: Dict, pred_data: Dict) -> Dict:
 if __name__ == "__main__":
     # Load data
     gold_data = load_gold_standard("madison_slates_annotation_omitted_removed/img_arr_prog.js")
-    pred_data = load_predictions("llava_output_2")
+    pred_data_2 = load_predictions("llava_output_2")
+    pred_data_3 = load_predictions("llava_output_3")
     
-    if gold_data and pred_data:
-        # Run evaluation
-        results = evaluate_predictions(gold_data, pred_data)
+    if gold_data and pred_data_2 and pred_data_3:
+        # Run evaluations
+        results_2 = evaluate_predictions(gold_data, pred_data_2)
+        
+        # Evaluate just CER/WER for llava_output_3
+        cer_wer_3 = {
+            "cer": [],
+            "wer": []
+        }
+        
+        for image_file in set(gold_data.keys()) & set(pred_data_3.keys()):
+            gold = gold_data[image_file]
+            preds = pred_data_3[image_file]
+            
+            if len(preds) >= 1:
+                metrics = evaluate_raw_transcription(
+                    gold["raw_transcription"],
+                    preds[0]["response"]
+                )
+                cer_wer_3["cer"].append(metrics["cer"])
+                cer_wer_3["wer"].append(metrics["wer"])
+        
+        # Calculate averages for llava_output_3
+        avg_cer_3 = sum(cer_wer_3["cer"]) / len(cer_wer_3["cer"]) if cer_wer_3["cer"] else 0
+        avg_wer_3 = sum(cer_wer_3["wer"]) / len(cer_wer_3["wer"]) if cer_wer_3["wer"] else 0
         
         # Print results
         print("\nDetailed Evaluation Report:")
         print("\n1. Raw Transcription Metrics:")
-        print(f"  - Character Error Rate (CER): {results['overall']['raw_transcription_cer_avg']:.3f}")
-        print(f"  - Word Error Rate (WER): {results['overall']['raw_transcription_wer_avg']:.3f}")
+        print("\nLLaVA Output 2:")
+        print(f"  - Character Error Rate (CER): {results_2['overall']['raw_transcription_cer_avg']:.3f}")
+        print(f"  - Word Error Rate (WER): {results_2['overall']['raw_transcription_wer_avg']:.3f}")
         
+        print("\nLLaVA Output 3:")
+        print(f"  - Character Error Rate (CER): {avg_cer_3:.3f}")
+        print(f"  - Word Error Rate (WER): {avg_wer_3:.3f}")
+        
+        # Continue with rest of existing output...
         print("\n2. Structured Fields Metrics (Exact field name and value matches):")
-        print(f"  - Field-level Accuracy: {results['overall']['structured_fields_accuracy_avg']:.3f}")
+        print(f"  - Field-level Accuracy: {results_2['overall']['structured_fields_accuracy_avg']:.3f}")
         
         # Date metrics
-        total_gold_dates = sum(results['dates']['total_gold_dates'])
-        total_correct_dates = sum(results['dates']['correct_dates'])
-        total_incorrect_dates = sum(results['dates']['incorrect_pred_dates'])
+        total_gold_dates = sum(results_2['dates']['total_gold_dates'])
+        total_correct_dates = sum(results_2['dates']['correct_dates'])
+        total_incorrect_dates = sum(results_2['dates']['incorrect_pred_dates'])
         
         print("\n3. Date Identification Metrics:")
         print("  These metrics evaluate date matching regardless of field names")
@@ -379,10 +408,10 @@ if __name__ == "__main__":
         print(f"  - Incorrect dates in predictions: {total_incorrect_dates}")
         
         # Non-date field metrics
-        total_gold_values = sum(results['non_date_fields']['total_gold_values'])
-        total_correct_values = sum(results['non_date_fields']['correct_values'])
-        total_pred_values = sum(results['non_date_fields']['total_pred_values'])
-        total_incorrect_values = sum(results['non_date_fields']['incorrect_values'])
+        total_gold_values = sum(results_2['non_date_fields']['total_gold_values'])
+        total_correct_values = sum(results_2['non_date_fields']['correct_values'])
+        total_pred_values = sum(results_2['non_date_fields']['total_pred_values'])
+        total_incorrect_values = sum(results_2['non_date_fields']['incorrect_values'])
         
         print("\n4. Non-Date Field Metrics:")
         print("  These metrics evaluate value matching regardless of field names")
@@ -393,11 +422,11 @@ if __name__ == "__main__":
         print(f"  - Precision: {(total_correct_values/total_pred_values)*100:.1f}%")
         
         print("\n5. Sample of incorrect dates found in predictions:")
-        incorrect_dates_sample = list(results["incorrect_dates_all"])[:10]
+        incorrect_dates_sample = list(results_2["incorrect_dates_all"])[:10]
         for date in incorrect_dates_sample:
             print(f"  - {date}")
             
         print("\n6. Sample of incorrect non-date values found in predictions:")
-        incorrect_values_sample = list(results["incorrect_values_all"])[:10]
+        incorrect_values_sample = list(results_2["incorrect_values_all"])[:10]
         for value in incorrect_values_sample:
             print(f"  - {value}")
